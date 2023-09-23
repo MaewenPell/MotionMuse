@@ -1,0 +1,29 @@
+@import "variables";
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    padding: 16px 24px;
+    min-height: 100vh;
+    background-color: $color-white;
+
+    &__logo {
+        display: flex;
+        column-gap: 10px;
+        align-items: center;
+        width: 250px;
+
+        .logo {
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .logoText {
+            font-weight: 700;
+            color: $color-main-violet;
+        }
+
+    }
+
+}

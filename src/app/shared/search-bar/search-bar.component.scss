@@ -1,0 +1,15 @@
+@import 'variables';
+
+.container {
+  display: flex;
+  align-items: center;
+  padding: 40px 20px;
+  height: 75px;
+
+  .searchBar {
+    &__title {
+      text-transform: uppercase;
+      color: $color-white;
+    }
+  }
+}

@@ -1,0 +1,23 @@
+@import 'variables';
+
+.inputSearch {
+  display: flex;
+  align-items: center;
+  width: 320px;
+  height: 50px;
+  border-radius: 32px;
+  background-color: transparent;
+  border: 1px solid $color-white-60;
+
+  .placeholder {
+    margin-left: 10px;
+    &__icon {
+      color: $color-white-60;
+      margin-right: 10px;
+    }
+
+    &__text {
+      color: $color-white-60;
+    }
+  }
+}

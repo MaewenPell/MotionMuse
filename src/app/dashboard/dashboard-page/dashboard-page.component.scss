@@ -1,0 +1,18 @@
+@import 'variables';
+
+.mainContent {
+  display: flex;
+  min-height: 100vh;
+  width: calc(100vw - $menu-width);
+  background-color: $color-light-gray;
+
+  &__hero {
+    height: 380px;
+    width: 100%;
+    background: linear-gradient(
+      87deg,
+      $color-main-violet 0,
+      #825ee4 100%
+    ) !important;
+  }
+}

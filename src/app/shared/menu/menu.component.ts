@@ -11,17 +11,18 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent implements OnInit {
-  public items: MenuItem[] = [];
+  public menuItems: MenuItem[] = [];
 
   ngOnInit(): void {
-    this.items = [
+    this.menuItems = [
       {
-        label: 'New',
-        icon: 'pi pi-fw pi-plus',
+        label: 'Dashboard',
+        icon: 'pi pi-chart-bar',
+        routerLink: ['/dashboard'],
       },
       {
-        label: 'Delete',
-        icon: 'pi pi-fw pi-trash',
+        label: 'Trainings',
+        icon: 'pi pi-wrench',
       },
     ];
   }

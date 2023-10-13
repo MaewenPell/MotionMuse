@@ -8,8 +8,7 @@ describe('DashboardPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DashboardPageComponent],
-      imports: [SearchBarComponent],
+      imports: [SearchBarComponent, DashboardPageComponent],
     });
     fixture = TestBed.createComponent(DashboardPageComponent);
     component = fixture.componentInstance;

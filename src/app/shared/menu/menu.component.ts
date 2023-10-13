@@ -23,6 +23,7 @@ export class MenuComponent implements OnInit {
       {
         label: 'Trainings',
         icon: 'pi pi-wrench',
+        routerLink: ['/trainings'],
       },
     ];
   }

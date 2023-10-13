@@ -7,8 +7,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 describe('AppComponent', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MenuComponent, BrowserAnimationsModule],
-      declarations: [AppComponent],
+      imports: [
+        RouterTestingModule,
+        MenuComponent,
+        BrowserAnimationsModule,
+        AppComponent,
+      ],
     })
   );
 

@@ -42,7 +42,8 @@
         "prettier/prettier": [
           "error",
           {
-            "parser": "angular"
+            "parser": "angular",
+            "wrapAttributes": "force-aligned",
           }
         ]
       }

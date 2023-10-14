@@ -3,7 +3,7 @@
 .mainContent {
   display: flex;
   min-height: 100vh;
-  width: calc(100vw - $menu-width);
+  width: 100vw;
   background-color: $color-light-gray;
 
   &__hero {

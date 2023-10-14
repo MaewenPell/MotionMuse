@@ -1,11 +1,13 @@
 @import 'variables';
 
 .container {
-  display: flex;
-  flex-direction: column;
-  width: 250px;
+  display: block;
+  position: fixed;
+  margin: 16px 0px 16px 24px;
+  height: calc(100vh - 32px);
+  border-radius: 16px;
+  width: $menu-width;
   padding: 20px;
-  min-height: 100vh;
   background-color: $color-white;
 
   &__logo {

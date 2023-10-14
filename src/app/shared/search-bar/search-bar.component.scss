@@ -3,8 +3,10 @@
 .container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 40px 20px;
   height: 75px;
+  margin-left: $menu-width + 16px;
 
   .searchBar {
     &__title {

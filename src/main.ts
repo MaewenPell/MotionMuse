@@ -4,14 +4,14 @@ import {
   provideAnimations,
   provideNoopAnimations,
 } from '@angular/platform-browser/animations';
-import { provideRouter, withDebugTracing } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';
 
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule),
-    provideRouter(APP_ROUTES, withDebugTracing()),
+    provideRouter(APP_ROUTES),
     provideAnimations(),
     provideNoopAnimations(),
   ],

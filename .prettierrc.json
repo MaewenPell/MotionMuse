@@ -8,5 +8,12 @@
   "trailingComma": "es5",
   "bracketSameLine": true,
   "printWidth": 80,
-  "endOfLine": "auto"
+  "endOfLine": "auto",
+  "singleAttributePerLine": true,
+  "overrides": [{
+    "files": "*.html",
+    "options": {
+      "parser": "none"
+    }
+  }]
 }

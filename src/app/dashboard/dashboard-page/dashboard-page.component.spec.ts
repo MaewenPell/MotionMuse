@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DashboardPageComponent } from './dashboard-page.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MenuComponent } from 'src/app/shared/menu/menu.component';
 import { SearchBarComponent } from 'src/app/shared/search-bar/search-bar.component';
+import { DashboardPageComponent } from './dashboard-page.component';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
@@ -8,7 +11,13 @@ describe('DashboardPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SearchBarComponent, DashboardPageComponent],
+      imports: [
+        SearchBarComponent,
+        DashboardPageComponent,
+        MenuComponent,
+        BrowserAnimationsModule,
+        RouterTestingModule,
+      ],
     });
     fixture = TestBed.createComponent(DashboardPageComponent);
     component = fixture.componentInstance;

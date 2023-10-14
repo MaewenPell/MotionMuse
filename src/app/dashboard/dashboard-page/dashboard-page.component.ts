@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
 import { MenuComponent } from '../../shared/menu/menu.component';
+import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-dashboard-page',

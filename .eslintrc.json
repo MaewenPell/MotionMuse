@@ -43,7 +43,7 @@
           "error",
           {
             "parser": "angular",
-            "wrapAttributes": "force-aligned",
+            "wrapAttributes": "force-aligned"
           }
         ]
       }

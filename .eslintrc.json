@@ -37,16 +37,7 @@
         "plugin:@angular-eslint/template/recommended",
         "plugin:@angular-eslint/template/accessibility",
         "plugin:prettier/recommended"
-      ],
-      "rules": {
-        "prettier/prettier": [
-          "error",
-          {
-            "parser": "angular",
-            "wrapAttributes": "force-aligned"
-          }
-        ]
-      }
+      ]
     }
   ]
 }

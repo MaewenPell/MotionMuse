@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { TokenExchangeComponent } from './shared/token-exchange/token-exchange.component';
 
 export const APP_ROUTES: Route[] = [
   {
@@ -8,6 +9,10 @@ export const APP_ROUTES: Route[] = [
   {
     path: 'trainings',
     loadChildren: () => import('./trainings/routes'),
+  },
+  {
+    path: 'token-exchange',
+    loadComponent: () => TokenExchangeComponent,
   },
   {
     path: '',

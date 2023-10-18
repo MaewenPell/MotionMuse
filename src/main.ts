@@ -7,12 +7,14 @@ import {
 import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';
+import { provideHttpClient } from '@angular/common/http';
 
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule),
     provideRouter(APP_ROUTES),
     provideAnimations(),
+    provideHttpClient(),
     provideNoopAnimations(),
   ],
 }).catch(err => console.error(err));

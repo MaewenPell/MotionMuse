@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConnectionComponent } from './connection.component';
 
 describe('ConnectionComponent', () => {
@@ -8,7 +9,7 @@ describe('ConnectionComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ConnectionComponent]
+      imports: [ConnectionComponent, HttpClientTestingModule],
     });
     fixture = TestBed.createComponent(ConnectionComponent);
     component = fixture.componentInstance;

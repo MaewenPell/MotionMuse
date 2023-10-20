@@ -1,5 +1,4 @@
 import { Route } from '@angular/router';
-import { TokenExchangeComponent } from './shared/token-exchange/token-exchange.component';
 
 export const APP_ROUTES: Route[] = [
   {
@@ -12,7 +11,7 @@ export const APP_ROUTES: Route[] = [
   },
   {
     path: 'token-exchange',
-    loadComponent: () => TokenExchangeComponent,
+    redirectTo: 'dashboard',
   },
   {
     path: '',

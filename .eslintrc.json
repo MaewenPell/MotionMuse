@@ -37,7 +37,15 @@
         "plugin:@angular-eslint/template/recommended",
         "plugin:@angular-eslint/template/accessibility",
         "plugin:prettier/recommended"
-      ]
+      ],
+      "rules": {
+        "prettier/prettier": [
+          "off",
+          {
+            "parser": "angular"
+          }
+        ]
+      }
     }
   ]
 }

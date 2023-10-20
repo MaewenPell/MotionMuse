@@ -25,8 +25,22 @@ export class DashboardPageComponent implements OnInit {
   public isConnected = false;
 
   ngOnInit(): void {
-    this.activatedRoute.url.subscribe(url => {
-      console.log(url);
+    this.activatedRoute.url.subscribe(() => {
+      const url = new URL(window.location.href);
+      this.getCodeFromUrl(url);
     });
+  }
+
+  private getCodeFromUrl(url: URL) {
+    let error: string | null = null;
+    let code: string | null = null;
+
+    error = url.searchParams.get('error');
+    code = url.searchParams.get('code');
+    if (code) {
+      this.connectionService.authorizationCode = code;
+    } else if (error) {
+      this.connectionService.authorizationCode = 'denied';
+    }
   }
 }

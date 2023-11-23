@@ -1,6 +1,6 @@
 @import 'variables';
 
-.container {
+.searchBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -8,10 +8,21 @@
   height: 75px;
   margin-left: $menu-width + 16px;
 
-  .searchBar {
-    &__title {
-      text-transform: uppercase;
+  &__title {
+    text-transform: uppercase;
+    color: $color-white;
+  }
+
+  .profil {
+    &__icon {
       color: $color-white;
+      display: flex;
+      align-items: center;
+      border: 1.5px solid $color-white;
+      border-radius: 100%;
+      padding: 5px;
+      opacity: 0.6;
+      gap: 10px;
     }
   }
 }

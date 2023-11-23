@@ -1,10 +1,12 @@
 <div class="mainContent">
   <app-menu></app-menu>
   <div class="mainContent__hero">
+    <p-toast></p-toast>
     <app-search-bar class="mainContent__search"
                     [pageTitle]="'Dashboard'">
     </app-search-bar>
-    <div class="mainContent__connection">
+    <div class="mainContent__connection"
+         *ngIf="!isConnected">
       <app-connection></app-connection>
     </div>
   </div>

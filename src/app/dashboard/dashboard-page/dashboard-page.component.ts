@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { Subscription } from 'rxjs';
 import { ConnectionComponent } from 'src/app/shared/connection/connection.component';
 import { ConnectionService } from 'src/app/shared/services/connection.service';
 import { MenuComponent } from '../../shared/menu/menu.component';
@@ -16,31 +19,77 @@ import { SearchBarComponent } from '../../shared/search-bar/search-bar.component
     MenuComponent,
     CommonModule,
     ConnectionComponent,
+    ToastModule,
   ],
+  providers: [MessageService],
 })
-export class DashboardPageComponent implements OnInit {
+export class DashboardPageComponent implements OnInit, OnDestroy {
+  private _isConnected!: boolean;
+  private isConnectedSub$!: Subscription;
   private activatedRoute = inject(ActivatedRoute);
+  private messageService = inject(MessageService);
+
   public connectionService = inject(ConnectionService);
 
-  public isConnected = false;
+  public set isConnected(isConnected: boolean) {
+    this._isConnected = isConnected;
+  }
+
+  public get isConnected() {
+    return this._isConnected;
+  }
 
   ngOnInit(): void {
     this.activatedRoute.url.subscribe(() => {
       const url = new URL(window.location.href);
-      this.getCodeFromUrl(url);
+
+      if (url.search?.length > 0) {
+        const authorizationCode = this.getCodeFromUrl(url);
+        this.connectionService.getAccessAthleteToken(authorizationCode);
+      }
     });
+
+    this.isConnectedSub$ = this.connectionService.isConnected$.subscribe(
+      (isConnected: boolean) => {
+        console.log(isConnected);
+        this.isConnected = isConnected;
+
+        this.displayToaster(isConnected);
+      }
+    );
+  }
+
+  private displayToaster(isConnected: boolean) {
+    isConnected
+      ? this.messageService.add({
+          severity: 'success',
+          summary: 'Succès',
+          detail: 'Connexion via Strava réussie',
+        })
+      : this.messageService.add({
+          severity: 'error',
+          summary: 'Oops',
+          detail: 'Connexion via Strava échouée',
+        });
   }
 
   private getCodeFromUrl(url: URL) {
+    let authorizationCode!: string;
     let error: string | null = null;
     let code: string | null = null;
 
     error = url.searchParams.get('error');
     code = url.searchParams.get('code');
     if (code) {
-      this.connectionService.authorizationCode = code;
+      authorizationCode = code;
     } else if (error) {
-      this.connectionService.authorizationCode = 'denied';
+      authorizationCode = 'denied';
     }
+
+    return authorizationCode;
+  }
+
+  ngOnDestroy(): void {
+    this.isConnectedSub$.unsubscribe();
   }
 }

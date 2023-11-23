@@ -4,6 +4,7 @@
 @import 'primeng/resources/primeng.css';
 @import 'primeicons/primeicons.css';
 @import './styles/_menu';
+@import 'button';
 
 body {
   margin: 0;
@@ -11,6 +12,7 @@ body {
   background-color: $color-light-gray;
   font-family: 'Open Sans', sans-serif;
 }
+
 ul {
   list-style: none;
   padding: 0;

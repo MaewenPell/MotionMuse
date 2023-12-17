@@ -1,6 +1,7 @@
 import { Athlete } from './athlete';
 
-export type AccessAthleteToken = {
+export type ConnectionBase = {
+  id: number;
   token_type: string;
   expires_at: number;
   expires_in: number;

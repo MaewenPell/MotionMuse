@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MessageService } from 'primeng/api';
 import { ConnectionComponent } from './connection.component';
 
 describe('ConnectionComponent', () => {
@@ -10,6 +11,7 @@ describe('ConnectionComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ConnectionComponent, HttpClientTestingModule],
+      providers: [MessageService],
     });
     fixture = TestBed.createComponent(ConnectionComponent);
     component = fixture.componentInstance;

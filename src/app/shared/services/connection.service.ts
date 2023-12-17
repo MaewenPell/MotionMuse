@@ -1,14 +1,18 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { env } from 'env';
-import { Subject } from 'rxjs';
-import { AccessAthleteToken } from 'src/app/types/accessToken';
+import { environment } from 'environment.dev';
+import { Observable, Subject, map } from 'rxjs';
+import { ConnectionBase } from 'src/app/types/accessToken';
+import { APIResponse } from 'src/app/types/api-response';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConnectionService {
   private http = inject(HttpClient);
+  private utilsService = inject(UtilsService);
 
   private _clientId!: string;
   private _clientSecret!: string;
@@ -22,7 +26,6 @@ export class ConnectionService {
   }
 
   public isConnected$ = new Subject<boolean>();
-  public athleteToken$ = new Subject<AccessAthleteToken>();
 
   authorizeApp() {
     const stravaUrl = 'https://www.strava.com/oauth/authorize';
@@ -46,10 +49,29 @@ export class ConnectionService {
       .set('grant_type', 'authorization_code');
 
     this.http
-      .post<AccessAthleteToken>(url, null, { params: params })
-      .subscribe(athleteToken => {
-        this.isConnected$.next(true);
-        this.athleteToken$.next(athleteToken);
+      .post<ConnectionBase>(url, null, { params: params })
+      .subscribe((connectionBase: ConnectionBase) => {
+        connectionBase.id = connectionBase.athlete.id;
+        connectionBase.athlete.connectionBaseId = connectionBase.id;
+        this.createConnection(connectionBase).subscribe(response => {
+          this.isConnected$.next(true);
+        });
       });
+  }
+
+  getConnections(): Observable<APIResponse<ConnectionBase[]>> {
+    const url = `${environment.baseUrl}/connections`;
+
+    return this.http.get<APIResponse<ConnectionBase[]>>(url).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
+
+  createConnection(connectionBase: ConnectionBase) {
+    const url = `${environment.baseUrl}/connection/${connectionBase.athlete.id}`;
+
+    return this.http.post<APIResponse<ConnectionBase>>(url, connectionBase);
   }
 }

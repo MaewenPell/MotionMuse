@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import {
@@ -5,9 +6,9 @@ import {
   provideNoopAnimations,
 } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';
-import { provideHttpClient } from '@angular/common/http';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -16,5 +17,6 @@ bootstrapApplication(AppComponent, {
     provideAnimations(),
     provideHttpClient(),
     provideNoopAnimations(),
+    MessageService,
   ],
 }).catch(err => console.error(err));

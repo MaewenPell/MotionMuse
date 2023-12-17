@@ -5,9 +5,10 @@
     <app-search-bar class="mainContent__search"
                     [pageTitle]="'Dashboard'">
     </app-search-bar>
-    <div class="mainContent__connection"
-         *ngIf="!isConnected">
-      <app-connection></app-connection>
-    </div>
+    @if (!isConnected) {
+      <div class="mainContent__connection">
+        <app-connection />
+      </div>
+    }
   </div>
 </div>

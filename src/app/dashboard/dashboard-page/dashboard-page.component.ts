@@ -25,6 +25,7 @@ import { SearchBarComponent } from '../../shared/search-bar/search-bar.component
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
   private _isConnected!: boolean;
+  private urlSubscription$!: Subscription;
   private isConnectedSub$!: Subscription;
   private activatedRoute = inject(ActivatedRoute);
   private messageService = inject(MessageService);
@@ -39,19 +40,21 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     return this._isConnected;
   }
 
-  ngOnInit(): void {
-    this.activatedRoute.url.subscribe(() => {
+  ngOnInit() {
+    // Subscribe to url changes
+    // Triggered if we are redirected from Strava after authorization
+    // TODO ? Create a separate route ?
+    this.urlSubscription$ = this.activatedRoute.url.subscribe(() => {
       const url = new URL(window.location.href);
 
       if (url.search?.length > 0) {
         const authorizationCode = this.getCodeFromUrl(url);
-        this.connectionService.getAccessAthleteToken(authorizationCode);
+        this.connectionService.getConnectionBaseFromStrava(authorizationCode);
       }
     });
 
     this.isConnectedSub$ = this.connectionService.isConnected$.subscribe(
       (isConnected: boolean) => {
-        console.log(isConnected);
         this.isConnected = isConnected;
 
         this.displayToaster(isConnected);
@@ -91,5 +94,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isConnectedSub$.unsubscribe();
+    this.urlSubscription$.unsubscribe();
   }
 }

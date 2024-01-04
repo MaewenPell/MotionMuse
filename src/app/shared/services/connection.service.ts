@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { env } from 'env';
-import { DateTime } from 'luxon';
 import { Subject } from 'rxjs';
 import { ConnectionBase } from 'src/app/types/access-token';
 import { Errors } from 'src/app/types/enums/errors.enums';
@@ -48,12 +47,15 @@ export class ConnectionService {
 
     switch (connectionBase) {
       case Errors.NO_CONNECTION_BASE:
+        console.log('NO_CONNECTION_BASE');
         this.authorizeApp();
         break;
       case Errors.TOKEN_EXPIRED:
+        console.log('TOKEN EXPIRED');
         this.getTokenFromRefreshToken();
         break;
       case connectionBase as ConnectionBase:
+        console.log('OK retirieving connection base from local storage');
         this.isConnected$.next(true);
         break;
     }
@@ -102,14 +104,9 @@ export class ConnectionService {
           JSON.stringify(newConnectionBase)
         );
 
+        console.log('Token refreshed');
+
         this.isConnected$.next(true);
       });
-  }
-
-  isTokenStillAvailable(expirationDateInMs: number): boolean {
-    const now = DateTime.now();
-    const expirationDatetime = DateTime.fromMillis(expirationDateInMs);
-
-    return expirationDatetime.diff(now).minutes > 0;
   }
 }

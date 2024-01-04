@@ -60,6 +60,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         this.displayToaster(isConnected);
       }
     );
+
+    this.connectionService.manageConnectionTokens();
   }
 
   private displayToaster(isConnected: boolean) {

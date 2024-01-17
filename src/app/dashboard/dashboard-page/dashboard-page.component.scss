@@ -7,6 +7,8 @@
   background-color: $color-light-gray;
 
   &__hero {
+    position: absolute;
+    z-index: 0;
     height: 300px;
     width: 100%;
     background: linear-gradient(87deg,
@@ -24,5 +26,34 @@
     margin-left: calc($menu-width + 32px);
     border-radius: 16px;
     background-color: $color-light-gray;
+  }
+
+  .dashboardContainer {
+    display: grid;
+    z-index: 1;
+    width: 100%;
+    height: calc(100vh - 120px);
+    margin: 100px 20px 16px calc($menu-width + 40px);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr 2fr;
+    gap: 40px;
+
+    .placeholder {
+      display: grid;
+      width: 100%;
+      height: 100%;
+      background-color: bisque;
+
+      &--5 {
+        background-color: red;
+        grid-column: 1 / 3;
+        grid-row: 2;
+      }
+      &--6 {
+        background-color: red;
+        grid-column: 3 / 5;
+        grid-row: 2;
+      }
+    }
   }
 }

@@ -4,10 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Subscription } from 'rxjs';
-import { ConnectionComponent } from 'src/app/shared/connection/connection.component';
+import { CardComponent } from 'src/app/shared/components/card/card.component';
+import { ConnectionComponent } from 'src/app/shared/components/connection/connection.component';
 import { ConnectionService } from 'src/app/shared/services/connection.service';
-import { MenuComponent } from '../../shared/menu/menu.component';
-import { SearchBarComponent } from '../../shared/search-bar/search-bar.component';
+import { CardDataType } from 'src/app/types/card-data.type';
+import { MenuComponent } from '../../shared/components/menu/menu.component';
+import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -20,6 +22,7 @@ import { SearchBarComponent } from '../../shared/search-bar/search-bar.component
     CommonModule,
     ConnectionComponent,
     ToastModule,
+    CardComponent,
   ],
   providers: [MessageService],
 })
@@ -39,6 +42,17 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   public get isConnected() {
     return this._isConnected;
   }
+
+  public cardValueTemp: CardDataType = {
+    type: 'resume',
+    color: '#F5365C',
+    title: 'Weekly Distance',
+    value: 54,
+    iconRef: 'null',
+    arrowType: 'up',
+    evolutionValue: 5,
+    evolutionSentece: 'Since Last Week',
+  };
 
   ngOnInit() {
     // Subscribe to url changes

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { ConnectionService } from '../services/connection.service';
+import { ConnectionService } from '../../services/connection.service';
 
 @Component({
   selector: 'app-connection',

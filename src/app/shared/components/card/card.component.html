@@ -1,0 +1,54 @@
+<div class="container">
+    <div class="cardResume">
+        <h4 class="cardResume__title">
+            {{ cardValues.title }}
+        </h4>
+        <h4 class="cardResume__cardValue">
+            {{ cardValues.value }}
+        </h4>
+        <div class="cardResume__cardIcon">
+            @switch (cardValues.type) {
+                @case ('resume') {
+                    <ng-container *ngTemplateOutlet="iconTemplate; context: {icon: 'shoes', color: cardValues.color }" />
+                }
+            @case ('evolution') {
+                    <ng-container *ngTemplateOutlet="iconTemplate; context: {icon: 'graphUp', color: cardValues.color }" />
+                }
+            }
+        </div>
+    </div>
+    <div class="cardEvolution">
+        <div class="cardEvolution__arrow">
+            @switch (cardValues.arrowType) {
+                @case ("up") {
+                    <!-- <img src="assets/images/icons/arrowUp.svg"
+                         alt="">
+                 -->
+                }
+                @case ("down") {
+                    <!-- <img src="assets/images/icons/arrowDown.svg"
+                         alt="">
+                 -->
+                }
+            }
+        </div>
+        <div class="cardEvolution__value">
+            {{ cardValues.evolutionValue }} Km
+        </div>
+        <div class="cardEvolution__sentence">
+            {{ cardValues.evolutionSentece }}
+        </div>
+    </div>
+</div>
+
+<ng-template #iconTemplate
+             let-icon
+             let-color>
+    <div class="roundBackground"
+         [ngClass]="'roundBackground roundBackground--{{color}}'">
+        <div class="roundBackground__icon">
+            <img src="{{ icon }}"
+                 alt="">
+        </div>
+    </div>
+</ng-template>

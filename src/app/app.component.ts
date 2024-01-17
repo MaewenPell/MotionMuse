@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PrimeNGConfig } from 'primeng/api';
 import { RouterOutlet } from '@angular/router';
-import { MenuComponent } from './shared/menu/menu.component';
+import { PrimeNGConfig } from 'primeng/api';
+import { MenuComponent } from './shared/components/menu/menu.component';
 
 @Component({
   selector: 'app-root',

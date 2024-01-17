@@ -8,12 +8,22 @@ describe('CardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CardComponent]
-    })
-    .compileComponents();
-    
+      imports: [CardComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(CardComponent);
     component = fixture.componentInstance;
+
+    component.cardValues = {
+      type: 'resume',
+      color: '#FF0000',
+      title: 'Mock Title',
+      value: 'Mock Value',
+      iconRef: 'Mock Icon Reference',
+      arrowType: 'up',
+      evolutionValue: 'Mock Evolution Value',
+      evolutionSentece: 'Mock Evolution Sentence',
+    };
     fixture.detectChanges();
   });
 

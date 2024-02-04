@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
-import { ActivityType } from 'src/app/types/strava/enum/activity-type.enum';
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 
 @Injectable({
@@ -8,7 +7,7 @@ import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 })
 export class DataComputationsService {
   public getTotaRunninglDistance(
-    activities: SummaryActivity[],
+    activities: SummaryActivity[] | Partial<SummaryActivity>[],
     from: 'currentWeek' | 'currentMonth' | 'custom',
     startedAfter?: DateTime,
     before?: DateTime
@@ -28,14 +27,21 @@ export class DataComputationsService {
         }
     }
 
-    let totalDistance = 0;
+    const activitiesInRange = activities.filter(activity => {
+      if (activity.start_date && startedAfter && before) {
+        const activityDate = DateTime.fromJSDate(activity.start_date);
+        return activityDate >= startedAfter && activityDate <= before;
+      }
+      return false;
+    });
 
-    totalDistance = activities.reduce((distance, activity) => {
-      if (
-        activity.type === ActivityType.Run ||
-        activity.type === ActivityType.TrailRun
-      ) {
-        return distance + activity.distance;
+    const totalDistance = activitiesInRange.reduce((distance, activity) => {
+      if (activity.type === 'Run' || activity.type === 'TrailRun') {
+        if (activity.distance) {
+          return distance + activity.distance;
+        } else {
+          throw new Error('The activity must have a distance');
+        }
       }
       return distance;
     }, 0);

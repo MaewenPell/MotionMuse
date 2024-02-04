@@ -5,6 +5,7 @@ import { PolylineMap } from './polylinemap';
 
 export type SummaryActivity = {
   id: number; // The unique identifier of the activity
+  utc_offset: number; // The timezone offset in seconds
   external_id: string; // The identifier provided at upload time
   upload_id: number; // The identifier of the upload that resulted in this activity
   athlete: MetaAthlete; // An instance of MetaAthlete
@@ -13,8 +14,22 @@ export type SummaryActivity = {
   moving_time: number; // The activity's moving time, in seconds
   elapsed_time: number; // The activity's elapsed time, in seconds
   total_elevation_gain: number; // The activity's total elevation gain
+  location_city: string | null; // The activity's starting location city
+  location_state: string | null; // The activity's starting location state or region
+  location_country: string | null; // The activity's starting location country
+  average_cadence: number; // The average cadence during the activity
+  average_heartrate: number; // The activity's average heart rate
+  max_heartrate: number; // The activity's max heart rate
+  heartrate_opt_out: boolean; // Whether the logged-in athlete has opted out of viewing heartrate data
+  display_hide_heartrate_option: boolean; // Whether the logged-in athlete has hidden their heart rate data
+  average_temp: number; // The activity's average temperature, in degrees celsius
+  from_accepted_tag: boolean; // Whether the activity was recorded on a device that had a barometric altimeter
+  has_heartrate: boolean; // Whether the logged-in athlete has heart rate data for this activity
+  pr_count: number; // The number of achievements gained during this activity
   elev_high: number; // The activity's highest elevation, in meters
+  suffer_score: number; // The activity's suffer score
   elev_low: number; // The activity's lowest elevation, in meters
+  visibility: string; // The visibility of the activity
   type: ActivityType; // Deprecated. Prefer to use sport_type
   sport_type: ActivityType; // An instance of SportType
   start_date: Date; // The time at which the activity was started
@@ -39,11 +54,11 @@ export type SummaryActivity = {
   average_speed: number; // The activity's average speed, in meters per second
   max_speed: number; // The activity's max speed, in meters per second
   has_kudoed: boolean; // Whether the logged-in athlete has kudoed this activity
-  hide_from_home: boolean; // Whether the activity is muted
-  gear_id: string; // The id of the gear for the activity
-  kilojoules: number; // The total work done in kilojoules during this activity. Rides only
-  average_watts: number; // Average power output in watts during this activity. Rides only
-  device_watts: boolean; // Whether the watts are from a power meter, false if estimated
-  max_watts: number; // Rides with power meter data only
-  weighted_average_watts: number; // Similar to Normalized Power. Rides with power meter data only
+  hide_from_home?: boolean; // Whether the activity is muted
+  gear_id: string | null; // The id of the gear for the activity
+  kilojoules?: number | null; // The total work done in kilojoules during this activity. Rides only
+  average_watts?: number | null; // Average power output in watts during this activity. Rides only
+  device_watts?: boolean | null; // Whether the watts are from a power meter, false if estimated
+  max_watts?: number | null; // Rides with power meter data only
+  weighted_average_watts?: number | null; // Similar to Normalized Power. Rides with power meter data only
 };

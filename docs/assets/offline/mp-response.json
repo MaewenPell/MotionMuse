@@ -1,0 +1,29 @@
+{
+  "token_type": "Bearer",
+  "expires_at": 1697670741,
+  "expires_in": 21402,
+  "refresh_token": "1a9b1b6a002df14f9f03f162a27dac174ca4737e",
+  "access_token": "e97cd023fe6f7795a2ff97835057666194a21214",
+  "athlete": {
+    "id": 17464740,
+    "username": "maewen_pelletier",
+    "resource_state": 2,
+    "firstname": "Maewen",
+    "lastname": "Pelletier",
+    "bio": "Mountain pack - [Trail Running 🏃 | Climbing 🧗‍♂️| Alpinism 🗻 | Skiing 🎿]",
+    "city": "Annecy",
+    "state": "",
+    "country": null,
+    "sex": "M",
+    "premium": true,
+    "summit": true,
+    "created_at": "2016-09-10T20:17:37Z",
+    "updated_at": "2023-10-16T17:02:07Z",
+    "badge_type_id": 1,
+    "weight": 58.0,
+    "profile_medium": "https://dgalywyr863hv.cloudfront.net/pictures/athletes/17464740/25892616/3/medium.jpg",
+    "profile": "https://dgalywyr863hv.cloudfront.net/pictures/athletes/17464740/25892616/3/large.jpg",
+    "friend": null,
+    "follower": null
+  }
+}

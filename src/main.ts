@@ -1,4 +1,8 @@
-import { provideHttpClient } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import {
@@ -9,13 +13,15 @@ import { provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';
+import { StravaInterceptor } from './app/core/interceptor/strava.interceptor';
 
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule),
     provideRouter(APP_ROUTES),
     provideAnimations(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()),
+    { provide: HTTP_INTERCEPTORS, useClass: StravaInterceptor, multi: true },
     provideNoopAnimations(),
     MessageService,
   ],

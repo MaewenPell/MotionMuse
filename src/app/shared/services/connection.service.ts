@@ -34,7 +34,7 @@ export class ConnectionService {
 
     const responseType = 'code';
     const redirectUri = 'http://localhost:4200/token-exchange';
-    const scope = 'activity:read_all';
+    const scope = 'read,profile:read_all,activity:read';
 
     const authorizeUrl = `${stravaUrl}?client_id=${this.clientId}&response_type=${responseType}&redirect_uri=${redirectUri}&approval_prompt=force&scope=${scope}`;
 
@@ -77,6 +77,16 @@ export class ConnectionService {
         );
         this.isConnected$.next(true);
       });
+  }
+
+  public getTokenFromConnectionBase(): string | null {
+    this.manageConnectionTokens();
+
+    const connectionBase = this.storageService.get('connectionBase');
+    if (connectionBase) {
+      return (connectionBase as ConnectionBase).access_token;
+    }
+    return null;
   }
 
   public getTokenFromRefreshToken() {

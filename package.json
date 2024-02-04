@@ -5,13 +5,11 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:production": "ng build --production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test-headless": "ng test --browsers=ChromeHeadless --watch=false",
-    "lint": "ng lint --fix",
-    "prettier": "npx prettier --write .",
-    "prettier-push": "pretty-quick --staged",
-    "prepare": "husky install"
+    "lint": "ng lint --fix"
   },
   "private": true,
   "dependencies": {

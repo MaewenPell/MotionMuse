@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { APP_COLORS } from 'src/styles/_colorVariables';
 import { CardComponent } from './card.component';
 
 describe('CardComponent', () => {
@@ -16,13 +17,13 @@ describe('CardComponent', () => {
 
     component.cardValues = {
       type: 'resume',
-      color: '#FF0000',
-      title: 'Mock Title',
-      value: 'Mock Value',
-      iconRef: 'Mock Icon Reference',
-      arrowType: 'up',
-      evolutionValue: 'Mock Evolution Value',
-      evolutionSentece: 'Mock Evolution Sentence',
+      color: APP_COLORS.DARK,
+      title: 'Total distance',
+      value: 100,
+      evolutionType: 'up',
+      evolutionValue: 10,
+      evolutionSentence: 'since last week',
+      unit: 'km',
     };
     fixture.detectChanges();
   });

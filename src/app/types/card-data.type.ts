@@ -1,10 +1,12 @@
+import { APP_COLORS } from 'src/styles/_colorVariables';
+
 export type CardDataType = {
   type: 'resume' | 'evolution';
-  color: string;
+  color: APP_COLORS;
   title: string;
   value: number | string;
-  iconRef: string; // Todo enum
-  arrowType: 'up' | 'down' | 'equal';
+  evolutionType: 'up' | 'down' | 'equal';
   evolutionValue: number | string;
-  evolutionSentece: string;
+  evolutionSentence: string;
+  unit: string; // TOOD union de type sur les valeurs possibles
 };

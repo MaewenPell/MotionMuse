@@ -1,54 +1,30 @@
 <div class="container">
     <div class="cardResume">
-        <h4 class="cardResume__title">
-            {{ cardValues.title }}
-        </h4>
-        <h4 class="cardResume__cardValue">
-            {{ cardValues.value }}
-        </h4>
-        <div class="cardResume__cardIcon">
-            @switch (cardValues.type) {
-                @case ('resume') {
-                    <ng-container *ngTemplateOutlet="iconTemplate; context: {icon: 'shoes', color: cardValues.color }" />
-                }
-            @case ('evolution') {
-                    <ng-container *ngTemplateOutlet="iconTemplate; context: {icon: 'graphUp', color: cardValues.color }" />
-                }
-            }
+        <div class="cardResume__info">
+            <h4 class="title">{{ cardValues.title }}</h4>
+            <h4 class="value">
+                {{ cardValues.value }}
+            </h4>
         </div>
+        <app-icon class="cardResume__icon"
+                  [icon]="typeIcon"
+                  [backgroundColor]="cardValues.color" />
     </div>
+
     <div class="cardEvolution">
         <div class="cardEvolution__arrow">
-            @switch (cardValues.arrowType) {
-                @case ("up") {
-                    <!-- <img src="assets/images/icons/arrowUp.svg"
-                         alt="">
-                 -->
-                }
-                @case ("down") {
-                    <!-- <img src="assets/images/icons/arrowDown.svg"
-                         alt="">
-                 -->
-                }
-            }
+            <app-icon [icon]="evolutionIcon"
+                      [widthInPx]="16"
+                      [heightInPx]="16"
+                      [color]="cardIconColor"
+                      [backgroundVisible]="false" />
         </div>
         <div class="cardEvolution__value">
-            {{ cardValues.evolutionValue }} Km
+            <span class="value">{{ cardValues.evolutionValue }}</span>
+            <span class="unit">{{ cardValues.unit }}</span>
         </div>
         <div class="cardEvolution__sentence">
-            {{ cardValues.evolutionSentece }}
+            {{ cardValues.evolutionSentence }}
         </div>
     </div>
 </div>
-
-<ng-template #iconTemplate
-             let-icon
-             let-color>
-    <div class="roundBackground"
-         [ngClass]="'roundBackground roundBackground--{{color}}'">
-        <div class="roundBackground__icon">
-            <img src="{{ icon }}"
-                 alt="">
-        </div>
-    </div>
-</ng-template>

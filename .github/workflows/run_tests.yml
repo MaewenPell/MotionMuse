@@ -1,0 +1,19 @@
+name: Run unit tests
+
+on:
+    push:
+        branches:
+            - **
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+            - name: Use NodeJs
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
+                cache: 'npm'
+            - run: npm run ci
+            - run: npm run test-headless

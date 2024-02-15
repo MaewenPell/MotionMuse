@@ -1,22 +1,19 @@
 <div class="mainContent">
-	<app-menu class="mainContent__menu" />
-	<div class="mainContent__hero">
-		<p-toast />
-		<app-search-bar class="mainContent__search"
-						[pageTitle]="'Dashboard'" />
-		@if (!isConnected) {
-		<div class="mainContent__connection">
-			<app-connection />
-		</div>
-		}
-	</div>
-	@if (isConnected) {
-	<div class="dashboardContainer">
-		@for (card of cardValues; track $index;) {
-		<app-card [cardValues]="card" />
-		}
-	</div>
-	<p-button [label]="'Get week activity'"
-			  (onClick)="this.getStravaActivities()" />
-	}
+  <app-menu class="mainContent__menu" />
+  <div class="mainContent__hero">
+    <p-toast />
+    <app-search-bar
+      class="mainContent__search"
+      [pageTitle]="'Dashboard'" />
+    @if (!this.connectionService.$isConnected()) {
+      <div class="mainContent__connection">
+        <app-connection />
+      </div>
+    }
+  </div>
+  @if (this.connectionService.$isConnected()) {
+    <div class="dashboardContainer">
+      <app-cards [cardTypes$]="[cardTypesEnums.WeeklyDistance]" />
+    </div>
+  }
 </div>

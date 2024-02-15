@@ -1,70 +1,74 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { PrimeIcons } from 'primeng/api';
+import { Component, effect, inject, input } from '@angular/core';
+import { DateTime } from 'luxon';
+import { SkeletonModule } from 'primeng/skeleton';
 import { CardDataType } from 'src/app/types/card-data.type';
+import { CardTypesEnum } from 'src/app/types/enums/cardTypes.enum';
 import { APP_COLORS } from 'src/styles/_colorVariables';
+import { ConvertUnitPipe } from '../../pipes/convert-unit.pipe';
+import { ToIconPipe } from '../../pipes/to-icon.pipe';
+import { DataComputationsService } from '../../services/data-computations.service';
+import { StravaService } from '../../services/strava.service';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
-  selector: 'app-card',
+  selector: 'app-cards',
   standalone: true,
-  imports: [CommonModule, IconComponent],
+  imports: [
+    CommonModule,
+    IconComponent,
+    ConvertUnitPipe,
+    ToIconPipe,
+    SkeletonModule,
+  ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',
 })
-export class CardComponent implements OnChanges {
-  @Input({ required: true }) cardValues!: CardDataType;
+export class CardComponent {
+  public cardTypes$ = input.required<CardTypesEnum[]>();
 
-  public evolutionIcon!: PrimeIcons;
-  public typeIcon!: PrimeIcons;
-  public cardIconColor!: string;
+  public stravaService = inject(StravaService);
+  public dataComputationsService = inject(DataComputationsService);
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['cardValues']) {
-      this.cardValues = changes['cardValues'].currentValue;
+  public weeklyDistanceCard!: CardDataType;
+  public appColors = APP_COLORS;
 
-      switch (this.cardValues.evolutionType) {
-        case 'up':
-          this.evolutionIcon = PrimeIcons.ARROW_UP;
-          this.cardIconColor = APP_COLORS.GREEN;
-          break;
-        case 'down':
-          this.evolutionIcon = PrimeIcons.ARROW_DOWN;
-          this.cardIconColor = APP_COLORS.LIGHT_RED;
-          break;
-        case 'equal':
-          this.evolutionIcon = PrimeIcons.ARROW_RIGHT;
-          this.cardIconColor = APP_COLORS.DARK;
-          break;
+  private computeCards = effect(() => {
+    this.cardTypes$().forEach(type => {
+      switch (type) {
+        case CardTypesEnum.WeeklyDistance:
+          this.weeklyDistanceCard = this.createWeeklyDistanceCard();
       }
-
-      switch (this.cardValues.type) {
-        case 'resume':
-          this.typeIcon = PrimeIcons.CHART_BAR;
-          break;
-        case 'evolution':
-          this.typeIcon = PrimeIcons.CHART_LINE;
-          break;
-      }
-
-      // this.cardIconColor = this.getRandomAppColor();
-    }
-  }
-
-  getRandomAppColor(): string {
-    const baseColors: Array<string> = [
-      'WHITE',
-      'WHITE_60',
-      'LIGHT_GRAY',
-      'DARK',
-    ];
-    const colorsKeys = Object.keys(APP_COLORS).filter(key => {
-      return !baseColors.includes(key);
     });
+  });
 
-    const randomIndex = Math.floor(
-      Math.random() * colorsKeys.length - baseColors.length
+  private createWeeklyDistanceCard(): CardDataType {
+    const weeklyDistance = this.dataComputationsService.getTotaRunningDistance(
+      this.stravaService.activities$(),
+      'currentWeek',
+      ['Run', 'TrailRun']
     );
-    return colorsKeys[randomIndex];
+
+    const lastWeekDistance =
+      this.dataComputationsService.getTotaRunningDistance(
+        this.stravaService.activities$(),
+        'custom',
+        ['Run', 'TrailRun'],
+        DateTime.now().startOf('week').minus({ week: 1 }),
+        DateTime.now().endOf('week').minus({ week: 1 })
+      );
+
+    const evolutionSinceLastWeek = weeklyDistance - lastWeekDistance;
+
+    return {
+      title: 'Weekly distance',
+      value: weeklyDistance,
+      unit: 'km',
+      evolutionType: evolutionSinceLastWeek > 0 ? 'up' : 'down',
+      type: 'evolution',
+      color: APP_COLORS.LIGHT_BLUE,
+      evolutionSentence: 'vs last week',
+      evolutionValue: evolutionSinceLastWeek,
+    };
   }
 }

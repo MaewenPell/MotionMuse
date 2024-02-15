@@ -17,7 +17,7 @@ export class StravaInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     if (req.url.startsWith('https://www.strava.com/api/v3/')) {
-      const token = this.connectionService.getTokenFromConnectionBase();
+      const token = this.connectionService.$stravaToken();
 
       const stravaReq = req.clone({
         headers: req.headers.set('Authorization', `Bearer ${token}`),

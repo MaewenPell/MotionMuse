@@ -32,8 +32,8 @@ export type SummaryActivity = {
   visibility: string; // The visibility of the activity
   type: ActivityType; // Deprecated. Prefer to use sport_type
   sport_type: ActivityType; // An instance of SportType
-  start_date: Date; // The time at which the activity was started
-  start_date_local: Date; // The time at which the activity was started in the local timezone
+  start_date: string; // The time at which the activity was started
+  start_date_local: string; // The time at which the activity was started in the local timezone
   timezone: string; // The timezone of the activity
   start_latlng: LatLng; // An instance of LatLng
   end_latlng: LatLng; // An instance of LatLng

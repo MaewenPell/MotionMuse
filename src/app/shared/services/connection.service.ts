@@ -1,10 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { env } from 'env';
-import { Subject } from 'rxjs';
+import { take } from 'rxjs';
 import { ConnectionBase } from 'src/app/types/access-token';
 import { Errors } from 'src/app/types/enums/errors.enums';
 import { StravaAPIUtils } from 'src/app/types/strava-api-token';
+import { DataComputationsService } from './data-computations.service';
 import { StorageService } from './local-storage.service';
 import { UtilsService } from './utils.service';
 
@@ -15,6 +16,10 @@ export class ConnectionService {
   private http = inject(HttpClient);
   private utilsService = inject(UtilsService);
   private storageService = inject(StorageService);
+  private dataComputationService = inject(DataComputationsService);
+
+  public $isConnected = signal(false);
+  public $stravaToken: WritableSignal<string | undefined> = signal(undefined);
 
   private _clientId!: string;
   private _clientSecret!: string;
@@ -26,8 +31,6 @@ export class ConnectionService {
   get clientSecret() {
     return env.client_secret;
   }
-
-  public isConnected$ = new Subject<boolean>();
 
   authorizeApp() {
     const stravaUrl = 'https://www.strava.com/oauth/authorize';
@@ -45,7 +48,7 @@ export class ConnectionService {
   public manageConnectionTokens() {
     const connectionBase = this.storageService.get('connectionBase');
 
-    switch (connectionBase) {
+    switch (connectionBase.errors) {
       case Errors.NO_CONNECTION_BASE:
         console.log('NO_CONNECTION_BASE');
         this.authorizeApp();
@@ -54,10 +57,11 @@ export class ConnectionService {
         console.log('TOKEN EXPIRED');
         this.getTokenFromRefreshToken();
         break;
-      case connectionBase as ConnectionBase:
+      default:
         console.log('OK retirieving connection base from local storage');
-        this.isConnected$.next(true);
-        break;
+        this.$stravaToken.set(connectionBase.connectionbase?.access_token);
+        this.$isConnected.set(true);
+        this.dataComputationService.shouldInitDashboardActivities();
     }
   }
 
@@ -70,27 +74,25 @@ export class ConnectionService {
 
     this.http
       .post<ConnectionBase>(StravaAPIUtils.TOKEN_URL, null, { params: params })
+      .pipe(take(1))
       .subscribe((connectionBase: ConnectionBase) => {
         this.storageService.set(
           'connectionBase',
           JSON.stringify(connectionBase)
         );
-        this.isConnected$.next(true);
       });
   }
 
-  public getTokenFromConnectionBase(): string | null {
+  public getTokenFromConnectionBase(): string | undefined {
     this.manageConnectionTokens();
 
-    const connectionBase = this.storageService.get('connectionBase');
-    if (connectionBase) {
-      return (connectionBase as ConnectionBase).access_token;
-    }
-    return null;
+    return this.storageService.get('connectionBase').connectionbase
+      ?.access_token;
   }
 
   public getTokenFromRefreshToken() {
-    const currentConnectionBase = this.storageService.get('connectionBase');
+    const currentConnectionBase =
+      this.storageService.get('connectionBase').connectionbase;
     const currentRefreshToken = (currentConnectionBase as ConnectionBase)
       .refresh_token;
     const params = new HttpParams()
@@ -115,8 +117,6 @@ export class ConnectionService {
         );
 
         console.log('Token refreshed');
-
-        this.isConnected$.next(true);
       });
   }
 }

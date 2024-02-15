@@ -13,10 +13,13 @@ export class StorageService {
     localStorage.setItem(key, value);
   }
 
-  public get(key: string): ConnectionBase | Errors {
+  public get(key: string): {
+    connectionbase: ConnectionBase | null;
+    errors: Errors | null;
+  } {
     const connectionBaseStorage = localStorage.getItem(key);
     if (!connectionBaseStorage) {
-      return Errors.NO_CONNECTION_BASE;
+      return { connectionbase: null, errors: Errors.NO_CONNECTION_BASE };
     } else {
       const connectionBase: ConnectionBase = JSON.parse(connectionBaseStorage);
       const isTokenViable = this.utilsService.isTokenStillAvailable(
@@ -24,9 +27,9 @@ export class StorageService {
       );
 
       if (isTokenViable) {
-        return connectionBase;
+        return { connectionbase: connectionBase, errors: null };
       } else {
-        return Errors.TOKEN_EXPIRED;
+        return { connectionbase: connectionBase, errors: Errors.TOKEN_EXPIRED };
       }
     }
   }

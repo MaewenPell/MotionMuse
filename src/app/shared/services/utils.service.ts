@@ -5,25 +5,23 @@ import { DateTime } from 'luxon';
   providedIn: 'root',
 })
 export class UtilsService {
-  snakeCaseToCamelCase(str: string): string {
-    return str.replace(/([-_][a-z])/g, group =>
-      group.toUpperCase().replace('-', '').replace('_', '')
-    );
-  }
-
-  camelCaseToSnakeCase(str: string): string {
-    return str
-      .replace(/([A-Z])/g, group => `_${group.toLowerCase()}`)
-      .replace(/^_/, '');
-  }
-
-  isTokenStillAvailable(expirationDateInSec: number): boolean {
+  isTokenStillAvailable(expirationDateInSecFromEpoch: number): boolean {
     const now = DateTime.now();
-    const expirationDatetime = DateTime.fromSeconds(expirationDateInSec);
+    const expirationDatetime = DateTime.fromSeconds(
+      expirationDateInSecFromEpoch
+    );
 
-    const oneHoursInMs = DateTime.fromObject({ hour: 1 }).toMillis();
+    const expirationDatetimeObject = expirationDatetime
+      .diff(now)
+      .shiftTo('hours', 'minutes')
+      .toObject();
 
-    // if the difference between now and expirationDatetime is less than 1h return false
-    return expirationDatetime.diff(now).toMillis() < oneHoursInMs;
+    if (
+      expirationDatetimeObject.hours !== undefined &&
+      expirationDatetimeObject.hours < 1
+    ) {
+      return false;
+    }
+    return true;
   }
 }

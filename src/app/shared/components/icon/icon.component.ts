@@ -11,7 +11,7 @@ import { APP_COLORS } from 'src/styles/_colorVariables';
   styleUrl: './icon.component.scss',
 })
 export class IconComponent {
-  @Input({ required: true }) icon!: PrimeIcons;
+  @Input({ required: true }) icon!: PrimeIcons | string;
   @Input() backgroundColor!: APP_COLORS;
   @Input() color: string = APP_COLORS.WHITE;
   @Input() backgroundVisible: boolean = true;

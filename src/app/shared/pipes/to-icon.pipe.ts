@@ -6,7 +6,7 @@ import { Icons } from 'src/app/types/icons';
   name: 'toIcon',
   standalone: true,
 })
-export class ToIconPipe implements PipeTransform {
+export class toIconPipe implements PipeTransform {
   transform(value: Icons): PrimeIcons {
     switch (value) {
       case 'resume':
@@ -19,6 +19,8 @@ export class ToIconPipe implements PipeTransform {
         return PrimeIcons.ARROW_DOWN;
       case 'equal':
         return PrimeIcons.ARROW_RIGHT;
+      default:
+        return PrimeIcons.CHECK;
     }
   }
 }

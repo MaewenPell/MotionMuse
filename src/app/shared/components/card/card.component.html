@@ -14,25 +14,31 @@
           </div>
           <app-icon
             class="cardResume__icon"
-            [icon]="'equal' | toIcon"
+            [icon]="card.icon | toIcon"
             [backgroundColor]="appColors.LIGHT_BLUE" />
         </div>
 
         <div class="cardEvolution">
           <div class="cardEvolution__arrow">
             <app-icon
-              [icon]="card.evolutionValueKm > 0 ? 'up' : ('down' | toIcon)"
+              [icon]="card.evolutionValue > 0 ? 'up' : ('down' | toIcon)"
               [widthInPx]="16"
               [heightInPx]="16"
-              [color]="card.evolutionValueKm > 0 ? appColors.GREEN : appColors.LIGHT_RED"
+              [color]="card.evolutionValue > 0 ? appColors.GREEN : appColors.LIGHT_RED"
               [backgroundVisible]="false" />
           </div>
-          <div class="cardEvolution__value">
+          <div
+            class="cardEvolution__value"
+            [ngClass]="
+              card.evolutionValue > 0
+                ? 'cardEvolution__value--positive'
+                : 'cardEvolution__value--negative'
+            ">
             <span class="value">
-              {{ card.evolutionValueKm | convertUnit: 'm' : 'km' | number: '1.0-0' }}
+              {{ card.evolutionValue | convertUnit: 'm' : card.evolutionUnit | number: '1.0-0' }}
             </span>
             <span class="unit">
-              {{ 'km' }}
+              {{ card.evolutionUnit }}
             </span>
           </div>
           <div class="cardEvolution__sentence">

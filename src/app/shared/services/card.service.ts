@@ -28,8 +28,8 @@ export class CardService {
         'custom',
         ['distance', 'elev_high'],
         ['Run', 'TrailRun'],
-        DateTime.now().startOf('week'),
-        DateTime.now().endOf('week')
+        DateTime.now().startOf('week').minus({ weeks: 1 }),
+        DateTime.now().endOf('week').minus({ weeks: 1 })
       );
 
       return {

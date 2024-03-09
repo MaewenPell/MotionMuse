@@ -10,7 +10,7 @@ import {
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 import { APP_COLORS } from 'src/styles/_colorVariables';
 import { ConvertUnitPipe } from '../../pipes/convert-unit.pipe';
-import { ToIconPipe } from '../../pipes/to-icon.pipe';
+import { toIconPipe } from '../../pipes/to-icon.pipe';
 import { CardService } from '../../services/card.service';
 import { DataComputationsService } from '../../services/data-computations.service';
 import { StravaService } from '../../services/strava.service';
@@ -23,7 +23,7 @@ import { IconComponent } from '../icon/icon.component';
     CommonModule,
     IconComponent,
     ConvertUnitPipe,
-    ToIconPipe,
+    toIconPipe,
     SkeletonModule,
   ],
   templateUrl: './card.component.html',
@@ -35,6 +35,7 @@ export class CardComponent {
   public cardService = inject(CardService);
   public stravaService = inject(StravaService);
   public dataComputationsService = inject(DataComputationsService);
+
   public appColors = APP_COLORS;
   public cards: CardDataInformations[] = [];
 
@@ -67,10 +68,12 @@ export class CardComponent {
   ): CardDataInformations {
     return {
       title: 'Weekly distance',
+      icon: 'running',
       mainValue: currentWeek.totalDistance,
       mainValueUnit: 'km',
-      evolutionValueKm: currentWeek.totalDistance - lastWeek.totalDistance,
-      evolutionSentence: 'from last week',
+      evolutionValue: currentWeek.totalDistance - lastWeek.totalDistance,
+      evolutionUnit: 'km',
+      evolutionSentence: 'since last week',
     };
   }
 
@@ -80,10 +83,12 @@ export class CardComponent {
   ): CardDataInformations {
     return {
       title: 'Weekly elevation',
+      icon: 'mountains',
       mainValue: currentWeek.totalElevation,
       mainValueUnit: 'm',
-      evolutionValueKm: currentWeek.totalElevation - lastWeek.totalElevation,
-      evolutionSentence: 'from last week',
+      evolutionValue: currentWeek.totalElevation - lastWeek.totalElevation,
+      evolutionUnit: 'm',
+      evolutionSentence: 'since last week',
     };
   }
 }

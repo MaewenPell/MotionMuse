@@ -1,28 +1,25 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
+import { WeeklyInformations } from 'src/app/types/strava-extracted-informations.type';
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
-import { StravaService } from './strava.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataComputationsService {
-  private stravaService = inject(StravaService);
-
-  public shouldInitDashboardActivities() {
-    // By default now we get 2 weeks of data so we can comprate the evolution
-    const after = DateTime.now().startOf('week').minus({ week: 1 });
-    const before = DateTime.now().endOf('week');
-    this.stravaService.getActivities(before, after);
-  }
-
-  public getTotaRunningDistance(
+  public extractStravaInformation(
     activities: SummaryActivity[] | Partial<SummaryActivity>[],
     from: 'currentWeek' | 'currentMonth' | 'custom',
-    inludedActivities: SummaryActivity['type'][],
+    informationType: Array<keyof SummaryActivity>,
+    includedActivities: SummaryActivity['type'][],
     startedAfter?: DateTime,
     before?: DateTime
-  ): number {
+  ): WeeklyInformations {
+    const extractedData = {
+      totalDistance: 0,
+      totalElevation: 0,
+    };
+
     switch (from) {
       case 'currentWeek':
         startedAfter = DateTime.local().startOf('week');
@@ -46,8 +43,32 @@ export class DataComputationsService {
       return false;
     });
 
-    const totalDistance = activitiesInRange.reduce((distance, activity) => {
-      if (activity.type && inludedActivities.includes(activity.type)) {
+    informationType.forEach((type: keyof SummaryActivity) => {
+      switch (type) {
+        case 'distance':
+          extractedData.totalDistance = this.extractDistance(
+            activitiesInRange,
+            includedActivities
+          );
+          break;
+        case 'elev_high':
+          extractedData.totalElevation = this.extractElevation(
+            activitiesInRange,
+            includedActivities
+          );
+          break;
+      }
+    });
+
+    return extractedData;
+  }
+
+  private extractDistance(
+    activities: Partial<SummaryActivity>[],
+    includedActivities: SummaryActivity['type'][]
+  ) {
+    const totalDistance = activities.reduce((distance, activity) => {
+      if (activity.type && includedActivities.includes(activity.type)) {
         if (activity.distance) {
           return distance + activity.distance;
         } else {
@@ -58,5 +79,23 @@ export class DataComputationsService {
     }, 0);
 
     return totalDistance;
+  }
+
+  private extractElevation(
+    activities: Partial<SummaryActivity>[],
+    includedActivities: SummaryActivity['type'][]
+  ) {
+    const totalElevation = activities.reduce((elevation, activity) => {
+      if (activity.type && includedActivities.includes(activity.type)) {
+        if (activity.elev_high) {
+          return elevation + activity.elev_high;
+        } else {
+          throw new Error('The activity must have a distance');
+        }
+      }
+      return elevation;
+    }, 0);
+
+    return totalElevation;
   }
 }

@@ -13,7 +13,9 @@
   </div>
   @if (this.connectionService.$isConnected()) {
     <div class="dashboardContainer">
-      <app-cards [cardTypes$]="[cardTypesEnums.WeeklyDistance]" />
+      <app-cards
+        class="dashboardContainer__cards"
+        [activities$]="rawActivities" />
     </div>
   }
 </div>

@@ -1,12 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input } from '@angular/core';
-import { DateTime } from 'luxon';
+import { Component, inject, input } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { SkeletonModule } from 'primeng/skeleton';
-import { CardDataType } from 'src/app/types/card-data.type';
-import { CardTypesEnum } from 'src/app/types/enums/cardTypes.enum';
+import { CardDataInformations } from 'src/app/types/data-card.type';
+import {
+  StravaExtractedInformations,
+  WeeklyInformations,
+} from 'src/app/types/strava-extracted-informations.type';
+import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 import { APP_COLORS } from 'src/styles/_colorVariables';
 import { ConvertUnitPipe } from '../../pipes/convert-unit.pipe';
 import { ToIconPipe } from '../../pipes/to-icon.pipe';
+import { CardService } from '../../services/card.service';
 import { DataComputationsService } from '../../services/data-computations.service';
 import { StravaService } from '../../services/strava.service';
 import { IconComponent } from '../icon/icon.component';
@@ -25,50 +30,60 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './card.component.scss',
 })
 export class CardComponent {
-  public cardTypes$ = input.required<CardTypesEnum[]>();
+  public activities$ = input.required<SummaryActivity[]>();
 
+  public cardService = inject(CardService);
   public stravaService = inject(StravaService);
   public dataComputationsService = inject(DataComputationsService);
-
-  public weeklyDistanceCard!: CardDataType;
   public appColors = APP_COLORS;
+  public cards: CardDataInformations[] = [];
 
-  private computeCards = effect(() => {
-    this.cardTypes$().forEach(type => {
-      switch (type) {
-        case CardTypesEnum.WeeklyDistance:
-          this.weeklyDistanceCard = this.createWeeklyDistanceCard();
-      }
-    });
-  });
+  private weeklyInformations!: StravaExtractedInformations;
+  private weeklyDistanceCard!: CardDataInformations;
+  private weeklyElevationGainCard!: CardDataInformations;
 
-  private createWeeklyDistanceCard(): CardDataType {
-    const weeklyDistance = this.dataComputationsService.getTotaRunningDistance(
-      this.stravaService.activities$(),
-      'currentWeek',
-      ['Run', 'TrailRun']
-    );
+  private react = toObservable(this.activities$).subscribe(rawActivities => {
+    if (rawActivities && rawActivities.length > 0) {
+      this.weeklyInformations =
+        this.cardService.computeWeeklyInformations(rawActivities);
 
-    const lastWeekDistance =
-      this.dataComputationsService.getTotaRunningDistance(
-        this.stravaService.activities$(),
-        'custom',
-        ['Run', 'TrailRun'],
-        DateTime.now().startOf('week').minus({ week: 1 }),
-        DateTime.now().endOf('week').minus({ week: 1 })
+      this.weeklyDistanceCard = this.createWeeklyDistanceCard(
+        this.weeklyInformations.currentWeek,
+        this.weeklyInformations.lastWeek
       );
 
-    const evolutionSinceLastWeek = weeklyDistance - lastWeekDistance;
+      this.weeklyElevationGainCard = this.createWeeklyElevationCard(
+        this.weeklyInformations.currentWeek,
+        this.weeklyInformations.lastWeek
+      );
 
+      this.cards.push(this.weeklyDistanceCard, this.weeklyElevationGainCard);
+    }
+  });
+
+  private createWeeklyDistanceCard(
+    currentWeek: WeeklyInformations,
+    lastWeek: WeeklyInformations
+  ): CardDataInformations {
     return {
       title: 'Weekly distance',
-      value: weeklyDistance,
-      unit: 'km',
-      evolutionType: evolutionSinceLastWeek > 0 ? 'up' : 'down',
-      type: 'evolution',
-      color: APP_COLORS.LIGHT_BLUE,
-      evolutionSentence: 'vs last week',
-      evolutionValue: evolutionSinceLastWeek,
+      mainValue: currentWeek.totalDistance,
+      mainValueUnit: 'km',
+      evolutionValueKm: currentWeek.totalDistance - lastWeek.totalDistance,
+      evolutionSentence: 'from last week',
+    };
+  }
+
+  private createWeeklyElevationCard(
+    currentWeek: WeeklyInformations,
+    lastWeek: WeeklyInformations
+  ): CardDataInformations {
+    return {
+      title: 'Weekly elevation',
+      mainValue: currentWeek.totalElevation,
+      mainValueUnit: 'm',
+      evolutionValueKm: currentWeek.totalElevation - lastWeek.totalElevation,
+      evolutionSentence: 'from last week',
     };
   }
 }

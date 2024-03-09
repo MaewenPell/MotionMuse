@@ -61,7 +61,6 @@ export class ConnectionService {
         console.log('OK retirieving connection base from local storage');
         this.$stravaToken.set(connectionBase.connectionbase?.access_token);
         this.$isConnected.set(true);
-        this.dataComputationService.shouldInitDashboardActivities();
     }
   }
 

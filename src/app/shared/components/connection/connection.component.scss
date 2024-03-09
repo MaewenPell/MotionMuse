@@ -1,7 +1,13 @@
 @import 'variables';
 
 .connectionContainer {
-    width: 100%;
-    height: 100%;
-    background-color: $color-light-gray;
+  width: 100%;
+  height: 100%;
+  background-color: $color-light-gray;
+
+  .btn {
+    width: 193px;
+    height: 48px;
+    background-image: url('../../../../assets/images/btn_strava_connectwith_orange.png');
+  }
 }

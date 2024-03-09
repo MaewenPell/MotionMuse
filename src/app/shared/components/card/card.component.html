@@ -1,85 +1,63 @@
-<div class="container">
-  <div class="cardResume">
-    <div class="cardResume__info">
-      <h4 class="title">
-        @defer (when stravaService.isLoading$()) {
-          {{ weeklyDistanceCard.title }}
-        } @placeholder {
-          <p-skeleton borderRadius="16px" />
-        }
-      </h4>
-      <h4 class="value">
-        @defer (when stravaService.isLoading$()) {
-          {{
-            weeklyDistanceCard.value | convertUnit: 'm' : 'km' | number: '1.0-0'
-          }}
-        } @placeholder {
-          <p-skeleton borderRadius="16px" />
-        }
-      </h4>
-    </div>
-    @defer (when stravaService.isLoading$()) {
-      <app-icon
-        class="cardResume__icon"
-        [icon]="weeklyDistanceCard.type | toIcon"
-        [backgroundColor]="weeklyDistanceCard.color" />
-    } @placeholder {
-      <p-skeleton borderRadius="16px" />
-    }
-  </div>
+<div class="layout">
+  @if (activities$() && activities$().length > 0 && cards) {
+    @for (card of cards; track card.title) {
+      <div class="container">
+        <div class="cardResume">
+          <div class="cardResume__info">
+            <h4 class="title">
+              {{ card.title }}
+            </h4>
+            <h4 class="value">
+              {{ card.mainValue | convertUnit: 'm' : card.mainValueUnit | number: '1.0-0' }}
+              {{ card.mainValueUnit }}
+            </h4>
+          </div>
+          <app-icon
+            class="cardResume__icon"
+            [icon]="'equal' | toIcon"
+            [backgroundColor]="appColors.LIGHT_BLUE" />
+        </div>
 
-  <div class="cardEvolution">
-    <h1>
-      @defer (when stravaService.isLoading$()) {
-        {{
-          weeklyDistanceCard.value | convertUnit: 'm' : 'km' | number: '1.0-0'
-        }}
-      } @placeholder {
-        <p-skeleton borderRadius="16px" />
-      }
-    </h1>
-    <div class="cardEvolution__arrow">
-      @defer (when stravaService.isLoading$()) {
-        <app-icon
-          [icon]="weeklyDistanceCard.evolutionType | toIcon"
-          [widthInPx]="16"
-          [heightInPx]="16"
-          [color]="
-            weeklyDistanceCard.evolutionValue > 0
-              ? appColors.GREEN
-              : appColors.LIGHT_RED
-          "
-          [backgroundVisible]="false" />
-      } @placeholder {
-        <p-skeleton borderRadius="16px" />
-      }
+        <div class="cardEvolution">
+          <div class="cardEvolution__arrow">
+            <app-icon
+              [icon]="card.evolutionValueKm > 0 ? 'up' : ('down' | toIcon)"
+              [widthInPx]="16"
+              [heightInPx]="16"
+              [color]="card.evolutionValueKm > 0 ? appColors.GREEN : appColors.LIGHT_RED"
+              [backgroundVisible]="false" />
+          </div>
+          <div class="cardEvolution__value">
+            <span class="value">
+              {{ card.evolutionValueKm | convertUnit: 'm' : 'km' | number: '1.0-0' }}
+            </span>
+            <span class="unit">
+              {{ 'km' }}
+            </span>
+          </div>
+          <div class="cardEvolution__sentence">
+            {{ card.evolutionSentence }}
+          </div>
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="container__skeletons">
+      <div class="row">
+        <p-skeleton
+          width="9rem"
+          borderRadius="16px" />
+        <p-skeleton
+          class="row__skeleton"
+          shape="circle"
+          size="3rem" />
+      </div>
+      <p-skeleton
+        height="0.5rem"
+        borderRadius="10px" />
+      <p-skeleton
+        height="0.5rem"
+        borderRadius="10px" />
     </div>
-    <div class="cardEvolution__value">
-      <span class="value">
-        @defer (when stravaService.isLoading$()) {
-          {{
-            weeklyDistanceCard.evolutionValue
-              | convertUnit: 'm' : 'km'
-              | number: '1.0-0'
-          }}
-        } @placeholder {
-          <p-skeleton borderRadius="16px" />
-        }
-      </span>
-      <span class="unit">
-        @defer (when stravaService.isLoading$()) {
-          {{ weeklyDistanceCard.unit }}
-        } @placeholder {
-          <p-skeleton borderRadius="16px" />
-        }
-      </span>
-    </div>
-    <div class="cardEvolution__sentence">
-      @defer (when stravaService.isLoading$()) {
-        {{ weeklyDistanceCard.evolutionSentence }}
-      } @placeholder {
-        <p-skeleton borderRadius="16px" />
-      }
-    </div>
-  </div>
+  }
 </div>

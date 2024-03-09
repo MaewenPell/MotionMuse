@@ -1,23 +1,20 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  effect,
-  inject,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { DateTime } from 'luxon';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { Subscription } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { CardComponent } from 'src/app/shared/components/card/card.component';
 import { ConnectionComponent } from 'src/app/shared/components/connection/connection.component';
+import { CardService } from 'src/app/shared/services/card.service';
 import { ConnectionService } from 'src/app/shared/services/connection.service';
 import { DataComputationsService } from 'src/app/shared/services/data-computations.service';
 import { StravaService } from 'src/app/shared/services/strava.service';
 import { CardTypesEnum } from 'src/app/types/enums/cardTypes.enum';
+import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 import { MenuComponent } from '../../shared/components/menu/menu.component';
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 
@@ -42,18 +39,37 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   private activatedRoute = inject(ActivatedRoute);
   private messageService = inject(MessageService);
-  private cd = inject(ChangeDetectorRef);
+
   public connectionService = inject(ConnectionService);
   public dataComputationsService = inject(DataComputationsService);
   public stravaService = inject(StravaService);
+  public cardService = inject(CardService);
 
   public cardTypesEnums = CardTypesEnum;
 
-  protected weekActivities!: Subscription;
+  public rawActivities: SummaryActivity[] = [];
 
-  private computeToasterEffect = effect(() => {
-    this.displayToaster(this.connectionService.$isConnected());
-  });
+  private _ = toObservable(this.connectionService.$isConnected)
+    .pipe(
+      tap({
+        error: () => this.displayToaster(false),
+        complete: () => this.getActivites(),
+      })
+    )
+    .subscribe(() => {
+      this.displayToaster(true);
+      this.getActivites();
+    });
+
+  private getActivites() {
+    // By default now we get 2 weeks of data so we can compare the evolution
+    const after = DateTime.now().startOf('week').minus({ week: 1 });
+    const before = DateTime.now().endOf('week');
+
+    this.stravaService.getActivities(before, after).subscribe(activities => {
+      this.rawActivities = activities;
+    });
+  }
 
   ngOnInit() {
     // Subscribe to url changes

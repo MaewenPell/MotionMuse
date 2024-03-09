@@ -7,15 +7,18 @@ import { UnitSource } from 'src/app/types/unit-source';
 })
 export class ConvertUnitPipe implements PipeTransform {
   transform(
-    value: number,
+    value: number | undefined,
     unitSource: UnitSource,
     unitDest: UnitSource
   ): number {
-    switch (unitSource) {
-      case 'm':
-        return unitDest === 'km' ? value / 1000 : value;
-      case 'km':
-        return unitDest === 'm' ? value * 1000 : value;
+    if (value) {
+      switch (unitSource) {
+        case 'm':
+          return unitDest === 'km' ? value / 1000 : value;
+        case 'km':
+          return unitDest === 'm' ? value * 1000 : value;
+      }
     }
+    return 0;
   }
 }

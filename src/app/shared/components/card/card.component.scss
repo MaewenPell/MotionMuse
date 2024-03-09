@@ -1,5 +1,16 @@
 @import 'variables';
 
+.layout {
+  display: grid;
+  z-index: 1;
+  width: 100%;
+  height: calc(100vh - 120px);
+  margin: 100px 20px 16px calc($menu-width + 40px);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 1fr 2fr;
+  gap: 40px;
+}
+
 .container {
   display: flex;
   justify-content: space-between;
@@ -14,7 +25,7 @@
   .cardResume {
     display: flex;
     justify-content: space-between;
-  
+
     &__info {
       width: 100%;
       display: flex;
@@ -44,7 +55,11 @@
 
     &__value {
       margin-left: 5px;
-      
+
+      .value {
+        font-size: 14px;
+      }
+
       .unit {
         font-size: 12px;
         margin-left: 2px;
@@ -57,6 +72,26 @@
       font-weight: 300;
       font-size: 12px;
       text-transform: capitalize;
+    }
+  }
+
+  &__skeletons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+
+    .row {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      margin-bottom: 5px;
+      gap: 15px;
+
+      &__skeleton {
+        display: flex;
+        width: 50%;
+      }
     }
   }
 }

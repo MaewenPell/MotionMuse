@@ -7,15 +7,21 @@
             <h4 class="title">
               {{ card.title }}
             </h4>
-            @if (card.mainValueUnit === 'm' || card.mainValueUnit === 'km') {
-              <h4 class="value">
-                {{ card.mainValue | convertUnit: 'm' : card.mainValueUnit | number: '1.0-0' }}
-              </h4>
-            } @else {
-              <h4 class="value">
-                {{ card.mainValue | toDashboardTime }}
-              </h4>
-            }
+
+            <div class="cardResume__infoContainer">
+              @if (card.mainValueUnit === 'm' || card.mainValueUnit === 'km') {
+                <h4 class="value">
+                  {{ card.mainValue | convertUnit: 'm' : card.mainValueUnit | number: '1.0-0' }}
+                </h4>
+              } @else {
+                <h4 class="value">
+                  {{ card.mainValue | toDashboardTime }}
+                </h4>
+              }
+              <span class="unit">
+                {{ card.evolutionUnit }}
+              </span>
+            </div>
           </div>
           <app-icon
             class="cardResume__icon"

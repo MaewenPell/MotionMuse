@@ -31,6 +31,12 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
+
+      &Container {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
     }
 
     .title {

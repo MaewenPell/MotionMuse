@@ -15,7 +15,7 @@ export class ToDashboardTimePipe implements PipeTransform {
     const duration = Duration.fromObject({ second: value });
 
     if (value < 60 * 60) {
-      return '< 1H';
+      return '< 1';
     } else {
       return isNegative ? '-' + duration.toFormat('h') : duration.toFormat('h');
     }

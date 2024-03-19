@@ -1,30 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { Component } from '@angular/core';
 import { MenuModule } from 'primeng/menu';
+import { APP_COLORS } from 'src/styles/_colorVariables';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, MenuModule],
+  imports: [CommonModule, MenuModule, IconComponent],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
 })
-export class MenuComponent implements OnInit {
-  public menuItems: MenuItem[] = [];
+export class MenuComponent {
+  public appColors = APP_COLORS;
 
-  ngOnInit(): void {
-    this.menuItems = [
-      {
-        label: 'Dashboard',
-        icon: 'pi pi-chart-bar',
-        routerLink: ['/dashboard'],
-      },
-      {
-        label: 'Trainings',
-        icon: 'pi pi-wrench',
-        routerLink: ['/trainings'],
-      },
-    ];
-  }
+  public dashboardActive: boolean = false;
 }

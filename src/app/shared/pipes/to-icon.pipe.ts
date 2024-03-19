@@ -7,7 +7,7 @@ import { Icons } from 'src/app/types/icons';
   standalone: true,
 })
 export class toIconPipe implements PipeTransform {
-  transform(value: Icons): PrimeIcons {
+  transform(value: Icons): PrimeIcons | string {
     switch (value) {
       case 'resume':
         return PrimeIcons.CHECK;
@@ -19,8 +19,18 @@ export class toIconPipe implements PipeTransform {
         return PrimeIcons.ARROW_DOWN;
       case 'equal':
         return PrimeIcons.ARROW_RIGHT;
+      case 'calendar':
+        return PrimeIcons.CALENDAR;
+      case 'time':
+        return PrimeIcons.CLOCK;
+      case 'shoe':
+        return '../../../assets/icons/mountains.svg';
+      case 'running':
+        return '../../../assets/icons/running.svg';
+      case 'mountains':
+        return '../../../assets/icons/mountains.svg';
       default:
-        return PrimeIcons.CHECK;
+        return value;
     }
   }
 }

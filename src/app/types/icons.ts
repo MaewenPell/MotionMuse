@@ -1,3 +1,5 @@
+import { PrimeIcons } from 'primeng/api';
+
 export type Icons =
   | 'resume'
   | 'evolution'
@@ -5,9 +7,6 @@ export type Icons =
   | 'down'
   | 'equal'
   | 'shoe'
-  | 'arrow-down'
-  | 'chart'
-  | 'chart-1'
-  | 'right-arrow'
   | 'mountains'
-  | 'running';
+  | 'running'
+  | PrimeIcons;

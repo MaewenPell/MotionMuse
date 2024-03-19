@@ -17,6 +17,8 @@ export class ConvertUnitPipe implements PipeTransform {
           return unitDest === 'km' ? value / 1000 : value;
         case 'km':
           return unitDest === 'm' ? value * 1000 : value;
+        default:
+          return -1;
       }
     }
     return 0;

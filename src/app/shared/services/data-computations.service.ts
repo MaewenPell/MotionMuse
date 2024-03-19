@@ -18,6 +18,7 @@ export class DataComputationsService {
     const extractedData = {
       totalDistance: 0,
       totalElevation: 0,
+      totalTime: 0,
     };
 
     switch (from) {
@@ -57,10 +58,33 @@ export class DataComputationsService {
             includedActivities
           );
           break;
+        case 'moving_time':
+          extractedData.totalTime = this.extractTime(
+            activitiesInRange,
+            includedActivities
+          );
+          break;
       }
     });
 
     return extractedData;
+  }
+
+  private extractTime(
+    activities: Partial<SummaryActivity>[],
+    includedActivities: SummaryActivity['type'][]
+  ) {
+    const totalTime = activities.reduce((time, activity) => {
+      if (activity.type && includedActivities.includes(activity.type)) {
+        if (activity.moving_time) {
+          return time + activity.moving_time;
+        } else {
+          throw new Error('The activity must have a moving time');
+        }
+      }
+      return time;
+    }, 0);
+    return totalTime;
   }
 
   private extractDistance(
@@ -97,5 +121,13 @@ export class DataComputationsService {
     }, 0);
 
     return totalElevation;
+  }
+
+  public getLastActivity(activities: SummaryActivity[]) {
+    const lastActivity = activities.reduce((previous, current) => {
+      return previous.start_date > current.start_date ? previous : current;
+    });
+
+    return lastActivity;
   }
 }

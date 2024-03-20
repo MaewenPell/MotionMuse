@@ -24,11 +24,37 @@
 
     .logoText {
       font-weight: 700;
-      color: $color-main-violet;
     }
   }
 
-  &__nav {
+  .navigation {
+    display: flex;
+    gap: 10px;
     margin-top: 60px;
+
+    &__container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      &Nav {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        font-size: 15px;
+        height: 35px;
+        color: $color-black-40;
+
+        &:hover {
+          color: $color-black-60;
+          cursor: pointer;
+        }
+
+        .is-active {
+          color: $color-black;
+          font-weight: 600;
+        }
+      }
+    }
   }
 }

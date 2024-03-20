@@ -1,1 +1,1 @@
-export type UnitSource = 'm' | 'km';
+export type UnitSource = 'm' | 'km' | 'h' | 'min';

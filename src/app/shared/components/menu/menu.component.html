@@ -7,7 +7,37 @@
     <h3 class="logoText">Motion Muse</h3>
   </div>
 
-  <div class="container__nav">
-    <p-menu [model]="menuItems"></p-menu>
+  <div class="navigation">
+    <div class="navigation__container">
+      <div class="navigation__containerNav">
+        <app-icon
+          [icon]="'pi pi-chart-bar'"
+          [iconSizeInPx]="18"
+          [iconColor]="appColors.LIGHT_BLUE"
+          [isPrimeNgIcon]="true"
+          [backgroundVisible]="false" />
+        <a
+          class="navigation__containerNavLink"
+          [routerLink]="['/dashboard']"
+          routerLinkActive="is-active">
+          Dashboard
+        </a>
+      </div>
+
+      <div class="navigation__containerNav">
+        <app-icon
+          [icon]="'pi pi-wrench'"
+          [iconSizeInPx]="18"
+          [iconColor]="appColors.DARK"
+          [isPrimeNgIcon]="true"
+          [iconColor]="appColors.LIGHT_RED"
+          [backgroundVisible]="false" />
+        <a
+          [routerLink]="['/trainings']"
+          routerLinkActive="is-active">
+          Trainings
+        </a>
+      </div>
+    </div>
   </div>
 </div>

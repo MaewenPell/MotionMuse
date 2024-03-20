@@ -6,4 +6,5 @@ export type StravaExtractedInformations = {
 export type WeeklyInformations = {
   totalDistance: number;
   totalElevation: number;
+  totalTime: number;
 };

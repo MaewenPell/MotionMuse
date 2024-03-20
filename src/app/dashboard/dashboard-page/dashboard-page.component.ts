@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DateTime } from 'luxon';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -39,7 +39,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   private activatedRoute = inject(ActivatedRoute);
   private messageService = inject(MessageService);
-
+  private router = inject(Router);
   public connectionService = inject(ConnectionService);
   public dataComputationsService = inject(DataComputationsService);
   public stravaService = inject(StravaService);

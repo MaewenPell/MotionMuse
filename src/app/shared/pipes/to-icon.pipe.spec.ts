@@ -1,15 +1,15 @@
 import { PrimeIcons } from 'primeng/api';
-import { ToIconPipe } from './to-icon.pipe';
+import { toIconPipe } from './to-icon.pipe';
 
 describe('ToIconPipe', () => {
-  let pipe: ToIconPipe;
+  let pipe: toIconPipe;
 
   beforeEach(() => {
-    pipe = new ToIconPipe();
+    pipe = new toIconPipe();
   });
 
   it('create an instance', () => {
-    const pipe = new ToIconPipe();
+    const pipe = new toIconPipe();
     expect(pipe).toBeTruthy();
   });
 

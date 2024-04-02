@@ -1,26 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { DateTime } from 'luxon';
 import { WeeklyInformations } from 'src/app/types/strava-extracted-informations.type';
+import { ActivityType } from 'src/app/types/strava/enum/activity-type.enum';
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataComputationsService {
-  public extractStravaInformation(
+  private utilsService: UtilsService = inject(UtilsService);
+
+  public extractTotalInformations(
     activities: SummaryActivity[] | Partial<SummaryActivity>[],
     from: 'currentWeek' | 'currentMonth' | 'custom',
-    informationType: Array<keyof SummaryActivity>,
     includedActivities: SummaryActivity['type'][],
     startedAfter?: DateTime,
     before?: DateTime
   ): WeeklyInformations {
-    const extractedData = {
-      totalDistance: 0,
-      totalElevation: 0,
-      totalTime: 0,
-    };
-
     switch (from) {
       case 'currentWeek':
         startedAfter = DateTime.local().startOf('week');
@@ -44,88 +41,53 @@ export class DataComputationsService {
       return false;
     });
 
-    informationType.forEach((type: keyof SummaryActivity) => {
-      switch (type) {
-        case 'distance':
-          extractedData.totalDistance = this.extractDistance(
-            activitiesInRange,
-            includedActivities
-          );
-          break;
-        case 'elev_high':
-          extractedData.totalElevation = this.extractElevation(
-            activitiesInRange,
-            includedActivities
-          );
-          break;
-        case 'moving_time':
-          extractedData.totalTime = this.extractTime(
-            activitiesInRange,
-            includedActivities
-          );
-          break;
-      }
-    });
+    const extractedData = this.extractInformations(
+      activitiesInRange,
+      includedActivities
+    );
 
     return extractedData;
   }
 
-  private extractTime(
+  private extractInformations(
     activities: Partial<SummaryActivity>[],
-    includedActivities: SummaryActivity['type'][]
-  ) {
-    const totalTime = activities.reduce((time, activity) => {
-      if (activity.type && includedActivities.includes(activity.type)) {
-        if (activity.moving_time) {
-          return time + activity.moving_time;
-        } else {
-          throw new Error('The activity must have a moving time');
-        }
+    activitiesTypes: ActivityType[]
+  ): WeeklyInformations {
+    const extractedData: WeeklyInformations = {
+      totalDistance: 0,
+      totalElevation: 0,
+      totalTime: 0,
+      detail: [],
+      lastActivity: null,
+    };
+
+    activities.forEach(activity => {
+      if (activity.type && activitiesTypes.includes(activity.type)) {
+        extractedData.totalDistance += activity.distance || 0;
+        extractedData.totalElevation += activity.elev_high || 0;
+        extractedData.totalTime += activity.moving_time || 0;
+        extractedData.detail.push({
+          day:
+            DateTime.fromISO(activity.start_date_local || '').toISODate() || '',
+          distance: activity.distance || 0,
+          elevation: activity.elev_high || 0,
+          timeInSeconds: activity.moving_time || 0,
+        });
       }
-      return time;
-    }, 0);
-    return totalTime;
-  }
+    });
 
-  private extractDistance(
-    activities: Partial<SummaryActivity>[],
-    includedActivities: SummaryActivity['type'][]
-  ) {
-    const totalDistance = activities.reduce((distance, activity) => {
-      if (activity.type && includedActivities.includes(activity.type)) {
-        if (activity.distance) {
-          return distance + activity.distance;
-        } else {
-          throw new Error('The activity must have a distance');
-        }
-      }
-      return distance;
-    }, 0);
+    this.utilsService.fillMissingData(extractedData);
 
-    return totalDistance;
-  }
-
-  private extractElevation(
-    activities: Partial<SummaryActivity>[],
-    includedActivities: SummaryActivity['type'][]
-  ) {
-    const totalElevation = activities.reduce((elevation, activity) => {
-      if (activity.type && includedActivities.includes(activity.type)) {
-        if (activity.elev_high) {
-          return elevation + activity.elev_high;
-        } else {
-          throw new Error('The activity must have a distance');
-        }
-      }
-      return elevation;
-    }, 0);
-
-    return totalElevation;
+    return extractedData;
   }
 
   public getLastActivity(activities: SummaryActivity[]) {
     const lastActivity = activities.reduce((previous, current) => {
-      return previous.start_date > current.start_date ? previous : current;
+      if (previous?.start_date && current?.start_date) {
+        return previous.start_date > current.start_date ? previous : current;
+      } else {
+        return previous;
+      }
     });
 
     return lastActivity;

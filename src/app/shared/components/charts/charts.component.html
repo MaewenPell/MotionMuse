@@ -1,0 +1,14 @@
+<div class="charts">
+  @if (chartOptions && chartOptionsWeeklyEvolutions) {
+    <div class="charts__container">
+      <ag-charts-angular
+        class="chart"
+        [options]="chartOptions" />
+    </div>
+    <div class="charts__container">
+      <ag-charts-angular
+        class="chart"
+        [options]="chartOptionsWeeklyEvolutions" />
+    </div>
+  }
+</div>

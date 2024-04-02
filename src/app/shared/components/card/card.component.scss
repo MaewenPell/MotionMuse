@@ -1,13 +1,10 @@
 @import 'variables';
 
 .layout {
-  display: grid;
+  display: flex;
   z-index: 1;
   width: 100%;
-  height: calc(100vh - 120px);
-  margin: 100px 20px 16px calc($menu-width + 40px);
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 1fr 2fr;
+  justify-content: space-between;
   gap: 40px;
 }
 

@@ -13,9 +13,17 @@
   </div>
   @if (this.connectionService.$isConnected()) {
     <div class="dashboardContainer">
-      <app-cards
-        class="dashboardContainer__cards"
-        [activities$]="rawActivities" />
+      <div class="dashboardContainer__row">
+        <app-cards
+          class="dashboardContainer__cards"
+          [activities$]="rawActivities" />
+      </div>
+      <div class="dashboardContainer__row">
+        <app-charts
+          class="dashboardContainer__charts"
+          [yearActivities$]="yearRawActivites"
+          [activities$]="rawActivities" />
+      </div>
     </div>
   }
 </div>

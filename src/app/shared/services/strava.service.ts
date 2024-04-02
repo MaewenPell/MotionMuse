@@ -31,6 +31,7 @@ export class StravaService {
         params: {
           before: beforeInEpoch,
           after: afterInEpoch,
+          per_page: 100,
         },
       })
       .pipe(

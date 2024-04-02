@@ -30,9 +30,21 @@
     background-color: $color-light-gray;
   }
 
-  .dashboardContainer {
-    &__cards {
+  .dashboard {
+    &Container {
       display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 80px 20px 20px 300px;
+      width: 100%;
+
+      &__cards {
+        display: flex;
+      }
+
+      &__charts {
+        display: flex;
+      }
     }
   }
 }

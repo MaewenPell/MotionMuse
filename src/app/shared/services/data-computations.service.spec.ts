@@ -1,111 +1,104 @@
-// import { TestBed } from '@angular/core/testing';
-// import { DateTime } from 'luxon';
+import { TestBed } from '@angular/core/testing';
+import { DateTime } from 'luxon';
+import { ActivityType } from 'src/app/types/strava/enum/activity-type.enum';
+import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
+import { DataComputationsService } from './data-computations.service';
 
-// import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
-// import { DataComputationsService } from './data-computations.service';
+describe('DataComputationsService', () => {
+  let service: DataComputationsService;
 
-// describe('DataComputationsService', () => {
-//   let service: DataComputationsService;
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(DataComputationsService);
+  });
 
-//   beforeEach(() => {
-//     TestBed.configureTestingModule({});
-//     service = TestBed.inject(DataComputationsService);
-//   });
+  it('should extract weekly informations from activities', () => {
+    const activities: Partial<SummaryActivity>[] = [
+      {
+        type: 'Run',
+        distance: 10,
+        elev_high: 100,
+        moving_time: 3600,
+        start_date_local: DateTime.now().startOf('week').toISODate(),
+      },
+      {
+        type: 'Ride',
+        distance: 20,
+        elev_high: 200,
+        moving_time: 7200,
+        start_date_local: DateTime.now()
+          .startOf('week')
+          .plus({ day: 1 })
+          .toISODate(),
+      },
+    ];
+    const activitiesTypes: ActivityType[] = ['Run', 'Ride'];
 
-//   it('[getTotaRunningDistance] should calculate total running distance for the current week', () => {
-//     const dynamicStartDate = DateTime.now().startOf('week');
-//     const dynamicEndDate = DateTime.now().endOf('week');
+    const result = service['extractInformations'](activities, activitiesTypes);
 
-//     const outOfRangeStartDate = dynamicEndDate.plus({ day: 1 }).toJSDate();
+    expect(result.totalDistance).toBe(30);
+    expect(result.totalElevation).toBe(300);
+    expect(result.totalTime).toBe(10800);
+    expect(result.detail.length).toBe(7);
+    expect(result.detail[0]).toEqual({
+      day: DateTime.now().startOf('week').toISODate(),
+      distance: 10,
+      elevation: 100,
+      timeInSeconds: 3600,
+    });
+    expect(result.detail[1]).toEqual({
+      day: DateTime.now().startOf('week').plus({ day: 1 }).toISODate(),
+      distance: 20,
+      elevation: 200,
+      timeInSeconds: 7200,
+    });
+  });
 
-//     const inRangeStartDate = dynamicEndDate.minus({ day: 1 }).toJSDate();
-//     const inRangeStartDate2 = dynamicStartDate.plus({ days: 1 }).toJSDate();
+  it('should not include activities with types not in activitiesTypes', () => {
+    const activities: Partial<SummaryActivity>[] = [
+      {
+        type: 'Run',
+        distance: 10,
+        elev_high: 100,
+        moving_time: 3600,
+        start_date_local: DateTime.now().startOf('week').toISODate(),
+      },
+      {
+        type: 'Swim',
+        distance: 5,
+        elev_high: 50,
+        moving_time: 1800,
+        start_date_local: DateTime.now()
+          .startOf('week')
+          .plus({ day: 1 })
+          .toISODate(),
+      },
+    ];
+    const activitiesTypes: ActivityType[] = ['Run'];
 
-//     const activities: Partial<SummaryActivity>[] = [
-//       { type: 'Run', distance: 5, start_date: inRangeStartDate },
-//       { type: 'TrailRun', distance: 10, start_date: outOfRangeStartDate },
-//       { type: 'Run', distance: 7, start_date: inRangeStartDate2 },
-//       { type: 'BackcountrySki', distance: 7, start_date: inRangeStartDate2 },
-//       { type: 'TrailRun', distance: 3, start_date: inRangeStartDate },
-//     ];
-//     const totalDistance = service.getTotaRunningDistance(
-//       activities,
-//       'currentWeek',
-//       ['Run', 'TrailRun']
-//     );
+    const result = service['extractInformations'](activities, activitiesTypes);
 
-//     // Only the distances of the correct sport + dates are considered
-//     expect(totalDistance).toBe(5 + 7 + 3);
-//   });
+    expect(result.totalDistance).toBe(10);
+    expect(result.totalElevation).toBe(100);
+    expect(result.totalTime).toBe(3600);
+    expect(result.detail.length).toBe(7);
+    expect(result.detail[0]).toEqual({
+      day: DateTime.now().startOf('week').toISODate(),
+      distance: 10,
+      elevation: 100,
+      timeInSeconds: 3600,
+    });
+  });
 
-//   it('[getTotaRunningDistance] should calculate total running distance for the current month', () => {
-//     const dynamicStartDate = DateTime.now().startOf('month');
-//     const dynamicEndDate = DateTime.now().endOf('month');
+  it('should handle empty activities array', () => {
+    const activities: Partial<SummaryActivity>[] = [];
+    const activitiesTypes: ActivityType[] = ['Run', 'Ride'];
 
-//     const outOfRangeStartDate = dynamicEndDate.plus({ week: 2 }).toJSDate();
+    const result = service['extractInformations'](activities, activitiesTypes);
 
-//     const inRangeStartDate = dynamicEndDate.minus({ days: 1 }).toJSDate();
-//     const inRangeStartDate2 = dynamicStartDate.plus({ days: 1 }).toJSDate();
-
-//     const activities: Partial<SummaryActivity>[] = [
-//       { type: 'Run', distance: 5, start_date: inRangeStartDate },
-//       { type: 'Run', distance: 10, start_date: inRangeStartDate },
-//       { type: 'Run', distance: 7, start_date: outOfRangeStartDate },
-//       { type: 'BackcountrySki', distance: 7, start_date: inRangeStartDate2 },
-//       { type: 'TrailRun', distance: 3, start_date: outOfRangeStartDate },
-//     ];
-//     const totalDistance = service.getTotaRunningDistance(
-//       activities,
-//       'currentMonth',
-//       ['Run', 'TrailRun']
-//     );
-//     expect(totalDistance).toBe(5 + 10);
-//   });
-
-//   it('should calculate total running distance for a custom range', () => {
-//     const dynamicStartDate = DateTime.now().minus({ days: 3 });
-//     const dynamicEndDate = DateTime.now().plus({ days: 3 });
-
-//     const inRangeStartDate = dynamicEndDate.minus({ days: 1 }).toJSDate();
-//     const inRangeStartDate2 = dynamicStartDate.plus({ days: 1 }).toJSDate();
-
-//     const outOfRangeStartDate = dynamicEndDate.plus({ day: 1 }).toJSDate();
-
-//     const activities: Partial<SummaryActivity>[] = [
-//       { type: 'Run', distance: 5, start_date: inRangeStartDate },
-//       { type: 'TrailRun', distance: 10, start_date: outOfRangeStartDate },
-//       { type: 'Run', distance: 7, start_date: inRangeStartDate2 },
-//       { type: 'TrailRun', distance: 3, start_date: inRangeStartDate },
-//       { type: 'BackcountrySki', distance: 7, start_date: inRangeStartDate2 },
-//     ];
-
-//     const totalDistance = service.getTotaRunningDistance(
-//       activities,
-//       'custom',
-//       ['Run', 'TrailRun'],
-//       dynamicStartDate,
-//       dynamicEndDate
-//     );
-//     expect(totalDistance).toBe(5 + 7 + 3);
-//   });
-
-//   it('should throw an error for custom range without valid dates', () => {
-//     const activities: Partial<SummaryActivity>[] = [
-//       { type: 'Run', distance: 5 },
-//       { type: 'TrailRun', distance: 10 },
-//       { type: 'Run', distance: 7 },
-//       { type: 'TrailRun', distance: 3 },
-//     ];
-//     const startedAfter = undefined;
-//     const before = undefined;
-//     expect(() => {
-//       service.getTotaRunningDistance(
-//         activities,
-//         'custom',
-//         ['Run', 'TrailRun'],
-//         startedAfter,
-//         before
-//       );
-//     }).toThrowError('You must provide a valid date for the custom range');
-//   });
-// });
+    expect(result.totalDistance).toBe(0);
+    expect(result.totalElevation).toBe(0);
+    expect(result.totalTime).toBe(0);
+    expect(result.detail.length).toBe(0);
+  });
+});

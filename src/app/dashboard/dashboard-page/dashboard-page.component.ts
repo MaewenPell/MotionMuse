@@ -1,13 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import {
+  Component,
+  DestroyRef,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateTime } from 'luxon';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { Subscription, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { CardComponent } from 'src/app/shared/components/card/card.component';
+import { ChartsComponent } from 'src/app/shared/components/charts/charts.component';
 import { ConnectionComponent } from 'src/app/shared/components/connection/connection.component';
 import { CardService } from 'src/app/shared/services/card.service';
 import { ConnectionService } from 'src/app/shared/services/connection.service';
@@ -31,6 +38,7 @@ import { SearchBarComponent } from '../../shared/components/search-bar/search-ba
     ToastModule,
     CardComponent,
     ButtonModule,
+    ChartsComponent,
   ],
   providers: [MessageService],
 })
@@ -39,6 +47,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   private activatedRoute = inject(ActivatedRoute);
   private messageService = inject(MessageService);
+  private destoyRef = inject(DestroyRef);
   private router = inject(Router);
   public connectionService = inject(ConnectionService);
   public dataComputationsService = inject(DataComputationsService);
@@ -48,28 +57,33 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   public cardTypesEnums = CardTypesEnum;
 
   public rawActivities: SummaryActivity[] = [];
+  public yearRawActivites: SummaryActivity[] = [];
 
-  private _ = toObservable(this.connectionService.$isConnected)
-    .pipe(
-      tap({
-        error: () => this.displayToaster(false),
-        complete: () => this.getActivites(),
-      })
-    )
-    .subscribe(() => {
+  private _ = toObservable(this.connectionService.$isConnected).subscribe(
+    () => {
+      const after = DateTime.now().startOf('week').minus({ week: 1 });
+      const before = DateTime.now().endOf('week');
+
+      const allYear = DateTime.now().startOf('year');
+      const allYearBefore = DateTime.now().endOf('year');
+
       this.displayToaster(true);
-      this.getActivites();
-    });
 
-  private getActivites() {
-    // By default now we get 2 weeks of data so we can compare the evolution
-    const after = DateTime.now().startOf('week').minus({ week: 1 });
-    const before = DateTime.now().endOf('week');
+      this.stravaService
+        .getActivities(before, after)
+        .pipe(takeUntilDestroyed(this.destoyRef))
+        .subscribe(res => {
+          this.rawActivities = res;
+        });
 
-    this.stravaService.getActivities(before, after).subscribe(activities => {
-      this.rawActivities = activities;
-    });
-  }
+      this.stravaService
+        .getActivities(allYearBefore, allYear)
+        .pipe(takeUntilDestroyed(this.destoyRef))
+        .subscribe(res => {
+          this.yearRawActivites = res;
+        });
+    }
+  );
 
   ngOnInit() {
     // Subscribe to url changes

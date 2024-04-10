@@ -10,6 +10,7 @@ import {
   provideNoopAnimations,
 } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
+import { provideEcharts } from 'ngx-echarts';
 import { MessageService } from 'primeng/api';
 import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';
@@ -24,5 +25,6 @@ bootstrapApplication(AppComponent, {
     { provide: HTTP_INTERCEPTORS, useClass: StravaInterceptor, multi: true },
     provideNoopAnimations(),
     MessageService,
+    provideEcharts(),
   ],
 }).catch(err => console.error(err));

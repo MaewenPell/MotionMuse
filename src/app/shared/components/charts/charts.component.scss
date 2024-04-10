@@ -9,6 +9,7 @@
 
   &__container {
     width: calc(50% - 20px);
+    position: relative;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -17,6 +18,28 @@
     border-radius: 8px;
     padding: 2px;
     background: $color-white;
+
+    .navigation {
+      position: absolute;
+      z-index: 2;
+
+      &--before {
+        left: -25px;
+      }
+
+      &--after {
+        right: -25px;
+      }
+
+      &__icon {
+        // color: $color-main-violet;
+        // background-color: red;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
 
     .chart {
       width: 100%;

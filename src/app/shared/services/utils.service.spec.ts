@@ -54,7 +54,7 @@ describe('UtilsService', () => {
       lastActivity: null,
     };
 
-    const filledWeeklyInfo = service.fillMissingData(weeklyInfo);
+    const filledWeeklyInfo = service.fillWeeklyMissingData(weeklyInfo);
 
     expect(filledWeeklyInfo.detail.length).toEqual(7);
   });

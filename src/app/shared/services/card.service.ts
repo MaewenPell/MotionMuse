@@ -21,24 +21,34 @@ export class CardService {
     activites: SummaryActivity[]
   ): StravaExtractedInformations {
     {
+      const currentWeekStartDate = DateTime.now().startOf('week');
+      const currentWeekEndDate = DateTime.now().endOf('week');
+      const lastWeekStartDate = DateTime.now()
+        .startOf('week')
+        .minus({ weeks: 1 });
+      const lastWeekEndDate = DateTime.now().endOf('week').minus({ weeks: 1 });
+
       const currentWeek = this.dataComputationsService.extractTotalInformations(
         activites,
         'currentWeek',
         ['Run', 'TrailRun'],
-        DateTime.now().startOf('week'),
-        DateTime.now().endOf('week')
+        currentWeekStartDate,
+        currentWeekEndDate
       );
 
       const lastWeek = this.dataComputationsService.extractTotalInformations(
         activites,
         'custom',
         ['Run', 'TrailRun'],
-        DateTime.now().startOf('week').minus({ weeks: 1 }),
-        DateTime.now().endOf('week').minus({ weeks: 1 })
+        lastWeekStartDate,
+        lastWeekEndDate
       );
 
       return {
         lastWeek: {
+          startDate: lastWeekStartDate,
+          endDate: lastWeekEndDate,
+          weekNumber: lastWeek.weekNumber,
           totalDistance: lastWeek.totalDistance,
           totalElevation: lastWeek.totalElevation,
           totalTime: lastWeek.totalTime,
@@ -46,6 +56,9 @@ export class CardService {
           lastActivity: lastWeek.lastActivity,
         },
         currentWeek: {
+          startDate: currentWeekStartDate,
+          endDate: currentWeekEndDate,
+          weekNumber: currentWeek.weekNumber,
           totalDistance: currentWeek.totalDistance,
           totalElevation: currentWeek.totalElevation,
           totalTime: currentWeek.totalTime,

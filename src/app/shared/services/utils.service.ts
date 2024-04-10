@@ -26,11 +26,14 @@ export class UtilsService {
     return true;
   }
 
-  fillMissingData(weeklyInfo: WeeklyInformations): WeeklyInformations {
+  fillWeeklyMissingData(
+    weeklyInfo: WeeklyInformations,
+    startDate: DateTime
+  ): WeeklyInformations {
     const allWeekDays: DateTime[] = [];
 
     for (let i = 0; i < 7; i++) {
-      const currentDay = DateTime.now().startOf('week').plus({ days: i });
+      const currentDay = startDate.plus({ days: i });
       allWeekDays.push(currentDay);
     }
 
@@ -40,11 +43,14 @@ export class UtilsService {
       if (currentDayDate) {
         weeklyInfo.detail.forEach(dayDetail => {
           if (
-            DateTime.fromISO(dayDetail.day).toISODate() !== currentDayDate &&
-            !weeklyInfo.detail.find(detail => detail.day === currentDayDate)
+            dayDetail.day.toISODate() !== currentDayDate &&
+            !weeklyInfo.detail.find(
+              detail => detail.day.toISODate() === currentDayDate
+            )
           ) {
             weeklyInfo.detail.push({
-              day: currentDayDate,
+              day: day,
+              weekNumber: day.weekNumber,
               distance: null,
               elevation: 0,
               timeInSeconds: 0,

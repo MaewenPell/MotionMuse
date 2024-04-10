@@ -38,12 +38,27 @@
       padding: 80px 20px 20px 300px;
       width: 100%;
 
+      &__row {
+        display: flex;
+        width: 100%;
+
+        &Extended {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+        }
+      }
+
       &__cards {
         display: flex;
+        justify-content: space-between;
+        width: 100%;
       }
 
       &__charts {
         display: flex;
+        justify-content: space-between;
+        width: 100%;
       }
     }
   }

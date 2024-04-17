@@ -16,13 +16,15 @@
       <div class="dashboardContainer__row">
         <app-cards
           class="dashboardContainer__cards"
-          [activities$]="rawActivities" />
+          [activities$]="rawActivities" /> 
       </div>
       <div class="dashboardContainer__row">
-        <app-charts
-          class="dashboardContainer__charts"
-          [yearActivities$]="yearRawActivites"
-          [activities$]="rawActivities" />
+        <div class="dashboardContainer__row">
+          <app-charts
+            class="dashboardContainer__charts"
+            [yearActivities$]="yearRawActivites"
+            [activities$]="rawActivities" />
+        </div>
       </div>
     </div>
   }

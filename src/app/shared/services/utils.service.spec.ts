@@ -37,24 +37,32 @@ describe('UtilsService', () => {
       totalDistance: 100,
       totalElevation: 200,
       totalTime: 300,
+      startDate: DateTime.now().startOf('week'),
+      endDate: DateTime.now().endOf('week'),
+      weekNumber: DateTime.now().startOf('week').weekNumber,
       detail: [
         {
-          day: DateTime.now().startOf('week').plus({ days: 1 }).toISODate(),
+          day: DateTime.now().startOf('week').plus({ days: 1 }),
           distance: 10,
           elevation: 20,
           timeInSeconds: 30,
+          weekNumber: DateTime.now().startOf('week').weekNumber,
         },
         {
-          day: DateTime.now().startOf('week').plus({ days: 3 }).toISODate(),
+          day: DateTime.now().startOf('week').plus({ days: 3 }),
           distance: 40,
           elevation: 50,
           timeInSeconds: 60,
+          weekNumber: DateTime.now().startOf('week').weekNumber,
         },
       ],
       lastActivity: null,
     };
 
-    const filledWeeklyInfo = service.fillMissingData(weeklyInfo);
+    const filledWeeklyInfo = service.fillWeeklyMissingData(
+      weeklyInfo,
+      DateTime.now().startOf('week')
+    );
 
     expect(filledWeeklyInfo.detail.length).toEqual(7);
   });

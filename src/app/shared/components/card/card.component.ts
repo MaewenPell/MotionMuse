@@ -61,7 +61,10 @@ export class CardComponent {
       );
 
       this.lastActivityCard = this.cardService.createLastActivityCard(
-        this.dataComputationsService.getLastActivity(rawActivities)
+        this.dataComputationsService.getLastActivity(rawActivities, [
+          'TrailRun',
+          'Run',
+        ])
       );
 
       this.weeklyTimeSpendCard = this.cardService.createWeeklyTimeSpendCard(

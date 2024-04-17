@@ -1,14 +1,34 @@
 <div class="charts">
-  @if (chartOptions && chartOptionsWeeklyEvolutions) {
+  @if (activities$()) {
     <div class="charts__container">
-      <ag-charts-angular
+      <div class="navigation navigation--before">
+        <p-button
+          class="navigation__icon"
+          (onClick)="loadPreviousWeekActivities()"
+          icon="pi pi-chevron-left"
+          [rounded]="true"
+          [text]="true"
+          severity="help " />
+      </div>
+      <div
         class="chart"
-        [options]="chartOptions" />
+        echarts
+        [options]="chartOptionsWeekly"></div>
+      <div class="navigation navigation--after">
+        <p-button
+          [rounded]="true"
+          class="navigation__icon"
+          (onClick)="loadNextWeekActivities()"
+          icon="pi pi-chevron-right" />
+      </div>
     </div>
     <div class="charts__container">
-      <ag-charts-angular
+      <div
         class="chart"
-        [options]="chartOptionsWeeklyEvolutions" />
+        echarts
+        [options]="chartOptionsWeeklyEvolutions"></div>
     </div>
+  } @else {
+    <!-- // todo skeleton -->
   }
 </div>

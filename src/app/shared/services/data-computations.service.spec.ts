@@ -17,14 +17,14 @@ describe('DataComputationsService', () => {
       {
         type: 'Run',
         distance: 10,
-        elev_high: 100,
+        total_elevation_gain: 100,
         moving_time: 3600,
         start_date_local: DateTime.now().startOf('week').toISODate(),
       },
       {
         type: 'Ride',
         distance: 20,
-        elev_high: 200,
+        total_elevation_gain: 200,
         moving_time: 7200,
         start_date_local: DateTime.now()
           .startOf('week')
@@ -39,15 +39,17 @@ describe('DataComputationsService', () => {
     expect(result.totalDistance).toBe(30);
     expect(result.totalElevation).toBe(300);
     expect(result.totalTime).toBe(10800);
-    expect(result.detail.length).toBe(7);
+    expect(result.detail.length).toBe(2);
     expect(result.detail[0]).toEqual({
-      day: DateTime.now().startOf('week').toISODate(),
+      day: DateTime.now().startOf('week'),
+      weekNumber: DateTime.now().startOf('week').weekNumber,
       distance: 10,
       elevation: 100,
       timeInSeconds: 3600,
     });
     expect(result.detail[1]).toEqual({
-      day: DateTime.now().startOf('week').plus({ day: 1 }).toISODate(),
+      day: DateTime.now().startOf('week').plus({ day: 1 }),
+      weekNumber: DateTime.now().startOf('week').weekNumber,
       distance: 20,
       elevation: 200,
       timeInSeconds: 7200,
@@ -59,14 +61,14 @@ describe('DataComputationsService', () => {
       {
         type: 'Run',
         distance: 10,
-        elev_high: 100,
+        total_elevation_gain: 100,
         moving_time: 3600,
         start_date_local: DateTime.now().startOf('week').toISODate(),
       },
       {
         type: 'Swim',
         distance: 5,
-        elev_high: 50,
+        total_elevation_gain: 50,
         moving_time: 1800,
         start_date_local: DateTime.now()
           .startOf('week')
@@ -81,12 +83,13 @@ describe('DataComputationsService', () => {
     expect(result.totalDistance).toBe(10);
     expect(result.totalElevation).toBe(100);
     expect(result.totalTime).toBe(3600);
-    expect(result.detail.length).toBe(7);
+    expect(result.detail.length).toBe(1);
     expect(result.detail[0]).toEqual({
-      day: DateTime.now().startOf('week').toISODate(),
+      day: DateTime.now().startOf('week'),
       distance: 10,
       elevation: 100,
       timeInSeconds: 3600,
+      weekNumber: DateTime.now().startOf('week').weekNumber,
     });
   });
 

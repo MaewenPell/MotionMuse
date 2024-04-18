@@ -2,9 +2,6 @@
   <app-menu class="mainContent__menu" />
   <div class="mainContent__hero">
     <p-toast />
-    <app-search-bar
-      class="mainContent__search"
-      [pageTitle]="'Dashboard'" />
     @if (!this.connectionService.$isConnected()) {
       <div class="mainContent__connection">
         <app-connection />

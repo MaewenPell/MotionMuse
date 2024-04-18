@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { EChartsOption } from 'echarts';
-import { groupBy, mapValues, sumBy } from 'lodash-es';
 import { DateTime } from 'luxon';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { ButtonModule } from 'primeng/button';
@@ -83,7 +82,7 @@ export class ChartsComponent {
 
   private computeWeeklyChart(activities: WeeklyInformations['detail']) {
     const data = activities.map(activity => ({
-      days: activity.day.startOf('day').toISO(),
+      days: activity.day.toISO(),
       weekNumber: activity.weekNumber,
       distance: activity.distance ? activity.distance / 1000 : null,
       elevation: activity.elevation ? activity.elevation : null,
@@ -91,7 +90,7 @@ export class ChartsComponent {
 
     this.chartOptionsWeekly = {
       title: {
-        text: `From : ${this.startDate.toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })} to ${this.endDate.toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })}`,
+        text: `From : ${this.startDate.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })} to ${this.endDate.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })}`,
         left: 'center',
         top: '10',
       },
@@ -166,13 +165,8 @@ export class ChartsComponent {
             color: APP_COLORS.MAIN_VIOLET,
             borderRadius: 5,
           },
-          barWidth: '30%',
           data: data.map(day => {
-            const distanceGrouped = mapValues(groupBy(data, 'days'), sum =>
-              sumBy(sum, 'distance')
-            );
-
-            return [day.days, distanceGrouped[day.days ?? 0]];
+            return [day.days, day.distance];
           }),
         },
         {
@@ -183,11 +177,7 @@ export class ChartsComponent {
             color: APP_COLORS.YELLOW,
           },
           data: data.map(day => {
-            const elevationGrouped = mapValues(groupBy(data, 'days'), sum =>
-              sumBy(sum, 'elevation')
-            );
-
-            return [day.days, elevationGrouped[day.days ?? 0]];
+            return [day.days, day.elevation];
           }),
           smooth: true,
         },
@@ -201,7 +191,7 @@ export class ChartsComponent {
 
     this.chartOptionsWeeklyEvolutions = {
       title: {
-        text: `From : ${this.startOfyear.toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })} to ${this.endOfYear.toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })}`,
+        text: `From : ${this.startOfyear.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })} to ${this.endOfYear.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })}`,
         left: 'center',
         top: '10',
       },
@@ -242,6 +232,16 @@ export class ChartsComponent {
         },
       ],
       tooltip: {
+        formatter: (params: any) => {
+          if (!params[0]?.data[1]) {
+            return `${params[0]?.axisValueLabel}<br> 
+          ${params[0].marker} ${params[0].seriesName} : 0 <br>
+          ${params[1].marker} ${params[1].seriesName} : 0`;
+          }
+          return `${params[0]?.axisValueLabel}<br> 
+          ${params[0].marker} ${params[0].seriesName} : ${params[0]?.data[1]?.toFixed(0)} Km <br>
+          ${params[1].marker} ${params[1].seriesName} : ${params[1]?.data[1]?.toFixed(0)} m <br>`;
+        },
         trigger: 'axis',
         axisPointer: {
           type: 'cross',

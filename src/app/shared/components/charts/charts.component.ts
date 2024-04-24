@@ -1,10 +1,10 @@
 import {
   Component,
   InputSignal,
-  effect,
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { EChartsOption } from 'echarts';
@@ -24,6 +24,10 @@ import { DataComputationsService } from '../../services/data-computations.servic
   styleUrl: './charts.component.scss',
 })
 export class ChartsComponent {
+  private dataComputationService: DataComputationsService = inject(
+    DataComputationsService
+  );
+
   public activities$ = model<SummaryActivity[]>();
 
   public yearActivities$: InputSignal<SummaryActivity[]> =
@@ -40,11 +44,10 @@ export class ChartsComponent {
   private startOfyear!: DateTime;
   private endOfYear!: DateTime;
 
-  private dataComputationService: DataComputationsService = inject(
-    DataComputationsService
-  );
+  protected subtitleWeeklyChart$ = signal<string>('');
+  protected subtitleYearlyChart$ = signal<string>('');
 
-  private getActivitiesReaction = effect(() => {});
+  protected incorrectNextWeek$ = signal<boolean>(false);
 
   private weeklyActivities = toObservable(this.activities$).subscribe(
     weeklyActivities => {
@@ -81,6 +84,18 @@ export class ChartsComponent {
   );
 
   private computeWeeklyChart(activities: WeeklyInformations['detail']) {
+    const expectedNextStartDate = this.startDate.plus({
+      week: 1,
+    });
+
+    this.incorrectNextWeek$.set(
+      expectedNextStartDate.startOf('week') > DateTime.now()
+    );
+
+    this.subtitleWeeklyChart$.set(
+      `From : ${this.startDate.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })} to ${this.endDate.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })}`
+    );
+
     const data = activities.map(activity => ({
       days: activity.day.toISO(),
       weekNumber: activity.weekNumber,
@@ -89,11 +104,6 @@ export class ChartsComponent {
     }));
 
     this.chartOptionsWeekly = {
-      title: {
-        text: `From : ${this.startDate.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })} to ${this.endDate.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })}`,
-        left: 'center',
-        top: '10',
-      },
       xAxis: {
         type: 'time',
         axisPointer: {
@@ -113,7 +123,6 @@ export class ChartsComponent {
           name: 'Distance',
           type: 'value',
           position: 'left',
-          max: 50,
           min: 0,
           alignTicks: true,
           axisPointer: {
@@ -125,7 +134,6 @@ export class ChartsComponent {
         {
           name: 'Elevation',
           type: 'value',
-          max: 3000,
           min: 0,
           alignTicks: true,
           position: 'right',
@@ -182,19 +190,22 @@ export class ChartsComponent {
           smooth: true,
         },
       ],
+      grid: {
+        top: '10',
+        left: '30',
+      },
     };
   }
 
   private computeAllWeeksEvolutionsChart(activities: WeeklyInformations) {
+    this.subtitleYearlyChart$.set(
+      `From : ${this.startOfyear.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })} to ${this.endOfYear.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })}`
+    );
+
     const chartInformationPerWeek =
       this.dataComputationService.extractTotalInformationPerWeek(activities);
 
     this.chartOptionsWeeklyEvolutions = {
-      title: {
-        text: `From : ${this.startOfyear.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })} to ${this.endOfYear.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })}`,
-        left: 'center',
-        top: '10',
-      },
       xAxis: {
         type: 'time',
         axisPointer: {
@@ -211,7 +222,6 @@ export class ChartsComponent {
           position: 'left',
           alignTicks: true,
           min: 0,
-          max: 100,
           axisPointer: {
             label: {
               precision: 0,
@@ -222,7 +232,6 @@ export class ChartsComponent {
           name: 'Elevation',
           type: 'value',
           min: 0,
-          max: 4000,
           position: 'right',
           axisPointer: {
             label: {
@@ -277,6 +286,10 @@ export class ChartsComponent {
           smooth: true,
         },
       ],
+      grid: {
+        top: '10',
+        left: '30',
+      },
     };
   }
 
@@ -301,9 +314,11 @@ export class ChartsComponent {
   }
 
   public loadNextWeekActivities() {
-    this.startDate = this.startDate.plus({
+    const expectedStartDate = this.startDate.plus({
       week: 1,
     });
+
+    this.startDate = expectedStartDate;
     this.endDate = this.endDate
       .plus({
         week: 1,

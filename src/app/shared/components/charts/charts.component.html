@@ -1,34 +1,47 @@
 <div class="charts">
-  @if (activities$()) {
     <div class="charts__container">
-      <div class="navigation navigation--before">
-        <p-button
-          class="navigation__icon"
-          (onClick)="loadPreviousWeekActivities()"
-          icon="pi pi-chevron-left"
-          [rounded]="true"
-          [text]="true"
-          severity="help " />
-      </div>
-      <div
-        class="chart"
-        echarts
-        [options]="chartOptionsWeekly"></div>
-      <div class="navigation navigation--after">
-        <p-button
-          [rounded]="true"
-          class="navigation__icon"
-          (onClick)="loadNextWeekActivities()"
-          icon="pi pi-chevron-right" />
-      </div>
+        <div class="charts__containerTitles">
+            <div class="title">
+                <h4>Weekly Evolution</h4>
+            </div>
+            <div class="subtitle">
+                <p-button
+                    class="navigation__icon"
+                    (onClick)="loadPreviousWeekActivities()"
+                    icon="pi pi-chevron-left"
+                    [rounded]="true"
+                    [size]="'small'"
+                    [text]="true" />
+                {{ subtitleWeeklyChart$() }}
+                <p-button
+                    class="navigation__icon"
+                    [disabled]="incorrectNextWeek$()"
+                    (onClick)="loadNextWeekActivities()"
+                    icon="pi pi-chevron-right"
+                    [size]="'small'"
+                    [rounded]="true"
+                    [text]="true" />
+            </div>
+        </div>
+        <div
+            class="chart"
+            echarts
+            [options]="chartOptionsWeekly"></div>
     </div>
     <div class="charts__container">
-      <div
-        class="chart"
-        echarts
-        [options]="chartOptionsWeeklyEvolutions"></div>
+        <div class="charts__containerTitles">
+            <div class="title">
+                <h4>Yearly Evolution</h4>
+            </div>
+            <div class="subtitle">
+                <span>
+                    {{ subtitleYearlyChart$() }}
+                </span>
+            </div>
+        </div>
+        <div
+            class="chart"
+            echarts
+            [options]="chartOptionsWeeklyEvolutions"></div>
     </div>
-  } @else {
-    <!-- // todo skeleton -->
-  }
 </div>

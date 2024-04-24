@@ -1,23 +1,26 @@
 @import 'variables';
 
 .layout {
-  display: flex;
+  display: grid;
   z-index: 1;
-  width: 100%;
-  justify-content: space-between;
+  grid-template-columns: repeat(4, 1fr);
   gap: 40px;
 }
 
 .container {
   display: flex;
+  height: 100%;
   justify-content: space-between;
   flex-direction: column;
   padding: 16px 24px;
   max-width: 255px;
   width: 100%;
-  height: 120px;
   background-color: white;
-  border-radius: 6px;
+  border-radius: 16px;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 
   .cardResume {
     display: flex;
@@ -27,13 +30,19 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 12px;
 
       &Container {
         display: flex;
         align-items: center;
         gap: 3px;
       }
+    }
+
+    &__skeletonRow {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .title {
@@ -46,7 +55,7 @@
 
     .value {
       color: #32325d;
-      font-size: 20px;
+      font-size: 30px;
       font-weight: 600;
       line-height: 20px;
     }
@@ -93,7 +102,7 @@
     background-color: white;
     padding: 16px 24px;
     height: 120px;
-    border-radius: 6px;
+    border-radius: 16px;
     gap: 10px;
 
     .row {

@@ -1,96 +1,116 @@
 <div class="layout">
-  @if (activities$() && activities$().length > 0 && cards) {
-    @for (card of cards; track card.title) {
-      <div class="container">
-        <div class="cardResume">
-          <div class="cardResume__info">
-            <h4 class="title">
-              {{ card.title }}
-            </h4>
+    @if (activities$() && activities$().length > 0 && cards) {
+        @for (card of cards; track card.title) {
+            <div class="container">
+                <div class="cardResume">
+                    <div class="cardResume__info">
+                        <h4 class="title">
+                            {{ card.title }}
+                        </h4>
 
-            <div class="cardResume__infoContainer">
-              @if (card.mainValueUnit === 'm' || card.mainValueUnit === 'km') {
-                <h4 class="value">
-                  {{ card.mainValue | convertUnit: 'm' : card.mainValueUnit | number: '1.0-0' }}
-                </h4>
-              } @else {
-                <h4 class="value">
-                  {{ card.mainValue | toDashboardTime }}
-                </h4>
-              }
-              <span class="unit">
-                {{ card.mainValueUnit }}
-              </span>
-            </div>
-          </div>
-          <app-icon
-            class="cardResume__icon"
-            [isPrimeNgIcon]="card.isPrimeIcon"
-            [icon]="card.icon | toIcon"
-            [iconColor]="appColors.DARK"
-            [backgroundColor]="card.color" />
-        </div>
+                        <div class="cardResume__infoContainer">
+                            @if (card.mainValueUnit === 'm' || card.mainValueUnit === 'km') {
+                                <h4 class="value">
+                                    {{
+                                        card.mainValue
+                                            | convertUnit: 'm' : card.mainValueUnit
+                                            | number: '1.0-0'
+                                    }}
+                                </h4>
+                            } @else {
+                                <h4 class="value">
+                                    {{ card.mainValue | toDashboardTime }}
+                                </h4>
+                            }
+                            <span class="unit">
+                                {{ card.mainValueUnit }}
+                            </span>
+                        </div>
+                    </div>
+                    <app-icon
+                        class="cardResume__icon"
+                        [isPrimeNgIcon]="card.isPrimeIcon"
+                        [icon]="card.icon | toIcon"
+                        [iconColor]="appColors.DARK"
+                        [backgroundColor]="card.color" />
+                </div>
 
-        @if (card.evolutionValue && card.evolutionUnit) {
-          <div class="cardEvolution">
-            <div class="cardEvolution__arrow">
-              <app-icon
-                [icon]="card.evolutionIcon"
-                [widthInPx]="16"
-                [heightInPx]="16"
-                [isPrimeNgIcon]="true"
-                [iconSizeInPx]="16"
-                [iconColor]="card.evolutionColor"
-                [backgroundVisible]="false" />
+                @if (card.evolutionValue && card.evolutionUnit) {
+                    <div class="cardEvolution">
+                        <div class="cardEvolution__arrow">
+                            <app-icon
+                                [icon]="card.evolutionIcon"
+                                [widthInPx]="16"
+                                [heightInPx]="16"
+                                [isPrimeNgIcon]="true"
+                                [iconSizeInPx]="16"
+                                [iconColor]="card.evolutionColor"
+                                [backgroundVisible]="false" />
+                        </div>
+                        <div
+                            class="cardEvolution__value"
+                            [ngClass]="
+                                card.evolutionValue > 0
+                                    ? 'cardEvolution__value--positive'
+                                    : 'cardEvolution__value--negative'
+                            ">
+                            @if (card.evolutionUnit === 'm' || card.evolutionUnit === 'km') {
+                                <span class="value">
+                                    {{
+                                        card.evolutionValue
+                                            | convertUnit: 'm' : card.evolutionUnit
+                                            | number: '1.0-0'
+                                    }}
+                                </span>
+                            } @else {
+                                <span class="value">
+                                    {{ card.evolutionValue | toDashboardTime }}
+                                </span>
+                            }
+                            <span class="unit">
+                                {{ card.evolutionUnit }}
+                            </span>
+                        </div>
+                        <div class="cardEvolution__sentence">
+                            {{ card.evolutionSentence }}
+                        </div>
+                    </div>
+                }
             </div>
-            <div
-              class="cardEvolution__value"
-              [ngClass]="
-                card.evolutionValue > 0
-                  ? 'cardEvolution__value--positive'
-                  : 'cardEvolution__value--negative'
-              ">
-              @if (card.evolutionUnit === 'm' || card.evolutionUnit === 'km') {
-                <span class="value">
-                  {{
-                    card.evolutionValue | convertUnit: 'm' : card.evolutionUnit | number: '1.0-0'
-                  }}
-                </span>
-              } @else {
-                <span class="value">
-                  {{ card.evolutionValue | toDashboardTime }}
-                </span>
-              }
-              <span class="unit">
-                {{ card.evolutionUnit }}
-              </span>
-            </div>
-            <div class="cardEvolution__sentence">
-              {{ card.evolutionSentence }}
-            </div>
-          </div>
         }
-      </div>
+    } @else {
+        @for (_ of [].constructor(4); track $index) {
+            <div class="container">
+                <div class="cardResume">
+                    <div class="cardResume__skeletonRow">
+                        <p-skeleton
+                            width="9rem"
+                            borderRadius="16px" />
+                        <p-skeleton
+                            width="9rem"
+                            borderRadius="16px" />
+                    </div>
+                    <p-skeleton
+                        class="row__skeleton"
+                        shape="circle"
+                        size="3rem" />
+                </div>
+
+                <div class="cardResume__skeletonRow">
+                    <p-skeleton
+                        height="1rem"
+                        borderRadius="10px" />
+                    <p-skeleton
+                        height="0.5rem"
+                        borderRadius="10px" />
+                    <p-skeleton
+                        height="0.5rem"
+                        borderRadius="10px" />
+                    <p-skeleton
+                        height="0.5rem"
+                        borderRadius="10px" />
+                </div>
+            </div>
+        }
     }
-  } @else {
-    @for (_ of [].constructor(4); track $index) {
-      <div class="container__skeletons">
-        <div class="row">
-          <p-skeleton
-            width="9rem"
-            borderRadius="16px" />
-          <p-skeleton
-            class="row__skeleton"
-            shape="circle"
-            size="3rem" />
-        </div>
-        <p-skeleton
-          height="0.5rem"
-          borderRadius="10px" />
-        <p-skeleton
-          height="0.5rem"
-          borderRadius="10px" />
-      </div>
-    }
-  }
 </div>

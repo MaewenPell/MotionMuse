@@ -1,40 +1,46 @@
 @import 'variables';
 
 .charts {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   z-index: 1;
-  height: calc(100vh - 252px);
   width: 100%;
   gap: 40px;
 
   &__container {
-    width: calc(50% - 20px);
-    position: relative;
     height: 100%;
+    padding: 16px 24px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    height: calc(100vh - 252px);
     border: 1px solid $color-white;
-    border-radius: 8px;
-    padding: 2px;
+    border-radius: 16px;
     background: $color-white;
+    z-index: 1;
+
+    &Titles {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .title {
+      color: #8898aa;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 14px;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 35px;
+    }
 
     .navigation {
-      position: absolute;
-      z-index: 2;
-
-      &--before {
-        left: -25px;
-      }
-
-      &--after {
-        right: -25px;
-      }
-
       &__icon {
-        // color: $color-main-violet;
-        // background-color: red;
-
         &:hover {
           cursor: pointer;
         }

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { PrimeIcons } from 'primeng/api';
+import { PrimeIcons } from "primeng/api";
 import { Icons } from 'src/app/types/icons';
 
 @Pipe({

@@ -1,3 +1,4 @@
+@use 'sass:color';
 // sizing
 $menu-width: 250px;
 
@@ -7,19 +8,18 @@ $fontFamily: 'Open Sans', sans-serif;
 // colors
 $color-black: black;
 $color-light-black: #32325d;
-$color-black-60: lighten($color-black, 40%);
-$color-black-40: lighten($color-black, 60%);
+$color-black-60: color.adjust($color-black, $lightness: 40%);
+$color-black-40: color.adjust($color-black, $lightness: 60%);
 
 $color-white: rgb(255, 255, 255);
-$color-white-60: lighten($color-white, 40%);
+$color-white-60: color.adjust($color-white, $lightness: 40%);
 
 // Accents
 $color-orange: #fb6340;
-$color-yellow: #ffd600;
 $color-green: #2dce89;
-$color-light-blue: #11cdef;
+$color-yellow: #ffd600;
 $color-light-red: #f5365c;
-
 $color-light-gray: #efefef;
 $color-main-violet: #5e72e4;
+$color-light-blue: #11cdef;
 $color-main-violet-light: #825ee4;

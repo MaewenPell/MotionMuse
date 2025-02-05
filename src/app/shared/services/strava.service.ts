@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { DateTime } from 'luxon';
-import { MessageService } from 'primeng/api';
+import { MessageService } from "primeng/api";
 import { Observable, tap } from 'rxjs';
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 

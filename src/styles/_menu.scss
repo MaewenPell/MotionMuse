@@ -1,6 +1,6 @@
-@import 'variables';
+@use 'variables';
 
 .p-menu {
-  font-family: $fontFamily !important;
+  font-family: variables.$fontFamily !important;
   border: none !important;
 }

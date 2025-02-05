@@ -23,7 +23,6 @@ import { StravaService } from 'src/app/shared/services/strava.service';
 import { CardTypesEnum } from 'src/app/types/enums/cardTypes.enum';
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 import { MenuComponent } from '../../shared/components/menu/menu.component';
-import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -31,7 +30,6 @@ import { SearchBarComponent } from '../../shared/components/search-bar/search-ba
   styleUrls: ['./dashboard-page.component.scss'],
   standalone: true,
   imports: [
-    SearchBarComponent,
     MenuComponent,
     CommonModule,
     ConnectionComponent,
@@ -40,7 +38,7 @@ import { SearchBarComponent } from '../../shared/components/search-bar/search-ba
     ButtonModule,
     ChartsComponent,
   ],
-  providers: [MessageService],
+  providers: [MessageService, StravaService],
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
   private urlSubscription$!: Subscription;

@@ -1,4 +1,4 @@
-@import 'variables';
+@use '../../../../styles/variables';
 
 .inputSearch {
   display: flex;
@@ -7,17 +7,17 @@
   height: 50px;
   border-radius: 32px;
   background-color: transparent;
-  border: 1px solid $color-white-60;
+  border: 1px solid variables.$color-white-60;
 
   .placeholder {
     margin-left: 10px;
     &__icon {
-      color: $color-white-60;
+      color: variables.$color-white-60;
       margin-right: 10px;
     }
 
     &__text {
-      color: $color-white-60;
+      color: variables.$color-white-60;
     }
   }
 }

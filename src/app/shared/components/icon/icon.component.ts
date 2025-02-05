@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { PrimeIcons } from 'primeng/api';
+import { PrimeIcons } from "primeng/api";
 import { APP_COLORS } from 'src/styles/_colorVariables';
 
 @Component({

@@ -1,8 +1,8 @@
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { MessageService } from 'primeng/api';
 import { StravaService } from './strava.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { MessageService } from "primeng/api";
 
 describe('StravaService', () => {
   let service: StravaService;

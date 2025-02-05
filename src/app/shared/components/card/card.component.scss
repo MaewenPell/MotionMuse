@@ -1,4 +1,4 @@
-@import 'variables';
+@use '../../../../styles/variables';
 
 .layout {
   display: grid;
@@ -66,11 +66,11 @@
     align-items: center;
 
     &__value--positive {
-      color: $color-green;
+      color: variables.$color-green;
     }
 
     &__value--negative {
-      color: $color-light-red;
+      color: variables.$color-light-red;
     }
 
     &__value {

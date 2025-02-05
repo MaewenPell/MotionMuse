@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, WritableSignal, inject, signal } from '@angular/core';
-import { env } from 'env';
 import { take } from 'rxjs';
 import { ConnectionBase } from 'src/app/types/access-token';
 import { Errors } from 'src/app/types/enums/errors.enums';
 import { StravaAPIUtils } from 'src/app/types/strava-api-token';
+import { Env } from '../../../../env';
 import { DataComputationsService } from './data-computations.service';
 import { StorageService } from './local-storage.service';
 import { UtilsService } from './utils.service';
@@ -21,16 +21,8 @@ export class ConnectionService {
   public $isConnected = signal(false);
   public $stravaToken: WritableSignal<string | undefined> = signal(undefined);
 
-  private _clientId!: string;
+  private env = new Env();
   private _clientSecret!: string;
-
-  get clientId() {
-    return env.client_id;
-  }
-
-  get clientSecret() {
-    return env.client_secret;
-  }
 
   authorizeApp() {
     const stravaUrl = 'https://www.strava.com/oauth/authorize';
@@ -39,7 +31,7 @@ export class ConnectionService {
     const redirectUri = 'http://localhost:4200/token-exchange';
     const scope = 'read,profile:read_all,activity:read';
 
-    const authorizeUrl = `${stravaUrl}?client_id=${this.clientId}&response_type=${responseType}&redirect_uri=${redirectUri}&approval_prompt=force&scope=${scope}`;
+    const authorizeUrl = `${stravaUrl}?client_id=${this.env.client_id}&response_type=${responseType}&redirect_uri=${redirectUri}&approval_prompt=force&scope=${scope}`;
 
     // Redirect to /token-exchange page
     window.location.href = authorizeUrl;
@@ -66,8 +58,8 @@ export class ConnectionService {
 
   public getConnectionBaseFromStrava(authorizationCode: string) {
     const params = new HttpParams()
-      .set('client_id', this.clientId)
-      .set('client_secret', this.clientSecret)
+      .set('client_id', this.env.client_id)
+      .set('client_secret', this.env.client_secret)
       .set('code', authorizationCode)
       .set('grant_type', StravaAPIUtils.AUTH);
 
@@ -95,8 +87,8 @@ export class ConnectionService {
     const currentRefreshToken = (currentConnectionBase as ConnectionBase)
       .refresh_token;
     const params = new HttpParams()
-      .set('client_id', this.clientId)
-      .set('client_secret', this.clientSecret)
+      .set('client_id', this.env.client_id)
+      .set('client_secret', this.env.client_secret)
       .set('grant_type', StravaAPIUtils.REFRESH)
       .set('refresh_token', currentRefreshToken);
 

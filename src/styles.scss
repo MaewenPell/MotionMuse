@@ -3,7 +3,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
 @import 'primeicons/primeicons.css';
 @include meta.load-css('styles/menu');
-@include meta.load-css('styles/button');
 
 :root {
   font-family: 'Open Sans', sans-serif;

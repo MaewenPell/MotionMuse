@@ -13,6 +13,7 @@ import { CardService } from '../../services/card.service';
 import { DataComputationsService } from '../../services/data-computations.service';
 import { StravaService } from '../../services/strava.service';
 import { IconComponent } from '../icon/icon.component';
+import { ButtonModule } from "primeng/button";
 
 @Component({
   selector: 'app-cards',
@@ -24,6 +25,7 @@ import { IconComponent } from '../icon/icon.component';
     toIconPipe,
     SkeletonModule,
     ToDashboardTimePipe,
+    ButtonModule
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',

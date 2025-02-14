@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, WritableSignal, computed, inject, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { take } from 'rxjs';
 import { ConnectionBase } from 'src/app/types/access-token';
 import { StravaAPIUtils } from 'src/app/types/strava-api-token';
-import { Env } from '../../../../env';
+import { Env } from '../../../env';
 import { StorageService } from './local-storage.service';
 
 @Injectable({

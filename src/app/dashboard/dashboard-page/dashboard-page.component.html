@@ -1,23 +1,22 @@
 <div class="mainContent">
     <app-menu class="mainContent__menu" />
     <div class="mainContent__hero">
-        @if (!this.connectionService.$isConnected()) {
+        <!-- TOOD mettre une page de connexion si on a pas de ConnectionBAse -->
+        <!-- @if (!this.connectionService.$isConnected()) {
             <div class="mainContent__connection">
                 <app-connection />
             </div>
-        }
+        } -->
     </div>
-    @if (this.connectionService.$isConnected()) {
-        <div class="dashboardContainer">
-            <app-cards
-                class="dashboardContainer__cards"
-                [activities$]="rawActivities" />
-            <app-charts
-                class="dashboardContainer__charts"
-                [yearActivities$]="yearRawActivites"
-                [activities$]="rawActivities" />
-        </div>
-    }
+    <!-- @if (this.connectionService.$isConnected()) { -->
+    <div class="dashboardContainer">
+        <app-cards
+            class="dashboardContainer__cards"
+            [activities$]="rawActivities" />
+        <app-charts
+            class="dashboardContainer__charts"
+            [yearActivities$]="yearRawActivites"
+            [activities$]="rawActivities" />
+    </div>
+    <!-- } -->
 </div>
-
-<p-toast />

@@ -1,4 +1,4 @@
-@import 'variables';
+@use '../../../../styles/variables';
 
 .container {
   display: block;
@@ -7,9 +7,9 @@
   margin: 16px 0px 16px 24px;
   height: calc(100vh - 32px);
   border-radius: 16px;
-  width: $menu-width;
+  width: variables.$menu-width;
   padding: 20px;
-  background-color: $color-white;
+  background-color: variables.$color-white;
 
   &__logo {
     display: flex;
@@ -43,15 +43,15 @@
         text-decoration: none;
         font-size: 15px;
         height: 35px;
-        color: $color-black-40;
+        color: variables.$color-black-40;
 
         &:hover {
-          color: $color-black-60;
+          color: variables.$color-black-60;
           cursor: pointer;
         }
 
         .is-active {
-          color: $color-black;
+          color: variables.$color-black;
           font-weight: 600;
         }
       }

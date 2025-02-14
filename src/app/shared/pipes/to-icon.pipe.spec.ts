@@ -1,4 +1,5 @@
-import { PrimeIcons } from 'primeng/api';
+
+import { PrimeIcons } from "primeng/api";
 import { toIconPipe } from './to-icon.pipe';
 
 describe('ToIconPipe', () => {

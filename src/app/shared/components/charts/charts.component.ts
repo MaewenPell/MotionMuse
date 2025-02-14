@@ -7,19 +7,16 @@ import {
   signal,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { EChartsOption } from 'echarts';
 import { DateTime } from 'luxon';
-import { NgxEchartsDirective } from 'ngx-echarts';
 import { ButtonModule } from 'primeng/button';
 import { WeeklyInformations } from 'src/app/types/strava-extracted-informations.type';
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
-import { APP_COLORS } from 'src/styles/_colorVariables';
 import { DataComputationsService } from '../../services/data-computations.service';
 
 @Component({
   selector: 'app-charts',
   standalone: true,
-  imports: [NgxEchartsDirective, ButtonModule],
+  imports: [ButtonModule],
   templateUrl: './charts.component.html',
   styleUrl: './charts.component.scss',
 })
@@ -34,9 +31,6 @@ export class ChartsComponent {
     input.required<SummaryActivity[]>();
 
   private values!: WeeklyInformations;
-
-  public chartOptionsWeekly!: EChartsOption;
-  public chartOptionsWeeklyEvolutions!: EChartsOption;
 
   public startDate: DateTime = DateTime.now().startOf('week');
   public endDate: DateTime = DateTime.now().endOf('week');
@@ -102,99 +96,6 @@ export class ChartsComponent {
       distance: activity.distance ? activity.distance / 1000 : null,
       elevation: activity.elevation ? activity.elevation : null,
     }));
-
-    this.chartOptionsWeekly = {
-      xAxis: {
-        type: 'time',
-        axisPointer: {
-          label: {
-            formatter: params =>
-              DateTime.fromMillis(Number(params.value)).toLocaleString(),
-          },
-        },
-        axisLabel: {
-          formatter: value => {
-            return DateTime.fromMillis(value).toFormat('ccc');
-          },
-        },
-      },
-      yAxis: [
-        {
-          name: 'Distance',
-          type: 'value',
-          position: 'left',
-          min: 0,
-          alignTicks: true,
-          axisPointer: {
-            label: {
-              precision: 0,
-            },
-          },
-        },
-        {
-          name: 'Elevation',
-          type: 'value',
-          min: 0,
-          alignTicks: true,
-          position: 'right',
-          axisPointer: {
-            label: {
-              precision: 0,
-            },
-          },
-        },
-      ],
-      tooltip: {
-        formatter: (params: any) => {
-          if (!params[0]?.data[1]) {
-            return `${params[0]?.axisValueLabel}<br> 
-          ${params[0].marker} ${params[0].seriesName} : 0 <br>
-          ${params[1].marker} ${params[1].seriesName} : 0`;
-          }
-          return `${params[0]?.axisValueLabel}<br> 
-          ${params[0].marker} ${params[0].seriesName} : ${params[0]?.data[1]?.toFixed(0)} Km <br>
-          ${params[1].marker} ${params[1].seriesName} : ${params[1]?.data[1]?.toFixed(0)} m <br>`;
-        },
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-        },
-      },
-      legend: {
-        data: ['Distance', 'Elevation'],
-        bottom: 10,
-      },
-      series: [
-        {
-          name: 'Distance',
-          type: 'bar',
-          yAxisIndex: 0,
-          itemStyle: {
-            color: APP_COLORS.MAIN_VIOLET,
-            borderRadius: 5,
-          },
-          data: data.map(day => {
-            return [day.days, day.distance];
-          }),
-        },
-        {
-          name: 'Elevation',
-          type: 'line',
-          yAxisIndex: 1,
-          itemStyle: {
-            color: APP_COLORS.YELLOW,
-          },
-          data: data.map(day => {
-            return [day.days, day.elevation];
-          }),
-          smooth: true,
-        },
-      ],
-      grid: {
-        top: '10',
-        left: '30',
-      },
-    };
   }
 
   private computeAllWeeksEvolutionsChart(activities: WeeklyInformations) {
@@ -204,93 +105,6 @@ export class ChartsComponent {
 
     const chartInformationPerWeek =
       this.dataComputationService.extractTotalInformationPerWeek(activities);
-
-    this.chartOptionsWeeklyEvolutions = {
-      xAxis: {
-        type: 'time',
-        axisPointer: {
-          label: {
-            formatter: params =>
-              DateTime.fromMillis(Number(params.value)).toLocaleString(),
-          },
-        },
-      },
-      yAxis: [
-        {
-          name: 'Distance',
-          type: 'value',
-          position: 'left',
-          alignTicks: true,
-          min: 0,
-          axisPointer: {
-            label: {
-              precision: 0,
-            },
-          },
-        },
-        {
-          name: 'Elevation',
-          type: 'value',
-          min: 0,
-          position: 'right',
-          axisPointer: {
-            label: {
-              precision: 0,
-            },
-          },
-        },
-      ],
-      tooltip: {
-        formatter: (params: any) => {
-          if (!params[0]?.data[1]) {
-            return `${params[0]?.axisValueLabel}<br> 
-          ${params[0].marker} ${params[0].seriesName} : 0 <br>
-          ${params[1].marker} ${params[1].seriesName} : 0`;
-          }
-          return `${params[0]?.axisValueLabel}<br> 
-          ${params[0].marker} ${params[0].seriesName} : ${params[0]?.data[1]?.toFixed(0)} Km <br>
-          ${params[1].marker} ${params[1].seriesName} : ${params[1]?.data[1]?.toFixed(0)} m <br>`;
-        },
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-        },
-      },
-      legend: {
-        data: ['Distance', 'Elevation'],
-        bottom: '10',
-      },
-      series: [
-        {
-          name: 'Distance',
-          type: 'bar',
-          yAxisIndex: 0,
-          itemStyle: {
-            color: APP_COLORS.MAIN_VIOLET,
-            borderRadius: 5,
-          },
-          data: chartInformationPerWeek.map(week => {
-            return [week.startDate?.toISOString(), week.totalDistance];
-          }),
-        },
-        {
-          name: 'Elevation',
-          type: 'line',
-          yAxisIndex: 1,
-          data: chartInformationPerWeek.map(week => {
-            return [week.startDate?.toISOString(), week.totalElevation];
-          }),
-          itemStyle: {
-            color: APP_COLORS.YELLOW,
-          },
-          smooth: true,
-        },
-      ],
-      grid: {
-        top: '10',
-        left: '30',
-      },
-    };
   }
 
   public loadPreviousWeekActivities() {

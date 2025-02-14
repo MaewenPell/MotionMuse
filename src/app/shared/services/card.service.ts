@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { DateTime } from 'luxon';
-import { PrimeIcons } from 'primeng/api';
 import { CardDataInformations } from 'src/app/types/data-card.type';
 import {
   StravaExtractedInformations,
@@ -9,6 +8,7 @@ import {
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 import { APP_COLORS } from 'src/styles/_colorVariables';
 import { DataComputationsService } from './data-computations.service';
+import { PrimeIcons } from "primeng/api";
 
 @Injectable({
   providedIn: 'root',

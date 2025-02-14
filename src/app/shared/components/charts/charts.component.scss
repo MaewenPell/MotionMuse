@@ -1,4 +1,4 @@
-@import 'variables';
+@use '../../../../styles/variables';
 
 .charts {
   display: grid;
@@ -13,9 +13,9 @@
     display: flex;
     flex-direction: column;
     height: calc(100vh - 252px);
-    border: 1px solid $color-white;
+    border: 1px solid variables.$color-white;
     border-radius: 16px;
-    background: $color-white;
+    background: variables.$color-white;
     z-index: 1;
 
     &Titles {

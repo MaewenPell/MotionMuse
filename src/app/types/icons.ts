@@ -1,4 +1,5 @@
-import { PrimeIcons } from 'primeng/api';
+import { PrimeIcons } from "primeng/api";
+
 
 export type Icons =
   | 'resume'

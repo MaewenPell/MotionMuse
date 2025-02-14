@@ -30,9 +30,7 @@
               "includePaths": ["src/styles"]
             },
             "styles": [
-              "src/styles.scss",
-              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
-              "node_modules/primeng/resources/primeng.min.css"
+              "src/styles.scss"
             ],
             "scripts": [],
             "browser": "src/main.ts"
@@ -104,6 +102,9 @@
     }
   },
   "cli": {
-    "schematicCollections": ["@angular-eslint/schematics"]
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ],
+    "analytics": false
   }
 }

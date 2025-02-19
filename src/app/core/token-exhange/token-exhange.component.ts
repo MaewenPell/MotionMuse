@@ -1,12 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Env } from 'env';
 import { take } from 'rxjs';
 import { ConnectionService } from 'src/app/shared/services/connection.service';
 import { StorageService } from 'src/app/shared/services/local-storage.service';
 import { ConnectionBase } from 'src/app/types/access-token';
 import { StravaAPIUtils } from 'src/app/types/strava-api-token';
+import { Env } from 'src/env';
 
 @Component({
   selector: 'app-token-exhange',

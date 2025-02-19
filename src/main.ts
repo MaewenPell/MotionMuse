@@ -13,6 +13,7 @@ import { StravaInterceptor } from './app/core/interceptor/strava.interceptor';
 import { providePrimeNG } from "primeng/config";
 
 import Aura from '@primeng/themes/aura';
+import MotionMusePreset from "./assets/presets/motion-muse.preset";
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -25,7 +26,7 @@ bootstrapApplication(AppComponent, {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: MotionMusePreset,
       },
     }),
   ],

@@ -7,7 +7,7 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Env } from 'env';
+import { Env } from 'src/env';
 import { ConnectionService } from '../shared/services/connection.service';
 import { StorageService } from '../shared/services/local-storage.service';
 import { Errors } from '../types/enums/errors.enums';

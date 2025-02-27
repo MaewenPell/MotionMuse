@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { DateTime } from 'luxon';
+import { PrimeIcons } from 'primeng/api';
 import { CardDataInformations } from 'src/app/types/data-card.type';
 import {
   StravaExtractedInformations,
@@ -8,7 +9,6 @@ import {
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 import { APP_COLORS } from 'src/styles/_colorVariables';
 import { DataComputationsService } from './data-computations.service';
-import { PrimeIcons } from "primeng/api";
 
 @Injectable({
   providedIn: 'root',
@@ -48,7 +48,6 @@ export class CardService {
         lastWeek: {
           startDate: lastWeekStartDate,
           endDate: lastWeekEndDate,
-          weekNumber: lastWeek.weekNumber,
           totalDistance: lastWeek.totalDistance,
           totalElevation: lastWeek.totalElevation,
           totalTime: lastWeek.totalTime,
@@ -58,7 +57,6 @@ export class CardService {
         currentWeek: {
           startDate: currentWeekStartDate,
           endDate: currentWeekEndDate,
-          weekNumber: currentWeek.weekNumber,
           totalDistance: currentWeek.totalDistance,
           totalElevation: currentWeek.totalElevation,
           totalTime: currentWeek.totalTime,
@@ -69,6 +67,12 @@ export class CardService {
     }
   }
 
+  public computeWeeklyInformations2(
+    activities: WeeklyInformations
+  ): StravaExtractedInformations | null {
+    return null;
+  }
+
   public createWeeklyTimeSpendCard(
     currentWeek: WeeklyInformations,
     lastWeek: WeeklyInformations
@@ -77,7 +81,7 @@ export class CardService {
       title: 'Time',
       icon: 'time',
       isPrimeIcon: true,
-      mainValue: currentWeek.totalTime,
+      mainValue: DateTime.fromSeconds(currentWeek.totalTime).toObject().hour,
       mainValueUnit: 'h',
       evolutionIcon:
         currentWeek.totalTime - lastWeek.totalTime > 0
@@ -102,7 +106,7 @@ export class CardService {
       title: 'Distance',
       icon: 'running',
       isPrimeIcon: false,
-      mainValue: currentWeek.totalDistance,
+      mainValue: currentWeek.totalDistance / 1000,
       mainValueUnit: 'km',
       evolutionIcon:
         currentWeek.totalDistance - lastWeek.totalDistance > 0
@@ -145,15 +149,16 @@ export class CardService {
   }
 
   public createLastActivityCard(
-    lastActivity: SummaryActivity
+    distance: number,
+    totalElevationGain: number
   ): CardDataInformations {
     return {
       title: 'Last activity',
       icon: PrimeIcons.CALENDAR,
       isPrimeIcon: true,
-      mainValue: lastActivity.distance,
+      mainValue: distance,
       mainValueUnit: 'km',
-      evolutionValue: lastActivity.total_elevation_gain,
+      evolutionValue: totalElevationGain,
       evolutionColor: APP_COLORS.DARK,
       evolutionIcon: this.primeIcon.ARROW_UP_RIGHT,
       evolutionUnit: 'm',

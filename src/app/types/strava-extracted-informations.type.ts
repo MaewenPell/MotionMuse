@@ -17,12 +17,11 @@ export type DailyDetails = {
 export type WeeklyInformations = {
   startDate: DateTime;
   endDate: DateTime;
-  weekNumber: number;
   totalDistance: number;
   totalElevation: number;
   totalTime: number;
-  detail: DailyDetails[];
-  lastActivity: SummaryActivity | null;
+  detail?: DailyDetails[];
+  lastActivity?: SummaryActivity | null;
 };
 
 export type totalInfomations = {

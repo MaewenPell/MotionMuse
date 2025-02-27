@@ -1,5 +1,5 @@
 <div class="charts">
-    <div class="charts__container">
+    <!-- <div class="charts__container">
         <div class="charts__containerTitles">
             <div class="title">
                 <h4>Weekly Evolution</h4>
@@ -23,8 +23,14 @@
                     [text]="true" />
             </div>
         </div>
-        <div class="chart"></div>
-    </div>
+
+        <canvas
+            baseChart
+            [data]="weeklyChartData()?.data"
+            [options]="weeklyChartData()?.options"
+            [type]="'line'">
+        </canvas>
+    </div> -->
     <div class="charts__container">
         <div class="charts__containerTitles">
             <div class="title">
@@ -36,6 +42,11 @@
                 </span>
             </div>
         </div>
-        <div class="chart"></div>
+        <canvas
+            baseChart
+            [data]="yearlyChartData()?.data"
+            [options]="weeklyChartData()?.options"
+            [type]="'line'">
+        </canvas>
     </div>
 </div>

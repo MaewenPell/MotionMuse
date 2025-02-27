@@ -1,6 +1,5 @@
 <div class="layout">
-    <p-button label="Submit" />
-    @if (activities$() && activities$().length > 0 && cards) {
+    @if (activities$() && cards) {
         @for (card of cards; track card.title) {
             <div class="container">
                 <div class="cardResume">

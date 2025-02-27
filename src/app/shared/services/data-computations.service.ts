@@ -57,6 +57,8 @@ export class DataComputationsService {
     return extractedData;
   }
 
+  public extractTotalInformations2(activites: WeeklyInformations) {}
+
   private extractInformations(
     activities: Partial<SummaryActivity>[],
     activitiesTypes: ActivityType[]
@@ -66,7 +68,6 @@ export class DataComputationsService {
       totalElevation: 0,
       endDate: DateTime.now(),
       startDate: DateTime.now(),
-      weekNumber: DateTime.now().weekNumber,
       totalTime: 0,
       detail: [],
       lastActivity: null,

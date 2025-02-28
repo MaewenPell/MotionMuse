@@ -40,24 +40,24 @@ export class UtilsService {
     allWeekDays.forEach((day: DateTime) => {
       const currentDayDate = day.toISODate();
 
-      if (currentDayDate) {
-        weeklyInfo.detail.forEach(dayDetail => {
-          if (
-            dayDetail.day.toISODate() !== currentDayDate &&
-            !weeklyInfo.detail.find(
-              detail => detail.day.toISODate() === currentDayDate
-            )
-          ) {
-            weeklyInfo.detail.push({
-              day: day,
-              weekNumber: day.weekNumber,
-              distance: null,
-              elevation: 0,
-              timeInSeconds: 0,
-            });
-          }
-        });
-      }
+      // if (currentDayDate) {
+      //   weeklyInfo?.detail?.forEach(dayDetail => {
+      //     if (
+      //       dayDetail.day.toISODate() !== currentDayDate &&
+      //       !weeklyInfo?.detail?.find(
+      //         detail => detail.day.toISODate() === currentDayDate
+      //       )
+      //     ) {
+      //       weeklyInfo?.detail?.push({
+      //         day: day,
+      //         weekNumber: day.weekNumber,
+      //         distance: null,
+      //         elevation: 0,
+      //         timeInSeconds: 0,
+      //       });
+      //     }
+      //   });
+      // }
     });
 
     return weeklyInfo;

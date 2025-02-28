@@ -1,4 +1,5 @@
 @use '../../../../styles/variables';
+@use "sass:color";
 
 .layout {
   display: grid;
@@ -10,10 +11,12 @@
 .container {
   display: flex;
   height: 100%;
-  justify-content: space-between;
+  gap: 15px;
+  border: 1px solid lightgray;
   flex-direction: column;
   padding: 16px 24px;
   max-width: 255px;
+  max-height: 120px;
   width: 100%;
   background-color: white;
   border-radius: 16px;
@@ -22,21 +25,29 @@
     transform: scale(1.02);
   }
 
-  .cardResume {
-    display: flex;
-    justify-content: space-between;
+  .card {
+    &__info {
+      display: flex;
+      gap: 20px;
+      position: relative;
+    }
+
+    &__icon {
+      position: absolute;
+      right: 0;
+    }
+
+    &__container {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
 
     &__info {
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-
-      &Container {
-        display: flex;
-        align-items: center;
-        gap: 3px;
-      }
+      gap: 20px;
     }
 
     &__skeletonRow {
@@ -45,7 +56,7 @@
       gap: 10px;
     }
 
-    .title {
+    &__title {
       color: #8898aa;
       font-size: 14px;
       font-weight: 700;
@@ -53,41 +64,60 @@
       text-transform: uppercase;
     }
 
-    .value {
-      color: #32325d;
+    &__value {
       font-size: 30px;
       font-weight: 600;
       line-height: 20px;
-    }
-  }
+      color: variables.$color-black;
 
-  .cardEvolution {
-    display: flex;
-    align-items: center;
-
-    &__value--positive {
-      color: variables.$color-green;
-    }
-
-    &__value--negative {
-      color: variables.$color-light-red;
-    }
-
-    &__value {
-      margin-left: 5px;
-
-      .value {
+      &--evolution {
+        margin-left: 5px;
         font-size: 14px;
-      }
+        color: variables.$color-black;
 
-      .unit {
-        font-size: 12px;
-        margin-left: 2px;
+        &--positive {
+          color: variables.$color-green;
+        }
+
+        &--negative {
+          color: variables.$color-light-red;
+        }
+      }
+    }
+
+    &__unit {
+      color: variables.$color-black;
+      font-size: 12px;
+      margin-left: 2px;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    &__evolution {
+      align-items: center;
+      display: flex;
+
+      &Overlay {
+        background-color: #8898aa;
+        align-items: center;
+        justify-content: center;
+        padding: 3px;
+        border-radius: 5px;
+        display: flex;
+
+        &--positive {
+          background-color: rgba(variables.$color-green, $alpha: .2);
+        }
+
+        &--negative {
+          background-color: rgba(variables.$color-light-red, $alpha: .2);
+        }
       }
     }
 
     &__sentence {
-      margin-left: 20px;
+      margin-left: 10px;
       color: #8898aa;
       font-weight: 300;
       font-size: 12px;

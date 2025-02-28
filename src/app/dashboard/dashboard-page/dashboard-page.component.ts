@@ -12,7 +12,10 @@ import { ConnectionService } from 'src/app/shared/services/connection.service';
 import { DataComputationsService } from 'src/app/shared/services/data-computations.service';
 import { StravaService } from 'src/app/shared/services/strava.service';
 import { CardTypesEnum } from 'src/app/types/enums/cardTypes.enum';
-import { WeeklyInformations } from 'src/app/types/strava-extracted-informations.type';
+import {
+  DailyDetails,
+  WeeklyInformations,
+} from 'src/app/types/strava-extracted-informations.type';
 import { MenuComponent } from '../../shared/components/menu/menu.component';
 
 @Component({
@@ -46,8 +49,9 @@ export class DashboardPageComponent {
     totalElevation: 0,
     totalTime: 0,
     detail: [],
-    lastActivity: null,
   });
+
+  public lastActivity$ = signal<DailyDetails | null>(null);
 
   constructor() {
     const startOfYear = DateTime.now().startOf('year');
@@ -66,6 +70,9 @@ export class DashboardPageComponent {
             endOfYear
           );
 
+        this.lastActivity$.set(
+          yearsActivityPerWeeks.detail[yearsActivityPerWeeks.detail.length - 1]
+        );
         this.yearsActivitiesPerWeek.set(yearsActivityPerWeeks);
       });
   }

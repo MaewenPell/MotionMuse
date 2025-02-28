@@ -1,18 +1,14 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  inject,
-  input,
-  signal,
-  Signal,
-} from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { Component, computed, inject, input, Signal } from '@angular/core';
 import { DateTime } from 'luxon';
+import { PrimeIcons } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CardDataInformations } from 'src/app/types/data-card.type';
-import { WeeklyInformations } from 'src/app/types/strava-extracted-informations.type';
+import {
+  DailyDetails,
+  WeeklyInformations,
+} from 'src/app/types/strava-extracted-informations.type';
 import { APP_COLORS } from 'src/styles/_colorVariables';
 import { ConvertUnitPipe } from '../../pipes/convert-unit.pipe';
 import { ToDashboardTimePipe } from '../../pipes/to-dashboard-time.pipe';
@@ -38,62 +34,132 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './card.component.scss',
 })
 export class CardComponent {
-  public activities$ = input.required<WeeklyInformations>();
-
   public cardService = inject(CardService);
   public stravaService = inject(StravaService);
   public dataComputationsService = inject(DataComputationsService);
 
+  public activities$ = input.required<WeeklyInformations>();
+  public lastActivity$ = input.required<DailyDetails | null>();
+
+  private primeIcon = PrimeIcons;
   public appColors = APP_COLORS;
-  public cards: CardDataInformations[] = [];
 
-  // private weeklyInformations: StravaExtractedInformations = {
-  //   lastWeek: {
-  //     startDate: DateTime.now(),
-  //     endDate: DateTime.now(),
-  //     totalDistance: 0,
-  //     totalElevation: 0,
-  //     totalTime: 0,
-  //     detail: [],
-  //     lastActivity: null,
-  //   },
-  //   currentWeek: {
-  //     startDate: DateTime.now(),
-  //     endDate: DateTime.now(),
-  //     totalDistance: 0,
-  //     totalElevation: 0,
-  //     totalTime: 0,
-  //     detail: [],
-  //     lastActivity: null,
-  //   },
-  // };
-
-  private weeklyDistanceCard: Signal<CardDataInformations | null> = computed(()=> {
-        return {
-          title: 'Distance',
-          icon: 'running',
-          isPrimeIcon: false,
-          mainValue: this.weeklyInformations().currentWeek.totalDistance / 1000,
-          mainValueUnit: 'km',
-          evolutionIcon:
-            currentWeek.totalDistance - lastWeek.totalDistance > 0
-              ? this.primeIcon.ARROW_UP
-              : this.primeIcon.ARROW_DOWN,
-          evolutionValue: currentWeek.totalDistance - lastWeek.totalDistance,
-          evolutionColor:
-            currentWeek.totalDistance - lastWeek.totalDistance > 0
-              ? APP_COLORS.GREEN
-              : APP_COLORS.LIGHT_RED,
-          evolutionUnit: 'km',
-          evolutionSentence: 'since last week',
-          color: APP_COLORS.YELLOW,
-        };
+  public cardsCollection$: Signal<CardDataInformations[]> = computed(() => {
+    return [
+      this.weeklyDistanceCard$(),
+      this.weeklyElevationGainCard$(),
+      this.weeklyTimeSpendCard$(),
+      this.lastActivityCard$(),
+    ];
   });
-  private weeklyElevationGainCard: Signal<CardDataInformations | null> =
-    signal(null);
-  private weeklyTimeSpendCard: Signal<CardDataInformations | null> =
-    signal(null);
-  private lastActivityCard: Signal<CardDataInformations | null> = signal(null);
+
+  private weeklyDistanceCard$: Signal<CardDataInformations> = computed(() => {
+    return {
+      id: 'distance',
+      title: 'Distance',
+      icon: 'running',
+      isPrimeIcon: false,
+      mainValue: this.weeklyInformations$().currentWeek.totalDistance,
+      mainValueUnit: 'km',
+      evolutionIcon:
+        this.weeklyInformations$().currentWeek.totalDistance -
+          this.weeklyInformations$().lastWeek.totalDistance >
+        0
+          ? this.primeIcon.ARROW_UP
+          : this.primeIcon.ARROW_DOWN,
+      evolutionValue:
+        this.weeklyInformations$().currentWeek.totalDistance -
+        this.weeklyInformations$().lastWeek.totalDistance,
+      evolutionColor:
+        this.weeklyInformations$().currentWeek.totalDistance -
+          this.weeklyInformations$().lastWeek.totalDistance >
+        0
+          ? APP_COLORS.GREEN
+          : APP_COLORS.LIGHT_RED,
+      evolutionUnit: 'km',
+      evolutionSentence: 'since last week',
+      color: APP_COLORS.YELLOW,
+    };
+  });
+
+  private weeklyElevationGainCard$: Signal<CardDataInformations> = computed(
+    () => {
+      return {
+        id: 'elevation',
+        title: 'Elevation',
+        icon: 'mountains',
+        isPrimeIcon: false,
+        mainValue: this.weeklyInformations$().currentWeek.totalElevation,
+        mainValueUnit: 'm',
+        evolutionValue:
+          this.weeklyInformations$().currentWeek.totalElevation -
+          this.weeklyInformations$().lastWeek.totalElevation,
+        evolutionIcon:
+          this.weeklyInformations$().currentWeek.totalElevation -
+            this.weeklyInformations$().lastWeek.totalElevation >
+          0
+            ? this.primeIcon.ARROW_UP
+            : this.primeIcon.ARROW_DOWN,
+        evolutionColor:
+          this.weeklyInformations$().currentWeek.totalElevation -
+            this.weeklyInformations$().lastWeek.totalElevation >
+          0
+            ? APP_COLORS.GREEN
+            : APP_COLORS.LIGHT_RED,
+        evolutionUnit: 'm',
+        evolutionSentence: 'since last week',
+        color: APP_COLORS.LIGHT_BLUE,
+      };
+    }
+  );
+
+  private lastActivityCard$: Signal<CardDataInformations> = computed(() => {
+    return {
+      id: 'lastActivity',
+      title: 'Last activity',
+      icon: PrimeIcons.CALENDAR,
+      isPrimeIcon: true,
+      mainValue: this.lastActivity$()?.distance ?? 0,
+      mainValueUnit: 'km',
+      evolutionValue: this.lastActivity$()?.elevation ?? 0,
+      evolutionColor: APP_COLORS.DARK,
+      evolutionIcon: this.primeIcon.ARROW_UP_RIGHT,
+      evolutionUnit: 'm',
+      evolutionSentence: 'Elevation gain',
+      color: APP_COLORS.LIGHT_RED,
+    };
+  });
+
+  private weeklyTimeSpendCard$: Signal<CardDataInformations> = computed(() => {
+    const card: CardDataInformations = {
+      id: 'time',
+      title: 'Time',
+      icon: 'time',
+      isPrimeIcon: true,
+      mainValue: this.weeklyInformations$().currentWeek.totalTime,
+      mainValueUnit: 'h',
+      evolutionIcon:
+        this.weeklyInformations$().currentWeek.totalTime -
+          this.weeklyInformations$().lastWeek.totalTime >
+        0
+          ? this.primeIcon.ARROW_UP
+          : this.primeIcon.ARROW_DOWN,
+      evolutionValue:
+        this.weeklyInformations$().currentWeek.totalTime -
+        this.weeklyInformations$().lastWeek.totalTime,
+      evolutionColor:
+        this.weeklyInformations$().currentWeek.totalTime -
+          this.weeklyInformations$().lastWeek.totalTime >
+        0
+          ? APP_COLORS.GREEN
+          : APP_COLORS.LIGHT_RED,
+      evolutionUnit: 'h',
+      evolutionSentence: 'since last week',
+      color: APP_COLORS.ORANGE,
+    };
+
+    return card;
+  });
 
   private currentWeekActivities$ = computed(() => {
     return this.activities$()?.detail?.filter(
@@ -111,7 +177,7 @@ export class CardComponent {
     );
   });
 
-  private weeklyInformations: Signal<{
+  private weeklyInformations$: Signal<{
     currentWeek: WeeklyInformations;
     lastWeek: WeeklyInformations;
   }> = computed(() => {
@@ -141,6 +207,8 @@ export class CardComponent {
         totalElevation: currentWeekTotalElevation,
         startDate: DateTime.now().startOf('week'),
         endDate: DateTime.now().endOf('week'),
+        detail: [],
+        lastActivity: this.currentWeekActivities$(),
       },
       lastWeek: {
         totalDistance: lastWeekTotalDistance,
@@ -148,42 +216,8 @@ export class CardComponent {
         totalElevation: lastWeekTotalElevation,
         startDate: DateTime.now().startOf('week').minus({ weeks: 1 }),
         endDate: DateTime.now().endOf('week').minus({ weeks: 1 }),
+        detail: [],
       },
     };
   });
-
-  constructor() {
-    toObservable(this.activities$).subscribe(() => {
-      if (this.activities$()?.detail?.length) {
-        this.weeklyDistanceCard = this.cardService.createWeeklyDistanceCard(
-          this.weeklyInformations$().currentWeek,
-          this.weeklyInformations.lastWeek
-        );
-
-        this.weeklyElevationGainCard =
-          this.cardService.createWeeklyElevationCard(
-            this.weeklyInformations.currentWeek,
-            this.weeklyInformations.lastWeek
-          );
-
-        this.lastActivityCard = this.cardService.createLastActivityCard(
-          currentWeekActivities[currentWeekActivities.length - 1].distance ??
-            0 / 1000,
-          currentWeekActivities[currentWeekActivities.length - 1].elevation
-        );
-
-        this.weeklyTimeSpendCard = this.cardService.createWeeklyTimeSpendCard(
-          this.weeklyInformations.currentWeek,
-          this.weeklyInformations.lastWeek
-        );
-
-        this.cards.push(
-          this.weeklyDistanceCard,
-          this.weeklyElevationGainCard,
-          this.weeklyTimeSpendCard,
-          this.lastActivityCard
-        );
-      }
-    });
-  }
 }

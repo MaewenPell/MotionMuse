@@ -12,11 +12,11 @@
     <div class="dashboardContainer">
         <app-cards
             class="dashboardContainer__cards"
+            [lastActivity$]="lastActivity$()"
             [activities$]="yearsActivitiesPerWeek()" />
-        <!-- <app-charts
+        <app-charts
             class="dashboardContainer__charts"
-            [yearActivities$]="yearRawActivites()"
-            [activities$]="rawActivities()" /> -->
+            [yearActivities$]="yearsActivitiesPerWeek()" />
         <!-- <app-charts
             class="dashboardContainer__charts"
             [(activities$)]="weeklyChartData"

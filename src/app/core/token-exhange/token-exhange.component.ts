@@ -6,7 +6,7 @@ import { ConnectionService } from 'src/app/shared/services/connection.service';
 import { StorageService } from 'src/app/shared/services/local-storage.service';
 import { ConnectionBase } from 'src/app/types/access-token';
 import { StravaAPIUtils } from 'src/app/types/strava-api-token';
-import { Env } from "src/env";
+import { Env } from 'src/env';
 
 @Component({
   selector: 'app-token-exhange',
@@ -50,6 +50,8 @@ export class TokenExhangeComponent {
                 'connectionBase',
                 JSON.stringify(connectionBase)
               );
+
+              this.router.navigate(['/dashboard']);
             });
         } else if (searchParams && searchParams === 'expired') {
           const currentConnectionBase =
@@ -78,12 +80,12 @@ export class TokenExhangeComponent {
                   JSON.stringify(newConnectionBase)
                 );
 
+                this.router.navigate(['/dashboard']);
+
                 console.log('Token refreshed');
               }
             );
         }
-
-        this.router.navigate(['/dashboard']);
       }
     });
   }

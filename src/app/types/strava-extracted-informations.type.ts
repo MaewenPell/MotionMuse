@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import { SummaryActivity } from './strava/types/summary-activity';
+import { ActivityType } from "./strava/enum/activity-type.enum";
 
 export type StravaExtractedInformations = {
   lastWeek: WeeklyInformations;
@@ -12,17 +13,16 @@ export type DailyDetails = {
   distance: number | null;
   elevation: number;
   timeInSeconds: number;
+  activityType: ActivityType
 };
 
 export type WeeklyInformations = {
   startDate: DateTime;
   endDate: DateTime;
-  weekNumber: number;
   totalDistance: number;
   totalElevation: number;
   totalTime: number;
   detail: DailyDetails[];
-  lastActivity: SummaryActivity | null;
 };
 
 export type totalInfomations = {

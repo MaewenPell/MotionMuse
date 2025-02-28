@@ -1,3 +1,4 @@
+
 export enum StravaAPIUtils {
   AUTH = 'authorization_code',
   REFRESH = 'refresh_token',

@@ -1,82 +1,73 @@
 <div class="layout">
-    <p-button label="Submit" />
-    @if (activities$() && activities$().length > 0 && cards) {
-        @for (card of cards; track card.title) {
+    @if (activities$() && cardsCollection$()) {
+        @for (card of cardsCollection$(); track card.id) {
             <div class="container">
-                <div class="cardResume">
-                    <div class="cardResume__info">
-                        <h4 class="title">
-                            {{ card.title }}
-                        </h4>
+                <div class="card__info">
+                    <h4 class="card__title">
+                        {{ card.title }}
+                    </h4>
 
-                        <div class="cardResume__infoContainer">
-                            @if (card.mainValueUnit === 'm' || card.mainValueUnit === 'km') {
-                                <h4 class="value">
-                                    {{
-                                        card.mainValue
-                                            | convertUnit: 'm' : card.mainValueUnit
-                                            | number: '1.0-0'
-                                    }}
-                                </h4>
-                            } @else {
-                                <h4 class="value">
-                                    {{ card.mainValue | toDashboardTime }}
-                                </h4>
-                            }
-                            <span class="unit">
-                                {{ card.mainValueUnit }}
-                            </span>
-                        </div>
+                    <div class="card__container">
+                        <h4 class="card__value">
+                            {{
+                                card.mainValueUnit === 'm' || card.mainValueUnit === 'km'
+                                    ? (card.mainValue
+                                      | convertUnit: 'm' : card.mainValueUnit
+                                      | number: '1.0-0')
+                                    : (card.mainValue | toDashboardTime)
+                            }}
+                        </h4>
+                        <span class="card__unit">
+                            {{ card.mainValueUnit }}
+                        </span>
                     </div>
                     <app-icon
-                        class="cardResume__icon"
+                        class="card__icon"
                         [isPrimeNgIcon]="card.isPrimeIcon"
                         [icon]="card.icon | toIcon"
                         [iconColor]="appColors.DARK"
                         [backgroundColor]="card.color" />
                 </div>
 
-                @if (card.evolutionValue && card.evolutionUnit) {
-                    <div class="cardEvolution">
-                        <div class="cardEvolution__arrow">
-                            <app-icon
-                                [icon]="card.evolutionIcon"
-                                [widthInPx]="16"
-                                [heightInPx]="16"
-                                [isPrimeNgIcon]="true"
-                                [iconSizeInPx]="16"
-                                [iconColor]="card.evolutionColor"
-                                [backgroundVisible]="false" />
-                        </div>
-                        <div
-                            class="cardEvolution__value"
-                            [ngClass]="
-                                card.evolutionValue > 0
-                                    ? 'cardEvolution__value--positive'
-                                    : 'cardEvolution__value--negative'
-                            ">
-                            @if (card.evolutionUnit === 'm' || card.evolutionUnit === 'km') {
-                                <span class="value">
-                                    {{
-                                        card.evolutionValue
-                                            | convertUnit: 'm' : card.evolutionUnit
-                                            | number: '1.0-0'
-                                    }}
-                                </span>
-                            } @else {
-                                <span class="value">
-                                    {{ card.evolutionValue | toDashboardTime }}
-                                </span>
-                            }
-                            <span class="unit">
-                                {{ card.evolutionUnit }}
-                            </span>
-                        </div>
-                        <div class="cardEvolution__sentence">
-                            {{ card.evolutionSentence }}
-                        </div>
+                <div class="card__evolution">
+                    <div
+                        class="card__evolutionOverlay"
+                        [ngClass]="
+                            card.evolutionValue > 0
+                                ? 'card__evolutionOverlay--positive'
+                                : 'card__evolutionOverlay--negative'
+                        ">
+                        <app-icon
+                            [icon]="card.evolutionIcon"
+                            [widthInPx]="10"
+                            [heightInPx]="10"
+                            [isPrimeNgIcon]="true"
+                            [iconSizeInPx]="10"
+                            [iconColor]="card.evolutionColor"
+                            [backgroundVisible]="false" />
+
+                        <span
+                            class="card__value--evolution"
+                            [ngClass]="{
+                                'card__value--evolution--positive':
+                                    card.evolutionValue > 0 && card.id !== 'lastActivity',
+                                'card__value--evolution--negative':
+                                    card.evolutionValue <= 0 && card.id !== 'lastActivity'
+                            }">
+                            {{
+                                card.evolutionUnit === 'm' || card.evolutionUnit === 'km'
+                                    ? (card.evolutionValue
+                                      | convertUnit: 'm' : card.evolutionUnit
+                                      | number: '1.0-0')
+                                    : (card.evolutionValue | toDashboardTime)
+                            }}
+                            {{ card.evolutionUnit }}
+                        </span>
                     </div>
-                }
+                    <div class="card__sentence">
+                        {{ card.evolutionSentence }}
+                    </div>
+                </div>
             </div>
         }
     } @else {

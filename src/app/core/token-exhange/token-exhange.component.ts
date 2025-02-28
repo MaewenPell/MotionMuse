@@ -50,6 +50,8 @@ export class TokenExhangeComponent {
                 'connectionBase',
                 JSON.stringify(connectionBase)
               );
+
+              this.router.navigate(['/dashboard']);
             });
         } else if (searchParams && searchParams === 'expired') {
           const currentConnectionBase =
@@ -78,12 +80,12 @@ export class TokenExhangeComponent {
                   JSON.stringify(newConnectionBase)
                 );
 
+                this.router.navigate(['/dashboard']);
+
                 console.log('Token refreshed');
               }
             );
         }
-
-        this.router.navigate(['/dashboard']);
       }
     });
   }

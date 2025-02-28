@@ -10,7 +10,6 @@ import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 })
 export class StravaService {
   private strava_base_url = 'https://www.strava.com/api/v3/athlete';
-  // private strava_base_url = 'localhost';
   private http = inject(HttpClient);
   private messageService = inject(MessageService);
 

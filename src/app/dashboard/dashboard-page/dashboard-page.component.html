@@ -8,15 +8,19 @@
             </div>
         } -->
     </div>
-    <!-- @if (this.connectionService.$isConnected()) { -->
+
     <div class="dashboardContainer">
         <app-cards
             class="dashboardContainer__cards"
-            [activities$]="rawActivities" />
+            [lastActivity$]="lastActivity$()"
+            [activities$]="yearsActivitiesPerWeek()" />
         <app-charts
             class="dashboardContainer__charts"
-            [yearActivities$]="yearRawActivites"
-            [activities$]="rawActivities" />
+            [yearActivities$]="yearsActivitiesPerWeek()" />
+        <!-- <app-charts
+            class="dashboardContainer__charts"
+            [(activities$)]="weeklyChartData"
+            [activities$]="rawActivities()" /> -->
     </div>
     <!-- } -->
 </div>

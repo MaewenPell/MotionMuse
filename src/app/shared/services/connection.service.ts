@@ -3,8 +3,8 @@ import { Injectable, inject } from '@angular/core';
 import { take } from 'rxjs';
 import { ConnectionBase } from 'src/app/types/access-token';
 import { StravaAPIUtils } from 'src/app/types/strava-api-token';
-import { Env } from '../../../env';
 import { StorageService } from './local-storage.service';
+import { Env } from "src/env";
 
 @Injectable({
   providedIn: 'root',

@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DateTime } from 'luxon';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
@@ -10,7 +12,10 @@ import { ConnectionService } from 'src/app/shared/services/connection.service';
 import { DataComputationsService } from 'src/app/shared/services/data-computations.service';
 import { StravaService } from 'src/app/shared/services/strava.service';
 import { CardTypesEnum } from 'src/app/types/enums/cardTypes.enum';
-import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
+import {
+  DailyDetails,
+  WeeklyInformations,
+} from 'src/app/types/strava-extracted-informations.type';
 import { MenuComponent } from '../../shared/components/menu/menu.component';
 
 @Component({
@@ -37,6 +42,38 @@ export class DashboardPageComponent {
 
   public cardTypesEnums = CardTypesEnum;
 
-  public rawActivities: SummaryActivity[] = [];
-  public yearRawActivites: SummaryActivity[] = [];
+  public yearsActivitiesPerWeek = signal<WeeklyInformations>({
+    startDate: DateTime.now(),
+    endDate: DateTime.now(),
+    totalDistance: 0,
+    totalElevation: 0,
+    totalTime: 0,
+    detail: [],
+  });
+
+  public lastActivity$ = signal<DailyDetails | null>(null);
+
+  constructor() {
+    const startOfYear = DateTime.now().startOf('year');
+    const endOfYear = DateTime.now().endOf('year');
+
+    this.stravaService
+      .getActivities(endOfYear, startOfYear)
+      .pipe(takeUntilDestroyed())
+      .subscribe(activities => {
+        const yearsActivityPerWeeks =
+          this.dataComputationsService.extractTotalInformations(
+            activities,
+            'custom',
+            ['Run', 'TrailRun'],
+            startOfYear,
+            endOfYear
+          );
+
+        this.lastActivity$.set(
+          yearsActivityPerWeeks.detail[yearsActivityPerWeeks.detail.length - 1]
+        );
+        this.yearsActivitiesPerWeek.set(yearsActivityPerWeeks);
+      });
+  }
 }

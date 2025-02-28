@@ -1,7 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { groupBy, map, mapValues, sumBy } from 'lodash-es';
 import { DateTime } from 'luxon';
-import { WeeklyInformations } from 'src/app/types/strava-extracted-informations.type';
+import {
+  DailyDetails,
+  WeeklyInformations,
+} from 'src/app/types/strava-extracted-informations.type';
 import { ActivityType } from 'src/app/types/strava/enum/activity-type.enum';
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 import { UtilsService } from './utils.service';
@@ -57,6 +60,8 @@ export class DataComputationsService {
     return extractedData;
   }
 
+  public extractTotalInformations2(activites: WeeklyInformations) {}
+
   private extractInformations(
     activities: Partial<SummaryActivity>[],
     activitiesTypes: ActivityType[]
@@ -66,10 +71,8 @@ export class DataComputationsService {
       totalElevation: 0,
       endDate: DateTime.now(),
       startDate: DateTime.now(),
-      weekNumber: DateTime.now().weekNumber,
       totalTime: 0,
       detail: [],
-      lastActivity: null,
     };
 
     activities.forEach(activity => {
@@ -77,7 +80,7 @@ export class DataComputationsService {
         extractedData.totalDistance += activity.distance || 0;
         extractedData.totalElevation += activity.total_elevation_gain || 0;
         extractedData.totalTime += activity.moving_time || 0;
-        extractedData.detail.push({
+        extractedData.detail?.push({
           day: DateTime.fromISO(activity.start_date_local || ''),
           distance: activity.distance || 0,
           elevation: activity.total_elevation_gain || 0,
@@ -118,8 +121,8 @@ export class DataComputationsService {
     );
 
     return map(sumByWeek, (value, key) => ({
-      startDate: activities.detail
-        .find(detail => detail.weekNumber === parseInt(key))
+      startDate: activities?.detail
+        ?.find((detail: DailyDetails) => detail.weekNumber === parseInt(key))
         ?.day.startOf('week')
         .toJSDate(),
       weekNumber: key,

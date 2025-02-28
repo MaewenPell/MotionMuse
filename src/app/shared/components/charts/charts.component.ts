@@ -1,151 +1,117 @@
-import {
-  Component,
-  InputSignal,
-  inject,
-  input,
-  model,
-  signal,
-} from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { Component, computed, input, Signal } from '@angular/core';
+import { ChartConfiguration } from 'chart.js';
+import 'chartjs-adapter-luxon';
 import { DateTime } from 'luxon';
+import { BaseChartDirective } from 'ng2-charts';
 import { ButtonModule } from 'primeng/button';
 import { WeeklyInformations } from 'src/app/types/strava-extracted-informations.type';
-import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
-import { DataComputationsService } from '../../services/data-computations.service';
+
+type ChartConfig =
+  | ChartConfiguration<'bar', { x: string | null; y: number | null }[], unknown>
+  | undefined;
 
 @Component({
   selector: 'app-charts',
   standalone: true,
-  imports: [ButtonModule],
+  imports: [ButtonModule, BaseChartDirective],
   templateUrl: './charts.component.html',
   styleUrl: './charts.component.scss',
 })
 export class ChartsComponent {
-  private dataComputationService: DataComputationsService = inject(
-    DataComputationsService
-  );
+  public yearActivities$ = input.required<WeeklyInformations>();
 
-  public activities$ = model<SummaryActivity[]>();
+  public weeklyChart$: Signal<ChartConfig> = computed(() => {
+    const formattedActivityData = this.yearActivities$()
+      ?.detail.filter(
+        activities => activities.weekNumber === DateTime.now().weekNumber
+      )
+      .map(activity => ({
+        days: activity.day.toISO(),
+        weekNumber: activity.weekNumber,
+        distance: activity.distance ? activity.distance / 1000 : null,
+        elevation: activity.elevation ? activity.elevation : null,
+      }));
 
-  public yearActivities$: InputSignal<SummaryActivity[]> =
-    input.required<SummaryActivity[]>();
+    return {
+      type: 'bar',
+      data: {
+        datasets: [
+          {
+            label: 'Distance',
+            data: formattedActivityData.map(d => {
+              return {
+                x: d.days,
+                y: d.distance,
+              };
+            }),
+            backgroundColor: 'rgba(148,159,177,0.2)',
+            borderColor: 'rgba(148,159,177,1)',
+          },
+        ],
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              unit: 'day',
+            },
+            min: DateTime.now().startOf('week').toISO(),
+            max: DateTime.now().endOf('week').toISO(),
+          },
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    };
+  });
 
-  private values!: WeeklyInformations;
+  public monthlyChart$: Signal<ChartConfig> = computed(() => {
+    const formattedActivityData = this.yearActivities$()
+      ?.detail.filter(
+        activities => activities.day.month === DateTime.now().month
+      )
 
-  public startDate: DateTime = DateTime.now().startOf('week');
-  public endDate: DateTime = DateTime.now().endOf('week');
+      .map(activity => ({
+        days: activity.day.toISO(),
+        weekNumber: activity.weekNumber,
+        distance: activity.distance ? activity.distance / 1000 : null,
+        elevation: activity.elevation ? activity.elevation : null,
+      }));
 
-  private startOfyear!: DateTime;
-  private endOfYear!: DateTime;
-
-  protected subtitleWeeklyChart$ = signal<string>('');
-  protected subtitleYearlyChart$ = signal<string>('');
-
-  protected incorrectNextWeek$ = signal<boolean>(false);
-
-  private weeklyActivities = toObservable(this.activities$).subscribe(
-    weeklyActivities => {
-      if (weeklyActivities && weeklyActivities.length > 0) {
-        this.values = this.dataComputationService.extractTotalInformations(
-          this.activities$() ?? [],
-          'custom',
-          ['Run', 'TrailRun'],
-          this.startDate,
-          this.endDate
-        );
-
-        this.computeWeeklyChart(this.values.detail);
-      }
-    }
-  );
-
-  private reactYear = toObservable(this.yearActivities$).subscribe(
-    rawYearActivities => {
-      this.startOfyear = DateTime.now().startOf('year');
-      this.endOfYear = DateTime.now().endOf('year');
-      if (rawYearActivities && rawYearActivities.length > 0) {
-        this.values = this.dataComputationService.extractTotalInformations(
-          rawYearActivities,
-          'custom',
-          ['Run', 'TrailRun'],
-          this.startOfyear,
-          this.endOfYear
-        );
-
-        this.computeAllWeeksEvolutionsChart(this.values);
-      }
-    }
-  );
-
-  private computeWeeklyChart(activities: WeeklyInformations['detail']) {
-    const expectedNextStartDate = this.startDate.plus({
-      week: 1,
-    });
-
-    this.incorrectNextWeek$.set(
-      expectedNextStartDate.startOf('week') > DateTime.now()
-    );
-
-    this.subtitleWeeklyChart$.set(
-      `From : ${this.startDate.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })} to ${this.endDate.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })}`
-    );
-
-    const data = activities.map(activity => ({
-      days: activity.day.toISO(),
-      weekNumber: activity.weekNumber,
-      distance: activity.distance ? activity.distance / 1000 : null,
-      elevation: activity.elevation ? activity.elevation : null,
-    }));
-  }
-
-  private computeAllWeeksEvolutionsChart(activities: WeeklyInformations) {
-    this.subtitleYearlyChart$.set(
-      `From : ${this.startOfyear.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })} to ${this.endOfYear.setLocale('en-gb').toLocaleString({ weekday: 'short', month: 'short', day: '2-digit' })}`
-    );
-
-    const chartInformationPerWeek =
-      this.dataComputationService.extractTotalInformationPerWeek(activities);
-  }
-
-  public loadPreviousWeekActivities() {
-    this.startDate = this.startDate.minus({
-      week: 1,
-    });
-    this.endDate = this.endDate
-      .minus({
-        week: 1,
-      })
-      .endOf('week');
-
-    const lastWeekActivitites = this.yearActivities$().filter(summary => {
-      return (
-        DateTime.fromISO(summary.start_date) > this.startDate &&
-        DateTime.fromISO(summary.start_date) < this.endDate
-      );
-    });
-
-    this.activities$.set(lastWeekActivitites);
-  }
-
-  public loadNextWeekActivities() {
-    const expectedStartDate = this.startDate.plus({
-      week: 1,
-    });
-
-    this.startDate = expectedStartDate;
-    this.endDate = this.endDate
-      .plus({
-        week: 1,
-      })
-      .endOf('week');
-
-    const lastWeekActivitites = this.yearActivities$().filter(summary => {
-      return (
-        DateTime.fromISO(summary.start_date) > this.startDate &&
-        DateTime.fromISO(summary.start_date) < this.endDate
-      );
-    });
-
-    this.activities$.set(lastWeekActivitites);
-  }
+    return {
+      type: 'bar',
+      data: {
+        datasets: [
+          {
+            label: 'Distance',
+            data: formattedActivityData.map(d => {
+              return {
+                x: d.days,
+                y: d.distance,
+              };
+            }),
+            backgroundColor: 'rgba(148,159,177,0.2)',
+            borderColor: 'rgba(148,159,177,1)',
+          },
+        ],
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              unit: 'day',
+            },
+            min: DateTime.now().startOf('month').toISO(),
+            max: DateTime.now().endOf('month').toISO(),
+          },
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    };
+  });
 }

@@ -1,12 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  GuardResult,
-  MaybeAsync,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { CanActivate, GuardResult, MaybeAsync, Router } from '@angular/router';
 import { Env } from 'src/env';
 import { ConnectionService } from '../shared/services/connection.service';
 import { StorageService } from '../shared/services/local-storage.service';
@@ -20,10 +13,7 @@ export class StravaAuthGuard implements CanActivate {
   storageService = inject(StorageService);
   router = inject(Router);
 
-  public canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): MaybeAsync<GuardResult> {
+  public canActivate(): MaybeAsync<GuardResult> {
     let connectionBase = this.storageService.get('connectionBase');
 
     const env = new Env();

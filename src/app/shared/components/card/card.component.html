@@ -1,4 +1,4 @@
-<div class="layout">
+<div class="card__layout">
     @if (activities$() && cardsCollection$()) {
         @for (card of cardsCollection$(); track card.id) {
             <div class="container">
@@ -21,12 +21,16 @@
                             {{ card.mainValueUnit }}
                         </span>
                     </div>
-                    <app-icon
-                        class="card__icon"
-                        [isPrimeNgIcon]="card.isPrimeIcon"
-                        [icon]="card.icon | toIcon"
-                        [iconColor]="appColors.DARK"
-                        [backgroundColor]="card.color" />
+
+                    <div
+                        class="card__iconBackground"
+                        [style.backgroundColor]="card.color">
+                        <app-icon
+                            class="card__icon"
+                            [isPrimeNgIcon]="card.isPrimeIcon"
+                            [icon]="card.icon | toIcon"
+                            [iconColor]="appColors.WHITE" />
+                    </div>
                 </div>
 
                 <div class="card__evolution">
@@ -39,8 +43,6 @@
                         ">
                         <app-icon
                             [icon]="card.evolutionIcon"
-                            [widthInPx]="10"
-                            [heightInPx]="10"
                             [isPrimeNgIcon]="true"
                             [iconSizeInPx]="10"
                             [iconColor]="card.evolutionColor"

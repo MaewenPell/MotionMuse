@@ -4,17 +4,39 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   z-index: 1;
+  height: 100%;
   width: 100%;
-  gap: 40px;
+  gap: 16px;
+
+  &__title {
+    color: variables.$color-light-gray-60;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 14px;
+    text-transform: uppercase;
+  }
+
+  &__subtitle {
+    font-size: 13px;
+    font-weight: 500;
+    color: #a8a8a8;
+  }
+
+  &__navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 35px;
+  }
 
   &__container {
     height: 100%;
     padding: 16px 24px;
     display: flex;
+    justify-content: space-between;
     flex-direction: column;
-    height: calc(100vh - 252px);
     border: 1px solid variables.$color-white;
-    border-radius: 16px;
+    border-radius: 1.5rem;
     background: variables.$color-white;
     z-index: 1;
 
@@ -22,21 +44,6 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-    }
-
-    .title {
-      color: #8898aa;
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 14px;
-      text-transform: uppercase;
-    }
-
-    .subtitle {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 35px;
     }
 
     .navigation {

@@ -1,5 +1,4 @@
-import { PrimeIcons } from "primeng/api";
-
+import { PrimeIcons } from 'primeng/api';
 
 export type Icons =
   | 'resume'
@@ -10,4 +9,7 @@ export type Icons =
   | 'shoe'
   | 'mountains'
   | 'running'
+  | 'route'
+  | 'timer'
+  | 'history'
   | PrimeIcons;

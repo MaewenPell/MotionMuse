@@ -1,11 +1,14 @@
 @use '../../../../styles/variables';
-@use "sass:color";
+@use 'sass:color';
 
-.layout {
-  display: grid;
-  z-index: 1;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 40px;
+.card {
+  &__layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, calc(50% - 5px));
+    gap: 10px;
+    height: 100%;
+  }
 }
 
 .container {
@@ -15,14 +18,15 @@
   border: 1px solid lightgray;
   flex-direction: column;
   padding: 16px 24px;
-  max-width: 255px;
-  max-height: 120px;
   width: 100%;
-  background-color: white;
-  border-radius: 16px;
+  background-color: variables.$color-white;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease;
 
   &:hover {
-    transform: scale(1.02);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
   }
 
   .card {
@@ -32,9 +36,20 @@
       position: relative;
     }
 
-    &__icon {
+    &__iconBackground {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      opacity: 0.9;
       position: absolute;
       right: 0;
+    }
+
+    &__icon {
+      display: flex;
     }
 
     &__container {
@@ -57,7 +72,7 @@
     }
 
     &__title {
-      color: #8898aa;
+      color: variables.$color-light-gray-60;
       font-size: 14px;
       font-weight: 700;
       line-height: 14px;
@@ -65,9 +80,9 @@
     }
 
     &__value {
-      font-size: 30px;
-      font-weight: 600;
+      font-weight: 700;
       line-height: 20px;
+      font-size: 1.75rem; // increased for more emphasis
       color: variables.$color-black;
 
       &--evolution {
@@ -76,18 +91,18 @@
         color: variables.$color-black;
 
         &--positive {
-          color: variables.$color-green;
+          color: #15803d; // stronger green
         }
 
         &--negative {
-          color: variables.$color-light-red;
+          color: #dc2626; // stronger red
         }
       }
     }
 
     &__unit {
-      color: variables.$color-black;
-      font-size: 12px;
+      font-size: 1rem;
+      color: #6b7280;
       margin-left: 2px;
       height: 100%;
       display: flex;
@@ -101,17 +116,20 @@
       &Overlay {
         background-color: #8898aa;
         align-items: center;
+        font-size: 0.9rem;
         justify-content: center;
-        padding: 3px;
-        border-radius: 5px;
+        padding: 4px 8px;
+        border-radius: 8px;
         display: flex;
 
         &--positive {
-          background-color: rgba(variables.$color-green, $alpha: .2);
+          background-color: #dcfce7;
+          color: #166534;
         }
 
         &--negative {
-          background-color: rgba(variables.$color-light-red, $alpha: .2);
+          background-color: #fee2e2;
+          color: #991b1b;
         }
       }
     }
@@ -129,7 +147,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: white;
+    background-color: variables.$color-white;
     padding: 16px 24px;
     height: 120px;
     border-radius: 16px;

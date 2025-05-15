@@ -1,18 +1,11 @@
-<div
-  class="roundedBackground"
-  [style.width.px]="widthInPx"
-  [style.height.px]="heightInPx"
-  [style.backgroundColor]="backgroundVisible ? backgroundColor : 'transparent'">
-  @if (isPrimeNgIcon) {
+@if (isPrimeNgIcon) {
     <i
-      class="{{ icon }}"
-      [style.color]="iconColor"
-      [style.fontSize.px]="iconSizeInPx"></i>
-  } @else {
+        class="{{ icon }}"
+        [style.color]="iconColor"
+        [style.fontSize.px]="iconSizeInPx"></i>
+} @else {
     <img
-      class="roundedBackground__icon"
-      *ngIf="!isPrimeNgIcon"
-      src="{{ icon }}"
-      alt="icon" />
-  }
-</div>
+        class="roundedBackground__icon"
+        src="{{ icon }}"
+        alt="icon" />
+}

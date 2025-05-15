@@ -17,7 +17,7 @@ export type SummaryActivity = {
   location_city: string | null; // The activity's starting location city
   location_state: string | null; // The activity's starting location state or region
   location_country: string | null; // The activity's starting location country
-  average_cadence: number; // The average cadence during the activity
+  average_cadence?: number; // The average cadence during the activity
   average_heartrate: number; // The activity's average heart rate
   max_heartrate: number; // The activity's max heart rate
   heartrate_opt_out: boolean; // Whether the logged-in athlete has opted out of viewing heartrate data
@@ -30,13 +30,13 @@ export type SummaryActivity = {
   suffer_score: number; // The activity's suffer score
   elev_low: number; // The activity's lowest elevation, in meters
   visibility: string; // The visibility of the activity
-  type: ActivityType; // Deprecated. Prefer to use sport_type
-  sport_type: ActivityType; // An instance of SportType
+  type: ActivityType | string; // Deprecated. Prefer to use sport_type
+  sport_type: ActivityType | string; // An instance of SportType
   start_date: string; // The time at which the activity was started
   start_date_local: string; // The time at which the activity was started in the local timezone
   timezone: string; // The timezone of the activity
-  start_latlng: LatLng; // An instance of LatLng
-  end_latlng: LatLng; // An instance of LatLng
+  start_latlng: number[]; // An instance of LatLng
+  end_latlng: number[]; // An instance of LatLng
   achievement_count: number; // The number of achievements gained during this activity
   kudos_count: number; // The number of kudos given for this activity
   comment_count: number; // The number of comments for this activity
@@ -49,7 +49,7 @@ export type SummaryActivity = {
   manual: boolean; // Whether this activity was created manually
   private: boolean; // Whether this activity is private
   flagged: boolean; // Whether this activity is flagged
-  workout_type: number; // The activity's workout type
+  workout_type?: number | null; // The activity's workout type
   upload_id_str: string; // The unique identifier of the upload in string format
   average_speed: number; // The activity's average speed, in meters per second
   max_speed: number; // The activity's max speed, in meters per second

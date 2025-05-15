@@ -1,26 +1,19 @@
 <div class="mainContent">
-    <app-menu class="mainContent__menu" />
-    <div class="mainContent__hero">
-        <!-- TOOD mettre une page de connexion si on a pas de ConnectionBAse -->
-        <!-- @if (!this.connectionService.$isConnected()) {
-            <div class="mainContent__connection">
-                <app-connection />
-            </div>
-        } -->
-    </div>
+    <app-menu
+        class="mainContent__menu"
+        [connectedAthlete]="connectedAthlete$()" />
 
     <div class="dashboardContainer">
         <app-cards
             class="dashboardContainer__cards"
             [lastActivity$]="lastActivity$()"
             [activities$]="yearsActivitiesPerWeek()" />
+
+        <div class="dashboardContainer__card2">
+            <app-last-activity-card [lastActivity]="lastActivity$()" />
+        </div>
         <app-charts
             class="dashboardContainer__charts"
             [yearActivities$]="yearsActivitiesPerWeek()" />
-        <!-- <app-charts
-            class="dashboardContainer__charts"
-            [(activities$)]="weeklyChartData"
-            [activities$]="rawActivities()" /> -->
     </div>
-    <!-- } -->
 </div>

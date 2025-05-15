@@ -1,8 +1,8 @@
 @use 'sass:meta';
 @use './styles/variables';
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
 @import 'primeicons/primeicons.css';
 @include meta.load-css('styles/menu');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
 
 :root {
   font-family: 'Open Sans', sans-serif;

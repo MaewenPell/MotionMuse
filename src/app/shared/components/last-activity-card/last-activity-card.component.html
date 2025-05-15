@@ -1,0 +1,36 @@
+<div class="lastActivityCard">
+    <div class="card__body">
+        <h4 class="card__title">Last activity</h4>
+
+        <h6 class="card__activityName">
+            {{ lastActivity().name }}
+        </h6>
+
+        <div class="card__activityContent">
+            <div>
+                <span class="card__activityValue">
+                    {{ lastActivity().distance / 1000 | number: '1.2-2' }}
+                </span>km
+            </div>
+            <div>
+                <span class="card__activityValue">
+                    {{ lastActivity().total_elevation_gain | number: '0.0' }}
+                </span>m
+            </div>
+            <div>
+                <span class="card__activityTime">
+                    {{ elapsedTimeFromSeconds() }}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div
+        #mapContainer
+        class="card__mapContainer">
+        <canvas
+            #traceCanvas
+            [width]="mapContainerRef().nativeElement.clientWidth"
+            [height]="mapContainerRef().nativeElement.clientHeight">
+        </canvas>
+    </div>
+</div>

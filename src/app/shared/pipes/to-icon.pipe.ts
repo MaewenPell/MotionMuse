@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { PrimeIcons } from "primeng/api";
+import { PrimeIcons } from 'primeng/api';
 import { Icons } from 'src/app/types/icons';
 
 @Pipe({
@@ -21,14 +21,18 @@ export class toIconPipe implements PipeTransform {
         return PrimeIcons.ARROW_RIGHT;
       case 'calendar':
         return PrimeIcons.CALENDAR;
-      case 'time':
-        return PrimeIcons.CLOCK;
       case 'shoe':
         return '../../../assets/icons/mountains.svg';
       case 'running':
         return '../../../assets/icons/running.svg';
       case 'mountains':
         return '../../../assets/icons/mountains.svg';
+      case 'route':
+        return '../../../assets/icons/route.svg';
+      case 'history':
+        return '../../../assets/icons/history.svg';
+      case 'timer':
+        return '../../../assets/icons/timer.svg';
       default:
         return value;
     }

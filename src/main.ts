@@ -10,7 +10,7 @@ import {
   provideNoopAnimations,
 } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideRouter } from '@angular/router';
+import { ActivatedRouteSnapshot, provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';

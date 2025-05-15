@@ -15,5 +15,5 @@ export type CardDataInformations = {
   evolutionIcon: PrimeIcons;
   evolutionUnit?: UnitSource;
   evolutionSentence?: string;
-  color: APP_COLORS;
+  color: APP_COLORS | string;
 };

@@ -18,7 +18,7 @@ export class DataComputationsService {
   public extractTotalInformations(
     activities: SummaryActivity[] | Partial<SummaryActivity>[],
     from: 'currentWeek' | 'currentMonth' | 'custom',
-    includedActivities: SummaryActivity['type'][],
+    includedActivities: ActivityType[] | string[],
     startedAfter?: DateTime,
     before?: DateTime
   ): WeeklyInformations {
@@ -60,11 +60,9 @@ export class DataComputationsService {
     return extractedData;
   }
 
-  public extractTotalInformations2(activites: WeeklyInformations) {}
-
   private extractInformations(
     activities: Partial<SummaryActivity>[],
-    activitiesTypes: ActivityType[]
+    activitiesTypes: ActivityType[] | string[]
   ): WeeklyInformations {
     const extractedData: WeeklyInformations = {
       totalDistance: 0,
@@ -76,7 +74,10 @@ export class DataComputationsService {
     };
 
     activities.forEach(activity => {
-      if (activity.type && activitiesTypes.includes(activity.type)) {
+      if (
+        activity.type &&
+        activitiesTypes.includes(activity.type as ActivityType)
+      ) {
         extractedData.totalDistance += activity.distance || 0;
         extractedData.totalElevation += activity.total_elevation_gain || 0;
         extractedData.totalTime += activity.moving_time || 0;
@@ -87,6 +88,9 @@ export class DataComputationsService {
           timeInSeconds: activity.moving_time || 0,
           weekNumber: DateTime.fromISO(activity.start_date_local || '')
             .weekNumber,
+          activityType: activity.sport_type,
+          activityName: activity.name || '',
+          map: activity.map?.polyline,
         });
       }
     });
@@ -99,7 +103,9 @@ export class DataComputationsService {
     includedActivities: ActivityType[]
   ) {
     return activities
-      .filter(activity => includedActivities.includes(activity.type))
+      .filter(activity =>
+        includedActivities.includes(activity.type as ActivityType)
+      )
       .reduce((previous, current) => {
         if (previous?.start_date && current?.start_date) {
           return previous.start_date > current.start_date ? previous : current;

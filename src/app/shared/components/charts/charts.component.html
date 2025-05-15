@@ -1,40 +1,26 @@
 <div class="charts">
-    <!-- <div class="charts__container">
+    <div class="charts__container">
         <div class="charts__containerTitles">
-            <div class="title">
-                <h4>Weekly Evolution</h4>
+            <div class="charts__title">
+                <h4>Weekly Recap</h4>
             </div>
-            <div class="subtitle">
+            <div class="charts__navigation">
                 <p-button
                     class="navigation__icon"
-                    (onClick)="loadPreviousWeekActivities()"
+                    (click)="setPreviousWeekNumber()"
                     icon="pi pi-chevron-left"
                     [rounded]="true"
                     [size]="'small'"
                     [text]="true" />
-                {{ subtitleWeeklyChart$() }}
+                <span class="charts__subtitle">{{ subtitleWeeklyChart$() }}</span>
                 <p-button
                     class="navigation__icon"
                     [disabled]="incorrectNextWeek$()"
-                    (onClick)="loadNextWeekActivities()"
+                    (click)="setNextWeekNumber()"
                     icon="pi pi-chevron-right"
                     [size]="'small'"
                     [rounded]="true"
                     [text]="true" />
-            </div>
-        </div>
-
-        <canvas
-            baseChart
-            [data]="weeklyChartData()?.data"
-            [options]="weeklyChartData()?.options"
-            [type]="'line'">
-        </canvas>
-    </div> -->
-    <div class="charts__container">
-        <div class="charts__containerTitles">
-            <div class="title">
-                <h4>Weekly Recap</h4>
             </div>
         </div>
         <canvas
@@ -47,8 +33,8 @@
 
     <div class="charts__container">
         <div class="charts__containerTitles">
-            <div class="title">
-                <h4>Monthly Evolution</h4>
+            <div class="charts__title">
+                <h4>Three weeks Evolution</h4>
             </div>
         </div>
         <canvas

@@ -5,10 +5,8 @@ import { PrimeIcons } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CardDataInformations } from 'src/app/types/data-card.type';
-import {
-  DailyDetails,
-  WeeklyInformations,
-} from 'src/app/types/strava-extracted-informations.type';
+import { WeeklyInformations } from 'src/app/types/strava-extracted-informations.type';
+import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 import { APP_COLORS } from 'src/styles/_colorVariables';
 import { ConvertUnitPipe } from '../../pipes/convert-unit.pipe';
 import { ToDashboardTimePipe } from '../../pipes/to-dashboard-time.pipe';
@@ -39,7 +37,7 @@ export class CardComponent {
   public dataComputationsService = inject(DataComputationsService);
 
   public activities$ = input.required<WeeklyInformations>();
-  public lastActivity$ = input.required<DailyDetails | null>();
+  public lastActivity$ = input.required<SummaryActivity | null>();
 
   private primeIcon = PrimeIcons;
   public appColors = APP_COLORS;
@@ -57,7 +55,7 @@ export class CardComponent {
     return {
       id: 'distance',
       title: 'Distance',
-      icon: 'running',
+      icon: 'route',
       isPrimeIcon: false,
       mainValue: this.weeklyInformations$().currentWeek.totalDistance,
       mainValueUnit: 'km',
@@ -78,7 +76,7 @@ export class CardComponent {
           : APP_COLORS.LIGHT_RED,
       evolutionUnit: 'km',
       evolutionSentence: 'since last week',
-      color: APP_COLORS.YELLOW,
+      color: '#2563eb',
     };
   });
 
@@ -108,7 +106,7 @@ export class CardComponent {
             : APP_COLORS.LIGHT_RED,
         evolutionUnit: 'm',
         evolutionSentence: 'since last week',
-        color: APP_COLORS.LIGHT_BLUE,
+        color: '#10b981',
       };
     }
   );
@@ -117,16 +115,16 @@ export class CardComponent {
     return {
       id: 'lastActivity',
       title: 'Last activity',
-      icon: PrimeIcons.CALENDAR,
-      isPrimeIcon: true,
+      icon: 'history',
+      isPrimeIcon: false,
       mainValue: this.lastActivity$()?.distance ?? 0,
       mainValueUnit: 'km',
-      evolutionValue: this.lastActivity$()?.elevation ?? 0,
+      evolutionValue: this.lastActivity$()?.elev_high ?? 0,
       evolutionColor: APP_COLORS.DARK,
       evolutionIcon: this.primeIcon.ARROW_UP_RIGHT,
       evolutionUnit: 'm',
       evolutionSentence: 'Elevation gain',
-      color: APP_COLORS.LIGHT_RED,
+      color: '#ec4899',
     };
   });
 
@@ -134,8 +132,8 @@ export class CardComponent {
     const card: CardDataInformations = {
       id: 'time',
       title: 'Time',
-      icon: 'time',
-      isPrimeIcon: true,
+      icon: 'timer',
+      isPrimeIcon: false,
       mainValue: this.weeklyInformations$().currentWeek.totalTime,
       mainValueUnit: 'h',
       evolutionIcon:
@@ -155,7 +153,7 @@ export class CardComponent {
           : APP_COLORS.LIGHT_RED,
       evolutionUnit: 'h',
       evolutionSentence: 'since last week',
-      color: APP_COLORS.ORANGE,
+      color: '#f59e0b',
     };
 
     return card;

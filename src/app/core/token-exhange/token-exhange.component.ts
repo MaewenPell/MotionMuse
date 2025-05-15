@@ -23,68 +23,75 @@ export class TokenExhangeComponent {
 
   private env = new Env();
 
+  private onPremise = false;
+
   constructor() {
     this.activatedRoute.url.subscribe(() => {
       const url = new URL(window.location.href);
 
-      if (url.search?.length > 0) {
-        const searchParams = new URLSearchParams(url.search).get('errorCode');
+      if (!this.onPremise) {
+        if (url.search?.length > 0) {
+          const searchParams = new URLSearchParams(url.search).get('errorCode');
 
-        if (searchParams && searchParams === 'noCb') {
-          const authorizationCode = this.getCodeFromUrl(url);
-          this.connectionService.getConnectionBaseFromStrava(authorizationCode);
+          if (searchParams && searchParams === 'noCb') {
+            const authorizationCode = this.getCodeFromUrl(url);
+            this.connectionService.getConnectionBaseFromStrava(
+              authorizationCode
+            );
 
-          const params = new HttpParams()
-            .set('client_id', this.env.client_id)
-            .set('client_secret', this.env.client_secret)
-            .set('code', authorizationCode)
-            .set('grant_type', StravaAPIUtils.AUTH);
+            const params = new HttpParams()
+              .set('client_id', this.env.client_id)
+              .set('client_secret', this.env.client_secret)
+              .set('code', authorizationCode)
+              .set('grant_type', StravaAPIUtils.AUTH);
 
-          this.httpClient
-            .post<ConnectionBase>(StravaAPIUtils.TOKEN_URL, null, {
-              params: params,
-            })
-            .pipe(take(1))
-            .subscribe((connectionBase: ConnectionBase) => {
-              this.storageService.set(
-                'connectionBase',
-                JSON.stringify(connectionBase)
-              );
-
-              this.router.navigate(['/dashboard']);
-            });
-        } else if (searchParams && searchParams === 'expired') {
-          const currentConnectionBase =
-            this.storageService.get('connectionBase').connectionbase;
-          const currentRefreshToken = (currentConnectionBase as ConnectionBase)
-            .refresh_token;
-          const params = new HttpParams()
-            .set('client_id', this.env.client_id)
-            .set('client_secret', this.env.client_secret)
-            .set('grant_type', StravaAPIUtils.REFRESH)
-            .set('refresh_token', currentRefreshToken);
-
-          this.httpClient
-            .post(StravaAPIUtils.TOKEN_URL, null, {
-              params: params,
-            })
-            .subscribe(
-              (connectionBaseWithoutAthlete: Partial<ConnectionBase>) => {
-                // Todo verfier que ça fonctionne
-                const newConnectionBase = {
-                  ...(currentConnectionBase as ConnectionBase),
-                  ...connectionBaseWithoutAthlete,
-                };
+            this.httpClient
+              .post<ConnectionBase>(StravaAPIUtils.TOKEN_URL, null, {
+                params: params,
+              })
+              .pipe(take(1))
+              .subscribe((connectionBase: ConnectionBase) => {
                 this.storageService.set(
                   'connectionBase',
-                  JSON.stringify(newConnectionBase)
+                  JSON.stringify(connectionBase)
                 );
 
                 this.router.navigate(['/dashboard']);
+              });
+          } else if (searchParams && searchParams === 'expired') {
+            const currentConnectionBase =
+              this.storageService.get('connectionBase').connectionbase;
+            const currentRefreshToken = (
+              currentConnectionBase as ConnectionBase
+            ).refresh_token;
+            const params = new HttpParams()
+              .set('client_id', this.env.client_id)
+              .set('client_secret', this.env.client_secret)
+              .set('grant_type', StravaAPIUtils.REFRESH)
+              .set('refresh_token', currentRefreshToken);
 
-                console.log('Token refreshed');
-              }
-            );
+            this.httpClient
+              .post(StravaAPIUtils.TOKEN_URL, null, {
+                params: params,
+              })
+              .subscribe(
+                (connectionBaseWithoutAthlete: Partial<ConnectionBase>) => {
+                  // Todo verfier que ça fonctionne
+                  const newConnectionBase = {
+                    ...(currentConnectionBase as ConnectionBase),
+                    ...connectionBaseWithoutAthlete,
+                  };
+                  this.storageService.set(
+                    'connectionBase',
+                    JSON.stringify(newConnectionBase)
+                  );
+
+                  this.router.navigate(['/dashboard']);
+
+                  console.log('Token refreshed');
+                }
+              );
+          }
         }
       }
     });

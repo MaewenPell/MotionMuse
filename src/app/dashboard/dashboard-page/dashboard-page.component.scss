@@ -6,54 +6,41 @@
 
 .mainContent {
   display: flex;
-  min-height: 100vh;
-  width: 100vw;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 8px 16px;
+  gap: 16px;
   background-color: variables.$color-light-gray;
 
-  &__hero {
-    position: absolute;
-    z-index: 0;
-    height: 300px;
-    width: 100%;
-    background: linear-gradient(
-      87deg,
-      variables.$color-main-violet 0,
-      #825ee4 100%
-    ) !important;
-  }
-
-  &__connection {
+  &__menu {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.9;
-    height: 100%;
-    margin-left: calc(variables.$menu-width + 32px);
-    border-radius: 16px;
-    background-color: variables.$color-light-gray;
+    height: 75px;
+    width: 100%;
   }
 
-  .dashboard {
-    &Container {
-      width: 100%;
-      margin: 20px 30px 20px 310px;
-      display: grid;
-      grid-template-areas:
-        'cards'
-        'charts';
-      grid-template-rows: 1fr;
-      grid-template-columns: 1fr;
-      row-gap: 40px;
+  .dashboardContainer {
+    width: 100%;
+    height: variables.$available-body-height;
+    display: grid;
+    grid-template-areas:
+      'cards card-2'
+      'charts charts';
+    grid-template-rows: calc(40% - 16px) calc(60% - 16px);
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
 
-      &__cards {
-        display: grid;
-        grid-area: cards;
-      }
+    &__cards {
+      grid-area: cards;
+      min-height: 250px;
+    }
 
-      &__charts {
-        grid-area: charts;
-      }
+    &__card2 {
+      grid-area: card-2;
+    }
+
+    &__charts {
+      grid-area: charts;
     }
   }
 }

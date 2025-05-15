@@ -7,15 +7,14 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { CardComponent } from 'src/app/shared/components/card/card.component';
 import { ChartsComponent } from 'src/app/shared/components/charts/charts.component';
+import { LastActivityCardComponent } from 'src/app/shared/components/last-activity-card/last-activity-card.component';
 import { CardService } from 'src/app/shared/services/card.service';
 import { ConnectionService } from 'src/app/shared/services/connection.service';
 import { DataComputationsService } from 'src/app/shared/services/data-computations.service';
 import { StravaService } from 'src/app/shared/services/strava.service';
-import { CardTypesEnum } from 'src/app/types/enums/cardTypes.enum';
-import {
-  DailyDetails,
-  WeeklyInformations,
-} from 'src/app/types/strava-extracted-informations.type';
+import { DetailedAthlete } from 'src/app/types/athlete';
+import { WeeklyInformations } from 'src/app/types/strava-extracted-informations.type';
+import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
 import { MenuComponent } from '../../shared/components/menu/menu.component';
 
 @Component({
@@ -26,22 +25,23 @@ import { MenuComponent } from '../../shared/components/menu/menu.component';
   imports: [
     MenuComponent,
     CommonModule,
-    // ConnectionComponent,
     ToastModule,
     CardComponent,
     ButtonModule,
     ChartsComponent,
+    LastActivityCardComponent,
   ],
   providers: [MessageService, StravaService],
 })
 export class DashboardPageComponent {
+  //#region DI
   public connectionService = inject(ConnectionService);
   public dataComputationsService = inject(DataComputationsService);
   public stravaService = inject(StravaService);
   public cardService = inject(CardService);
+  //#endregion
 
-  public cardTypesEnums = CardTypesEnum;
-
+  //#region signals
   public yearsActivitiesPerWeek = signal<WeeklyInformations>({
     startDate: DateTime.now(),
     endDate: DateTime.now(),
@@ -50,8 +50,66 @@ export class DashboardPageComponent {
     totalTime: 0,
     detail: [],
   });
-
-  public lastActivity$ = signal<DailyDetails | null>(null);
+  public connectedAthlete$ = signal<DetailedAthlete | null>(null);
+  public lastActivity$ = signal<SummaryActivity>({
+    id: 0,
+    utc_offset: 0,
+    external_id: '',
+    upload_id: 0,
+    athlete: {
+      id: 0,
+      resource_state: 0,
+    },
+    name: '',
+    distance: 0,
+    moving_time: 0,
+    elapsed_time: 0,
+    total_elevation_gain: 0,
+    location_city: null,
+    location_state: null,
+    location_country: null,
+    average_heartrate: 0,
+    max_heartrate: 0,
+    heartrate_opt_out: false,
+    display_hide_heartrate_option: false,
+    average_temp: 0,
+    from_accepted_tag: false,
+    has_heartrate: false,
+    pr_count: 0,
+    elev_high: 0,
+    suffer_score: 0,
+    elev_low: 0,
+    visibility: '',
+    type: '',
+    sport_type: '',
+    start_date: '',
+    start_date_local: '',
+    timezone: '',
+    start_latlng: [],
+    end_latlng: [],
+    achievement_count: 0,
+    kudos_count: 0,
+    comment_count: 0,
+    athlete_count: 0,
+    photo_count: 0,
+    total_photo_count: 0,
+    map: {
+      id: '',
+      polyline: undefined,
+      summary_polyline: '',
+    },
+    trainer: false,
+    commute: false,
+    manual: false,
+    private: false,
+    flagged: false,
+    upload_id_str: '',
+    average_speed: 0,
+    max_speed: 0,
+    has_kudoed: false,
+    gear_id: null,
+  });
+  //#endregion
 
   constructor() {
     const startOfYear = DateTime.now().startOf('year');
@@ -65,15 +123,18 @@ export class DashboardPageComponent {
           this.dataComputationsService.extractTotalInformations(
             activities,
             'custom',
-            ['Run', 'TrailRun'],
+            ['Run', 'TrailRun', 'Ride', 'BackcountrySki', 'NordicSki'],
             startOfYear,
             endOfYear
           );
 
-        this.lastActivity$.set(
-          yearsActivityPerWeeks.detail[yearsActivityPerWeeks.detail.length - 1]
-        );
+        this.lastActivity$.set(activities[0]);
+
         this.yearsActivitiesPerWeek.set(yearsActivityPerWeeks);
       });
+
+    this.stravaService.getAthelete().subscribe(athlete => {
+      this.connectedAthlete$.set(athlete);
+    });
   }
 }

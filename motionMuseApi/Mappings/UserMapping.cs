@@ -9,8 +9,8 @@ namespace motionMuseApi.Mappings
       return new User
       {
         Username = userDto.Username,
-        InitialToken = userDto.Token,
-        Token = userDto.RefreshToken,
+        RefreshToken = "",
+        Token = "",
         PasswordHash = hashedPassword,
       };
     }
@@ -42,12 +42,11 @@ namespace motionMuseApi.Mappings
       };
     }
 
-    public static UserLoggedDto ToUserLoggedDto(this UserRegisterDto registerDto)
+    public static UserRegisteredDto ToUserRegisteredDto(this UserRegisterDto user)
     {
-      return new UserLoggedDto
+      return new UserRegisteredDto
       {
-        RefreshToken = registerDto.RefreshToken,
-        Token = registerDto.Token,
+        Username = user.Username
       };
     }
   }

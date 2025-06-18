@@ -1,7 +1,7 @@
-import { Route } from '@angular/router';
+import { Route, Routes } from '@angular/router';
 import { TrainingPageComponent } from './training-page/training-page.component';
 
-export default [
+export const trainingsRoutes: Routes = [
   {
     path: '',
     component: TrainingPageComponent,

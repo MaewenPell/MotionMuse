@@ -1,0 +1,16 @@
+<p-ifta-label>
+    <input
+        id="userName"
+        type="text"
+        pInputText
+        [(ngModel)]="username" />
+    <label for="userName">UserName</label>
+</p-ifta-label>
+
+<p-ifta-label>
+    <p-password
+        id="password"
+        [(ngModel)]="password"
+        [feedback]="false" />
+    <label for="password">Password</label>
+</p-ifta-label>

@@ -35,6 +35,7 @@ export class TokenExhangeComponent {
 
           if (searchParams && searchParams === 'noCb') {
             const authorizationCode = this.getCodeFromUrl(url);
+            
             this.connectionService.getConnectionBaseFromStrava(
               authorizationCode
             );

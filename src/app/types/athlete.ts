@@ -1,7 +1,6 @@
 export interface Athlete {
   id: number;
   username: string;
-  connectionBaseId: number;
   resource_state: number;
   firstname: string;
   lastname: string;
@@ -16,8 +15,8 @@ export interface Athlete {
   updated_at: string;
   badge_type_id: number;
   weight: number;
-  profile_medium: URL;
-  profile: URL;
+  profile_medium: string;
+  profile: string;
   friend: null;
   follower: null;
 }

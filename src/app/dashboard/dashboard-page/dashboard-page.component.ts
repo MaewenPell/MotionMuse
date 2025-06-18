@@ -12,10 +12,8 @@ import { CardService } from 'src/app/shared/services/card.service';
 import { ConnectionService } from 'src/app/shared/services/connection.service';
 import { DataComputationsService } from 'src/app/shared/services/data-computations.service';
 import { StravaService } from 'src/app/shared/services/strava.service';
-import { DetailedAthlete } from 'src/app/types/athlete';
 import { WeeklyInformations } from 'src/app/types/strava-extracted-informations.type';
 import { SummaryActivity } from 'src/app/types/strava/types/summary-activity';
-import { MenuComponent } from '../../shared/components/menu/menu.component';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -23,7 +21,6 @@ import { MenuComponent } from '../../shared/components/menu/menu.component';
   styleUrls: ['./dashboard-page.component.scss'],
   standalone: true,
   imports: [
-    MenuComponent,
     CommonModule,
     ToastModule,
     CardComponent,
@@ -50,7 +47,6 @@ export class DashboardPageComponent {
     totalTime: 0,
     detail: [],
   });
-  public connectedAthlete$ = signal<DetailedAthlete | null>(null);
   public lastActivity$ = signal<SummaryActivity>({
     id: 0,
     utc_offset: 0,
@@ -132,9 +128,5 @@ export class DashboardPageComponent {
 
         this.yearsActivitiesPerWeek.set(yearsActivityPerWeeks);
       });
-
-    this.stravaService.getAthelete().subscribe(athlete => {
-      this.connectedAthlete$.set(athlete);
-    });
   }
 }

@@ -12,4 +12,5 @@ export type Icons =
   | 'route'
   | 'timer'
   | 'history'
+  | 'at'
   | PrimeIcons;

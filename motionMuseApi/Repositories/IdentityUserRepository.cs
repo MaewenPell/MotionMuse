@@ -24,12 +24,32 @@ namespace motionMuseApi.Repositories
       return user;
     }
 
-    public async Task<UserLoggedDto> RegisterUser(UserRegisterDto user, string plainPassword)
+    public async Task<UserRegisteredDto> RegisterUser(UserRegisterDto user, string plainPassword)
     {
       var hashedPassword = _passwordManager.HashPassword(user.ToLoginDto());
 
       _context.User.Add(user.ToEntity(hashedPassword));
       await _context.SaveChangesAsync();
+
+      return user.ToUserRegisteredDto();
+    }
+
+    public async Task<UserLoggedDto?> Finalize(UserRegisterDto login)
+    {
+      var user = await GetByName(login.Username);
+
+      if (user == null)
+      {
+        return null;
+      }
+
+      bool isPasswordValid = _passwordManager.VerifyPassword(user.ToLoginDto(), user.PasswordHash, login.Password);
+
+      if (isPasswordValid)
+      {
+        user.Token = login.Token;
+        user.RefreshToken = login.RefreshToken;
+      }
 
       return user.ToUserLoggedDto();
     }

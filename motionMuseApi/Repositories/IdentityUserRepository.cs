@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using motionMuseApi.Mappings;
 using motionMuseApi.Models;
@@ -10,29 +11,6 @@ namespace motionMuseApi.Repositories
     private readonly MyDbContext _context = context;
     private readonly PasswordManager _passwordManager = passwordManager;
 
-    public async Task<UserDto?> AuthenticateUser(string name, string plainPassword)
-    {
-      var user = await GetByName(name);
-
-      if (user == null)
-      {
-        return null;
-      }
-
-      bool isPasswordValid = _passwordManager.VerifyPassword(user.ToDto(plainPassword), user.PasswordHash, plainPassword);
-
-      return isPasswordValid ? user.ToDto(plainPassword) : null;
-    }
-
-    public async Task<UserDto> RegisterUser(UserDto user, string plainPassword)
-    {
-      var hashedPassword = _passwordManager.HashPassword(user, plainPassword);
-
-      _context.User.Add(user.ToEntity(hashedPassword));
-      await _context.SaveChangesAsync();
-
-      return user;
-    }
 
     public async Task<User?> GetByName(string username)
     {
@@ -44,6 +22,55 @@ namespace motionMuseApi.Repositories
       }
 
       return user;
+    }
+
+    public async Task<UserRegisteredDto> RegisterUser(UserRegisterDto user, string plainPassword)
+    {
+      var hashedPassword = _passwordManager.HashPassword(user.ToLoginDto());
+
+      _context.User.Add(user.ToEntity(hashedPassword));
+      await _context.SaveChangesAsync();
+
+      return user.ToUserRegisteredDto();
+    }
+
+    public async Task<UserLoggedDto?> Finalize(UserRegisterDto login)
+    {
+      var user = await GetByName(login.Username);
+
+      if (user == null)
+      {
+        return null;
+      }
+
+      bool isPasswordValid = _passwordManager.VerifyPassword(user.ToLoginDto(), user.PasswordHash, login.Password);
+
+      if (isPasswordValid)
+      {
+        user.Token = login.Token;
+        user.RefreshToken = login.RefreshToken;
+      }
+
+      return user.ToUserLoggedDto();
+    }
+
+    public async Task<UserLoggedDto?> AuthenticateUser(LoginDto login)
+    {
+      var user = await GetByName(login.Username);
+
+      if (user == null)
+      {
+        return null;
+      }
+
+      bool isPasswordValid = _passwordManager.VerifyPassword(user.ToLoginDto(), user.PasswordHash, login.Password);
+
+      if (isPasswordValid)
+      {
+        return user.ToUserLoggedDto();
+      }
+
+      return null;
     }
   }
 }

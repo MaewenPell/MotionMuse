@@ -1,3 +1,7 @@
 <div class="root">
-  <router-outlet />
+    <app-menu
+        class="mainContent__menu"
+        [connectedAthlete]="connectedAthlete$()" />
+
+    <router-outlet />
 </div>

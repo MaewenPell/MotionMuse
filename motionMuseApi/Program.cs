@@ -6,6 +6,14 @@ using motionMuseApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options => options.AddPolicy("Everything", policy =>
+{
+  policy
+      .AllowAnyHeader()
+      .AllowAnyMethod()
+      .AllowAnyOrigin();
+}));
+
 builder.Services.AddDbContext<MyDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers().AddNewtonsoftJson();
@@ -25,7 +33,7 @@ builder.Services.AddScoped<PasswordManager>();
 
 var app = builder.Build();
 
-app.UseCors("AllowAllOrigins");
+app.UseCors("Everything");
 app.UseSwagger();
 app.UseSwaggerUI();
 

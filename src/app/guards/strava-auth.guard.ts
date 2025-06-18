@@ -16,7 +16,7 @@ export class StravaAuthGuard implements CanActivate {
 
   public canActivate(): MaybeAsync<GuardResult> {
     if (!this.onPremise) {
-      let connectionBase = this.storageService.get('connectionBase');
+      const connectionBase = this.storageService.get('connectionBase');
 
       const env = new Env();
 
@@ -24,12 +24,12 @@ export class StravaAuthGuard implements CanActivate {
         case Errors.NO_CONNECTION_BASE:
           console.log('NO_CONNECTION_BASE');
 
-          const redirectUri =
-            'http://localhost:4200/token-exchange?errorCode=noCb';
-          const scope = 'read,profile:read_all,activity:read';
-          const authorizeUrl = `https://www.strava.com/oauth/authorize?client_id=${env.client_id}&response_type=code&redirect_uri=${redirectUri}&approval_prompt=force&scope=${scope}`;
+          // const redirectUri =
+          //   'http://localhost:4200/token-exchange?errorCode=noCb';
+          // const scope = 'read,profile:read_all,activity:read';
+          // const authorizeUrl = `https://www.strava.com/oauth/authorize?client_id=${env.client_id}&response_type=code&redirect_uri=${redirectUri}&approval_prompt=force&scope=${scope}`;
 
-          window.location.href = authorizeUrl;
+          this.router.navigate(['/connection']);
           return false;
         case Errors.TOKEN_EXPIRED:
           this.router.navigate(['/token-exchange'], {

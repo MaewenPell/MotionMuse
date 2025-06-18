@@ -33,6 +33,8 @@ export class toIconPipe implements PipeTransform {
         return '../../../assets/icons/history.svg';
       case 'timer':
         return '../../../assets/icons/timer.svg';
+      case 'at':
+        return '../../../assets/icons/at.svg';
       default:
         return value;
     }

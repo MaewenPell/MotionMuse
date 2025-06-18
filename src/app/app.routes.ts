@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { ConnectionComponent } from './core/connection/connection.component';
 import { TokenExhangeComponent } from './core/token-exhange/token-exhange.component';
 import { StravaAuthGuard } from './guards/strava-auth.guard';
 
@@ -11,11 +12,16 @@ export const APP_ROUTES: Route[] = [
   },
   {
     path: 'trainings',
-    loadChildren: () => import('./trainings/routes').then(x => x.default),
+    loadChildren: () =>
+      import('./trainings/routes').then(x => x.trainingsRoutes),
   },
   {
     path: 'token-exchange',
     loadComponent: () => TokenExhangeComponent,
+  },
+  {
+    path: 'connection',
+    loadComponent: () => ConnectionComponent,
   },
   {
     path: '',

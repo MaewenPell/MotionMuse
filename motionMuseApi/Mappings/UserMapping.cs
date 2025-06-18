@@ -4,25 +4,49 @@ namespace motionMuseApi.Mappings
 {
   public static class UserMapping
   {
-    public static UserDto ToDto(this User user, string plainPassword)
-    {
-      return new UserDto
-      {
-        Username = user.Username,
-        InitialToken = user.InitialToken,
-        RefreshToken = user.RefreshToken,
-        Password = plainPassword
-      };
-    }
-
-    public static User ToEntity(this UserDto userDto, string hashedPassword)
+    public static User ToEntity(this UserRegisterDto userDto, string hashedPassword)
     {
       return new User
       {
         Username = userDto.Username,
-        InitialToken = userDto.InitialToken,
-        RefreshToken = userDto.RefreshToken,
+        RefreshToken = "",
+        Token = "",
         PasswordHash = hashedPassword,
+      };
+    }
+
+    public static LoginDto ToLoginDto(this User user)
+    {
+      return new LoginDto
+      {
+        Password = user.PasswordHash,
+        Username = user.Username
+      };
+    }
+
+    public static LoginDto ToLoginDto(this UserRegisterDto registerDto)
+    {
+      return new LoginDto
+      {
+        Password = registerDto.Password,
+        Username = registerDto.Username
+      };
+    }
+
+    public static UserLoggedDto ToUserLoggedDto(this User user)
+    {
+      return new UserLoggedDto
+      {
+        RefreshToken = user.Token,
+        Token = user.Token
+      };
+    }
+
+    public static UserRegisteredDto ToUserRegisteredDto(this UserRegisterDto user)
+    {
+      return new UserRegisteredDto
+      {
+        Username = user.Username
       };
     }
   }

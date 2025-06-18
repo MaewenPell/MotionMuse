@@ -1,11 +1,12 @@
 
 namespace motionMuseApi.Models
 {
-  public class UserDto
+  public class UserRegisterDto
   {
     public required string Username { get; set; }
     public required string Password { get; set; }
-    public required string InitialToken { get; set; }
-    public required string RefreshToken { get; set; }
+
+    public string Token { get; set; } = "";
+    public string RefreshToken { get; set; } = "";
   }
 }

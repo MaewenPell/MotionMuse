@@ -1,0 +1,60 @@
+.container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+  .connectionStepper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 10px 20%;
+
+    &__content {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+    }
+
+    &__contentResult {
+      display: flex;
+      width: 250px;
+      background: rgb(23, 23, 34);
+      border-radius: 10px;
+      padding: 25px;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .connectedUser {
+      &__header {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      &__img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+      }
+
+      &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      &__separator {
+        height: 1px;
+        background: white;
+        width: 100%;
+      }
+    }
+  }
+}

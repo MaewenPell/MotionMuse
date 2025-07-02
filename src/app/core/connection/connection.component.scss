@@ -1,60 +1,23 @@
-.container {
+.connection {
   display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
+  background: rgb(23, 23, 34);
   height: 100%;
 
-  .connectionStepper {
+  &__content {
     display: flex;
-    flex-direction: column;
     width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     height: 100%;
-    padding: 10px 20%;
+    gap: 10px;
+  }
 
-    &__content {
-      display: flex;
-      width: 100%;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: 100%;
-      justify-content: space-between;
-    }
-
-    &__contentResult {
-      display: flex;
-      width: 250px;
-      background: rgb(23, 23, 34);
-      border-radius: 10px;
-      padding: 25px;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .connectedUser {
-      &__header {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      &__img {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-      }
-
-      &__body {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      &__separator {
-        height: 1px;
-        background: white;
-        width: 100%;
-      }
-    }
+  &__action {
+    padding: 20px 0;
   }
 }

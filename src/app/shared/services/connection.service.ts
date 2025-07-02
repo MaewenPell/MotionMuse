@@ -3,14 +3,32 @@ import { Injectable, inject } from '@angular/core';
 import { ConnectionBase } from 'src/app/types/access-token';
 import { StravaAPIUtils } from 'src/app/types/strava-api-token';
 import { Env } from 'src/env';
-import { StorageService } from './local-storage.service';
+
+type Credentials = {
+  username: string;
+  password: string;
+};
+
+type ConnectedUser = {
+  username: string;
+  token: string;
+  refreshToken: string;
+};
+
+export type FinalizePaylod = {
+  username: string;
+  password: string;
+  expiresIn: number;
+  expiresAt: number;
+  token: string;
+  refreshToken: string;
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConnectionService {
   private http = inject(HttpClient);
-  private storageService = inject(StorageService);
   private env = new Env();
 
   public getConnectionBaseFromStrava(authorizationCode: string) {
@@ -25,7 +43,24 @@ export class ConnectionService {
     });
   }
 
-  register(credentials: { username: string; password: string } | undefined) {
-    return this.http.post('http://localhost:5073/api/user/register', credentials);
+  register(credentials: Credentials | undefined) {
+    return this.http.post<{ username: string }>(
+      'http://localhost:5073/api/user/register',
+      credentials
+    );
+  }
+
+  login(credentials: Credentials) {
+    return this.http.post<ConnectedUser>(
+      'http://localhost:5073/api/user/register',
+      credentials
+    );
+  }
+
+  finalize(finalizeObject: FinalizePaylod) {
+    return this.http.patch(
+      'http://localhost:5073/api/user/register',
+      finalizeObject
+    );
   }
 }

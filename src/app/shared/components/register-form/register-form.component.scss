@@ -1,0 +1,10 @@
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+
+  &__input {
+    display: flex;
+  }
+}

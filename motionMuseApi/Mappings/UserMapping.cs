@@ -9,9 +9,12 @@ namespace motionMuseApi.Mappings
       return new User
       {
         Username = userDto.Username,
-        RefreshToken = "",
-        Token = "",
+        RefreshToken = userDto.RefreshToken,
+        Token = userDto.Token,
+        ExpiresAt = userDto.ExpiresAt ?? 0,
+        ExpiresIn = userDto.ExpiresIn ?? 0,
         PasswordHash = hashedPassword,
+        IsAccountFinalized = userDto.Token.Length > 0
       };
     }
 

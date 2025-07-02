@@ -1,106 +1,59 @@
-<div class="container">
-    <p-stepper
-        [value]="1"
-        class="connectionStepper"
-        [linear]="true">
-        <p-step-list>
-            <p-step [value]="1">Link With MotionMuse</p-step>
-            <p-step [value]="2">Link With Strava</p-step>
-        </p-step-list>
-        <p-step-panels>
-            <p-step-panel [value]="1">
-                <ng-template
-                    #content
-                    let-activateCallback="activateCallback">
-                    <div class="connectionStepper__content">
-                        <div class="connectionStepper__contentResult">
-                            <app-register-form #appRegisterForm />
-                            <!-- @if (connectionBase()) {
-                                @let athlete = connectionBase()?.athlete;
-                                <img
-                                    class="connectedUser__img"
-                                    alt="profilMedium"
-                                    [src]="athlete?.profile_medium" />
-                                <div class="connectedUser__header">
-                                    <span class="connectedUser__headerLastName">
-                                        {{ athlete?.lastname }}
-                                    </span>
-                                    <span class="connectedUser__headerFirstName">
-                                        {{ athlete?.firstname }}</span
-                                    >
-                                </div>
+<div class="connection">
+    <div class="connection__content">
+        <p-selectbutton
+            [options]="stateOptions"
+            [(ngModel)]="switchValue"
+            optionLabel="label"
+            optionValue="value"
+            aria-labelledby="basic" />
 
-                                <div class="connectedUser__body">
-                                    <span>
-                                        <app-icon
-                                            class="icon"
-                                            [isPrimeNgIcon]="false"
-                                            [icon]="'at' | toIcon" />
-                                        {{ athlete?.username }}
-                                    </span>
-                                    <span>{{ athlete?.city }}</span>
-                                    <div class="separator"></div>
-                                    <span>{{ athlete?.bio }}</span>
-                                </div>
-                                <p-button
-                                    label="Connect with strava"
-                                    icon="pi pi-arrow-right"
-                                    iconPos="right"
-                                    (onClick)="navigateToStrava()" />
-                            } @else {
-                                <p-button
-                                    label="Connect with strava"
-                                    icon="pi pi-arrow-right"
-                                    iconPos="right"
-                                    (onClick)="navigateToStrava()" />
-                            } -->
-                        </div>
-                        <div class="flex pt-6 justify-end">
-                            <p-button
-                                label="Register"
-                                icon="pi pi-arrow-right"
-                                iconPos="right"
-                                [disabled]="!areCredentialsSet()"
-                                (onClick)="
-                                    register();
-                                    activateCallback(2)
-                                " />
-                        </div>
-                    </div>
-                </ng-template>
-            </p-step-panel>
+        <app-register-form
+            #appRegisterForm
+            [kind]="switchValue" />
 
-            <p-step-panel [value]="2">
-                <ng-template
-                    #content
-                    let-activateCallback="activateCallback">
-                    @if (isUserLogged()) {
-                      logged
-                    } @else {
-                      error
-                    }
-                </ng-template>
-            </p-step-panel>
+        <p-button
+            class="connection__action"
+            [label]="switchValue === 'register' ? 'Register' : 'Connect'"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            [disabled]="!areCredentialsSet()"
+            (onClick)="register()" />
 
-            <p-step-panel [value]="3">
-                <ng-template
-                    #content
-                    let-activateCallback="activateCallback">
-                    <div class="flex flex-col h-48">
-                        <div
-                            class="border-2 border-dashed border-surface-200 dark:border-surface-700 rounded bg-surface-50 dark:bg-surface-950 flex-auto flex justify-center items-center font-medium">
-                            Content III
-                        </div>
-                    </div>
-                    <div class="flex pt-6 justify-start">
-                        <p-button
-                            label="Back"
-                            icon="pi pi-arrow-left"
-                            iconPos="right"
-                            (onClick)="activateCallback(2)" />
-                    </div>
-                </ng-template>
-            </p-step-panel>
-        </p-step-panels>
-    </p-stepper>
+        @if (switchValue === 'register' && isUserLogged()) {
+            <p-button
+                [label]="'Link with Strava'"
+                (onClick)="showStravaDialog = true" />
+        }
+
+        @if (switchValue === 'register' && appRegisterRef()?.stravaToken) {
+            <p-button
+                [label]="'Finalize Account'"
+                (onClick)="finalizeAccount()" />
+        }
+    </div>
 </div>
+
+<p-dialog
+    header="Edit Profile"
+    [modal]="true"
+    [(visible)]="showStravaDialog"
+    [style]="{ width: '25rem' }">
+    <iframe
+        #iframeRef
+        [src]="getStravaAuthUrl()"
+        (load)="loadChange($event)"
+        width="100%"
+        height="600px"></iframe>
+
+        // TODO trouver comment faire pour gerer l'iframe 
+
+    <div class="flex justify-end gap-2">
+        <p-button
+            label="Cancel"
+            severity="secondary"
+            (click)="showStravaDialog = false" />
+        <p-button
+            label="Save"
+            (click)="showStravaDialog = false" />
+    </div>
+</p-dialog>

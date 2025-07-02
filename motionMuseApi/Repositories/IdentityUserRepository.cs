@@ -45,10 +45,24 @@ namespace motionMuseApi.Repositories
 
       bool isPasswordValid = _passwordManager.VerifyPassword(user.ToLoginDto(), user.PasswordHash, login.Password);
 
-      if (isPasswordValid)
+      if (isPasswordValid && login.Token is not null)
       {
         user.Token = login.Token;
         user.RefreshToken = login.RefreshToken;
+      }
+      else
+      {
+        return null;
+      }
+
+      if (login.ExpiresAt is not null && login.ExpiresIn is not null)
+      {
+        user.ExpiresAt = (int)login.ExpiresAt;
+        user.ExpiresIn = (int)login.ExpiresIn;
+      }
+      else
+      {
+        return null;
       }
 
       return user.ToUserLoggedDto();

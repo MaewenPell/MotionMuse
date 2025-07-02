@@ -1,7 +1,9 @@
 <div class="root">
-    <app-menu
-        class="mainContent__menu"
-        [connectedAthlete]="connectedAthlete$()" />
+    @if (connectedAthlete$()) {
+        <app-menu
+            class="mainContent__menu"
+            [connectedAthlete]="connectedAthlete$()" />
+    }
 
     <router-outlet />
 </div>

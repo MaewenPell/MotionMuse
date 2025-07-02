@@ -18,7 +18,7 @@ namespace motionMuseApi.Controllers
       return CreatedAtAction(nameof(Register), registeredUser);
     }
 
-    [HttpPost("finalize")]
+    [HttpPatch("finalize")]
     public async Task<IActionResult> Finalize(UserRegisterDto user)
     {
       var loggedUser = await _userRepository.Finalize(user);

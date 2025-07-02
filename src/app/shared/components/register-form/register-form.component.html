@@ -1,16 +1,30 @@
-<p-ifta-label>
-    <input
-        id="userName"
-        type="text"
-        pInputText
-        [(ngModel)]="username" />
-    <label for="userName">UserName</label>
-</p-ifta-label>
+<div class="registerForm">
+    <p-ifta-label class="registerForm__input">
+        <input
+            id="userName"
+            type="text"
+            pInputText
+            [(ngModel)]="username" />
+        <label for="userName">UserName</label>
+    </p-ifta-label>
 
-<p-ifta-label>
-    <p-password
-        id="password"
-        [(ngModel)]="password"
-        [feedback]="false" />
-    <label for="password">Password</label>
-</p-ifta-label>
+    <p-ifta-label class="registerForm__input">
+        <p-password
+            id="password"
+            [(ngModel)]="password"
+            [feedback]="false" />
+        <label for="password">Password</label>
+    </p-ifta-label>
+
+    @if (kind() === 'register') {
+        <p-ifta-label class="registerForm__input">
+            <input
+                id="token"
+                type="text"
+                pInputText
+                [disabled]="true"
+                [(ngModel)]="stravaToken" />
+            <label for="token">Strava Token</label>
+        </p-ifta-label>
+    }
+</div>

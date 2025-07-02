@@ -25,7 +25,7 @@ export const APP_ROUTES: Route[] = [
   },
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'connection',
     pathMatch: 'full',
   },
 ];

@@ -1,34 +1,62 @@
-import { Component, computed, inject, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { StepperModule } from 'primeng/stepper';
-import { IconComponent } from 'src/app/shared/components/icon/icon.component';
+import { DialogModule } from 'primeng/dialog';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { Stepper, StepperModule } from 'primeng/stepper';
+import { take } from 'rxjs';
 import { RegisterFormComponent } from 'src/app/shared/components/register-form/register-form.component';
-import { toIconPipe } from 'src/app/shared/pipes/to-icon.pipe';
-import { ConnectionService } from 'src/app/shared/services/connection.service';
+import {
+  ConnectionService,
+  FinalizePaylod,
+} from 'src/app/shared/services/connection.service';
 import { ConnectionBase } from 'src/app/types/access-token';
 import { Env } from 'src/env';
+
+export type ConnectionOptions = 'connect' | 'register';
 
 @Component({
   selector: 'app-connection',
   imports: [
     StepperModule,
     ButtonModule,
-    IconComponent,
-    toIconPipe,
     RegisterFormComponent,
+    FormsModule,
+    DialogModule,
+    SelectButtonModule,
   ],
   templateUrl: './connection.component.html',
   styleUrl: './connection.component.scss',
 })
 export class ConnectionComponent {
+  //#region DI
   private activatedRoute = inject(ActivatedRoute);
+  private sanitizer = inject(DomSanitizer);
   connectionService = inject(ConnectionService);
 
+  //#endregion
+
+  //#region Signal
   connectionBase = signal<ConnectionBase | null>(null);
   isUserLogged = signal(false);
-
-  appRegisterRef = viewChild<RegisterFormComponent>('appRegisterForm');
+  payload = signal<FinalizePaylod>({
+    username: '',
+    password: '',
+    expiresIn: 0,
+    expiresAt: 0,
+    token: '',
+    refreshToken: '',
+  });
 
   areCredentialsSet = computed(() => {
     return (
@@ -36,6 +64,26 @@ export class ConnectionComponent {
       !!this.appRegisterRef()?.credentials().password
     );
   });
+  //#endregion
+
+  //#region ViewChild
+  public iframeRef = viewChild<ElementRef<HTMLIFrameElement>>('iframeRef');
+
+  //#region Props
+  showStravaDialog = false;
+
+  stateOptions: Array<{ label: string; value: ConnectionOptions }> = [
+    { label: 'Connection', value: 'connect' },
+    { label: 'Register', value: 'register' },
+  ];
+
+  switchValue: ConnectionOptions = 'connect';
+  //#endregion
+
+  //#region ViewChild
+  appRegisterRef = viewChild<RegisterFormComponent>('appRegisterForm');
+  stepperRef = viewChild<Stepper>('stepper');
+  //#endregion
 
   constructor() {
     this.activatedRoute.url.subscribe(res => {
@@ -46,69 +94,64 @@ export class ConnectionComponent {
 
       if (searchParams === 'no-code') {
         const authCode = this.getCodeFromUrl(url);
+        this.switchValue = 'register';
 
-        // this.connectionService
-        //   .getConnectionBaseFromStrava(authCode)
-        //   .pipe(take(1))
-        //   .subscribe((connectionBase: ConnectionBase) => {
-        //     console.log(connectionBase);
-        //     // this.connectionBase.set(connectionBase);
-        //   });
-
-        this.connectionBase.set({
-          id: 1,
-          token_type: 'Bearer',
-          expires_at: 1749161819,
-          expires_in: 19728,
-          refresh_token: '0fe2e790c70e44a31e2301c241acd4aadd980516',
-          access_token: '547c25c4406426c6f0553a384dda6f0409f1d70c',
-          athlete: {
-            id: 17464740,
-            username: 'maewen_pelletier',
-            resource_state: 2,
-            firstname: 'Maewen',
-            lastname: 'Pelletier',
-            bio: 'Mountain pack - [Trail Running 🏃 | Climbing 🧗‍♂️| Alpinism 🗻 | Skiing 🎿]',
-            city: 'Annecy',
-            state: '',
-            country: null,
-            sex: 'M',
-            premium: true,
-            summit: true,
-            created_at: '2016-09-10T20:17:37Z',
-            updated_at: '2025-02-12T17:49:45Z',
-            badge_type_id: 1,
-            weight: 58,
-            profile_medium:
-              'https://dgalywyr863hv.cloudfront.net/pictures/athletes/17464740/25892616/3/medium.jpg',
-            profile:
-              'https://dgalywyr863hv.cloudfront.net/pictures/athletes/17464740/25892616/3/large.jpg',
-            friend: null,
-            follower: null,
-          },
-        });
+        this.connectionService
+          .getConnectionBaseFromStrava(authCode)
+          .pipe(take(1))
+          .subscribe((connectionBase: ConnectionBase) => {
+            this.connectionBase.set(connectionBase);
+          });
       }
     });
   }
 
-  navigateToStrava() {
+  private ttot = toObservable(this.connectionBase)
+    .pipe(takeUntilDestroyed())
+    .subscribe(cb => {
+      if (cb) {
+        console.log(cb);
+
+        this.payload.set({
+          username: this.appRegisterRef()?.credentials().username ?? '',
+          password: this.appRegisterRef()?.credentials().password ?? '',
+          expiresIn: this.connectionBase()?.expires_in ?? 0,
+          expiresAt: this.connectionBase()?.expires_at ?? 0,
+          token: this.connectionBase()?.access_token ?? '',
+          refreshToken: this.connectionBase()?.refresh_token ?? '',
+        });
+      }
+    });
+
+  public getStravaAuthUrl() {
     const env = new Env();
     const redirectUri = 'http://localhost:4200/connection?errorCode=no-code';
     const scope = 'read,profile:read_all,activity:read';
-    const authorizeUrl = `https://www.strava.com/oauth/authorize?client_id=${env.client_id}&response_type=code&redirect_uri=${redirectUri}&approval_prompt=force&scope=${scope}`;
 
-    window.location.href = authorizeUrl;
+    const finalUrl = `https://www.strava.com/oauth/authorize?client_id=${env.client_id}&response_type=code&redirect_uri=${redirectUri}&approval_prompt=force&scope=${scope}`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(finalUrl);
   }
 
   register() {
-    const user = this.connectionService
-      .register(this.appRegisterRef()?.credentials())
-      .subscribe(res => {
-        console.log(res);
-        if (res) {
-          this.isUserLogged.set(true);
-        }
-      });
+    if (this.switchValue === 'register') {
+      const user = this.connectionService
+        .register(this.appRegisterRef()?.credentials())
+        .subscribe(res => {
+          console.log(res);
+          if (res) {
+            this.isUserLogged.set(true);
+            this.stepperRef()?.updateValue(2);
+          }
+        });
+    } else {
+      // const user = this.connectionService.login();
+    }
+  }
+
+  public finalizeAccount() {
+    this.connectionService.finalize(this.payload()).subscribe(res => {
+      console.log(res);
+    });
   }
 
   private getCodeFromUrl(url: URL) {
@@ -121,5 +164,9 @@ export class ConnectionComponent {
     }
 
     return authorizationCode;
+  }
+
+  public loadChange(event: Event) {
+    console.log(event);
   }
 }

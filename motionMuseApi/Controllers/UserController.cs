@@ -14,21 +14,9 @@ namespace motionMuseApi.Controllers
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto user)
     {
-      var registeredUser = await _userRepository.RegisterUser(user, user.Password);
+      var registeredUser = await _userRepository.RegisterUser(user);
+
       return CreatedAtAction(nameof(Register), registeredUser);
-    }
-
-    [HttpPost("finalize")]
-    public async Task<IActionResult> Finalize([FromBody] UserRegisterDto user)
-    {
-      var loggedUser = await _userRepository.Finalize(user);
-
-      if (loggedUser == null)
-      {
-        return Unauthorized();
-      }
-
-      return CreatedAtAction(nameof(Finalize), loggedUser);
     }
 
     [HttpPost("login")]

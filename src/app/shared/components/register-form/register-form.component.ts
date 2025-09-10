@@ -19,7 +19,6 @@ import { ConnectionBase } from 'src/app/types/access-token';
 import { Env } from 'src/env';
 import {
   ConnectionService,
-  Credentials,
   FinalizePaylod,
 } from '../../services/connection.service';
 import { StorageService } from '../../services/local-storage.service';
@@ -99,26 +98,12 @@ export class RegisterFormComponent {
             refreshToken: cb.refresh_token,
           });
 
-          const credentials: Credentials = {
-            password: this.localStorageService.getItem('password') ?? '',
-            username: this.localStorageService.getItem('username') ?? '',
-          };
-
-          if (credentials.password && credentials.username) {
-            this.connectionService
-              .register(credentials)
-              .pipe(takeUntilDestroyed(this.destroyedRef))
-              .subscribe(res => {
-                console.log('res => ', res);
-
-                this.connectionService
-                  .finalize(this.payload())
-                  .pipe(takeUntilDestroyed(this.destroyedRef))
-                  .subscribe(res => {
-                    console.log('finished');
-                  });
-              });
-          }
+          this.connectionService
+            .register(this.payload())
+            .pipe(takeUntilDestroyed(this.destroyedRef))
+            .subscribe(res => {
+              console.log('res => ', res);
+            });
         }
       });
   }

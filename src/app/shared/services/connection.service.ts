@@ -59,11 +59,4 @@ export class ConnectionService {
       }
     );
   }
-
-  finalize(finalizeObject: FinalizePaylod) {
-    return this.http.post(
-      'http://localhost:5073/api/user/finalize',
-      finalizeObject
-    );
-  }
 }

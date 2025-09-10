@@ -45,11 +45,12 @@ namespace motionMuseApi.Mappings
       };
     }
 
-    public static UserRegisteredDto ToUserRegisteredDto(this UserRegisterDto user)
+    public static UserLoggedDto ToUserLoggedDto(this UserRegisterDto user)
     {
-      return new UserRegisteredDto
+      return new UserLoggedDto
       {
-        Username = user.Username
+        RefreshToken = user.RefreshToken,
+        Token = user.Token
       };
     }
   }

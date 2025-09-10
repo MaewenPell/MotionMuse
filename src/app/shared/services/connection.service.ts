@@ -4,7 +4,7 @@ import { ConnectionBase } from 'src/app/types/access-token';
 import { StravaAPIUtils } from 'src/app/types/strava-api-token';
 import { Env } from 'src/env';
 
-type Credentials = {
+export type Credentials = {
   username: string;
   password: string;
 };
@@ -52,14 +52,17 @@ export class ConnectionService {
 
   login(credentials: Credentials) {
     return this.http.post<ConnectedUser>(
-      'http://localhost:5073/api/user/register',
-      credentials
+      'http://localhost:5073/api/user/login',
+      {
+        username: credentials.username,
+        password: credentials.password,
+      }
     );
   }
 
   finalize(finalizeObject: FinalizePaylod) {
-    return this.http.patch(
-      'http://localhost:5073/api/user/register',
+    return this.http.post(
+      'http://localhost:5073/api/user/finalize',
       finalizeObject
     );
   }

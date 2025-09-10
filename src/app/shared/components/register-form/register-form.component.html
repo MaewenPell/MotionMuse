@@ -26,5 +26,12 @@
                 [(ngModel)]="stravaToken" />
             <label for="token">Strava Token</label>
         </p-ifta-label>
+        <p-button
+            [label]="'Register with strava'"
+            (onClick)="registerWithStrava()" />
+    } @else {
+        <p-button
+            [label]="'Login'"
+            (onClick)="login()" />
     }
 </div>

@@ -3,57 +3,13 @@
         <p-selectbutton
             [options]="stateOptions"
             [(ngModel)]="switchValue"
+            (onChange)="changeNavigation($event)"
             optionLabel="label"
             optionValue="value"
             aria-labelledby="basic" />
 
         <app-register-form
             #appRegisterForm
-            [kind]="switchValue" />
-
-        <p-button
-            class="connection__action"
-            [label]="switchValue === 'register' ? 'Register' : 'Connect'"
-            icon="pi pi-arrow-right"
-            iconPos="right"
-            [disabled]="!areCredentialsSet()"
-            (onClick)="register()" />
-
-        @if (switchValue === 'register' && isUserLogged()) {
-            <p-button
-                [label]="'Link with Strava'"
-                (onClick)="showStravaDialog = true" />
-        }
-
-        @if (switchValue === 'register' && appRegisterRef()?.stravaToken) {
-            <p-button
-                [label]="'Finalize Account'"
-                (onClick)="finalizeAccount()" />
-        }
+            [kind]="currentEndRoute()" />
     </div>
 </div>
-
-<p-dialog
-    header="Edit Profile"
-    [modal]="true"
-    [(visible)]="showStravaDialog"
-    [style]="{ width: '25rem' }">
-    <iframe
-        #iframeRef
-        [src]="getStravaAuthUrl()"
-        (load)="loadChange($event)"
-        width="100%"
-        height="600px"></iframe>
-
-        // TODO trouver comment faire pour gerer l'iframe 
-
-    <div class="flex justify-end gap-2">
-        <p-button
-            label="Cancel"
-            severity="secondary"
-            (click)="showStravaDialog = false" />
-        <p-button
-            label="Save"
-            (click)="showStravaDialog = false" />
-    </div>
-</p-dialog>

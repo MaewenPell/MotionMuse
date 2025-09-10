@@ -1,14 +1,14 @@
 import { Route } from '@angular/router';
 import { ConnectionComponent } from './core/connection/connection.component';
 import { TokenExhangeComponent } from './core/token-exhange/token-exhange.component';
-import { StravaAuthGuard } from './guards/strava-auth.guard';
+import { RegisterFormComponent } from './shared/components/register-form/register-form.component';
 
 export const APP_ROUTES: Route[] = [
   {
     path: 'dashboard',
     loadChildren: () =>
       import('./dashboard/routes').then(x => x.dashboardRoutes),
-    canActivate: [StravaAuthGuard],
+    // canActivate: [StravaAuthGuard],
   },
   {
     path: 'trainings',
@@ -22,6 +22,16 @@ export const APP_ROUTES: Route[] = [
   {
     path: 'connection',
     loadComponent: () => ConnectionComponent,
+    children: [
+      {
+        path: 'register',
+        loadComponent: () => RegisterFormComponent,
+      },
+      {
+        path: 'login',
+        loadComponent: () => RegisterFormComponent,
+      },
+    ],
   },
   {
     path: '',

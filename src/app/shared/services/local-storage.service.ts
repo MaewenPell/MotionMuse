@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { ConnectionBase } from 'src/app/types/access-token';
 import { Errors } from 'src/app/types/enums/errors.enums';
 import { UtilsService } from './utils.service';
@@ -11,6 +11,10 @@ export class StorageService {
 
   public set(key: string, value: string): void {
     localStorage.setItem(key, value);
+  }
+
+  public getItem(key: string) {
+    return localStorage.getItem(key);
   }
 
   public get(key: string): {

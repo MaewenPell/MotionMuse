@@ -14,9 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { take } from 'rxjs';
 import { ConnectionBase } from 'src/app/types/access-token';
-import { Env } from 'src/env';
 import {
   ConnectionService,
   FinalizePaylod,
@@ -38,9 +36,10 @@ import { StorageService } from '../../services/local-storage.service';
 })
 export class RegisterFormComponent {
   private activatedRoute = inject(ActivatedRoute);
-  private connectionService = inject(ConnectionService);
   private destroyedRef = inject(DestroyRef);
   private localStorageService = inject(StorageService);
+
+  connectionService = inject(ConnectionService);
 
   public kind = input<'login' | 'register'>('login');
 
@@ -67,17 +66,14 @@ export class RegisterFormComponent {
 
   constructor() {
     this.activatedRoute.url.subscribe(res => {
-      const url = new URL(decodeURIComponent(window.location.href));
-      const authCode = this.getCodeFromUrl(url);
-
       this.refillForm();
 
-      this.connectionService
-        .getConnectionBaseFromStrava(authCode)
-        .pipe(take(1))
-        .subscribe((connectionBase: ConnectionBase) => {
-          this.connectionBase.set(connectionBase);
-        });
+      // this.connectionService
+      //   .getConnectionBaseFromStrava(authCode)
+      //   .pipe(take(1))
+      //   .subscribe((connectionBase: ConnectionBase) => {
+      //     this.connectionBase.set(connectionBase);
+      //   });
     });
 
     toObservable(this.connectionBase)
@@ -97,41 +93,7 @@ export class RegisterFormComponent {
             token: cb.access_token,
             refreshToken: cb.refresh_token,
           });
-
-          this.connectionService
-            .register(this.payload())
-            .pipe(takeUntilDestroyed(this.destroyedRef))
-            .subscribe(res => {
-              console.log('res => ', res);
-            });
         }
-      });
-  }
-
-  public registerWithStrava() {
-    const env = new Env();
-    const baseUrl = 'http://localhost:4200/connection/register';
-    const redirectUri = `${baseUrl}&errorCode=no-code`;
-
-    const scope = 'read,profile:read_all,activity:read';
-
-    const finalUrl = `https://www.strava.com/oauth/authorize?client_id=${env.client_id}&response_type=code&redirect_uri=${redirectUri}&approval_prompt=force&scope=${scope}`;
-
-    this.localStorageService.set('username', this.username());
-    this.localStorageService.set('password', this.password());
-
-    window.location.href = finalUrl;
-  }
-
-  login() {
-    this.connectionService
-      .login({
-        username: this.username() ?? '',
-        password: this.password() ?? '',
-      })
-      .pipe(takeUntilDestroyed(this.destroyedRef))
-      .subscribe(res => {
-        console.log('res');
       });
   }
 

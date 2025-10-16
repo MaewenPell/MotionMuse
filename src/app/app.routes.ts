@@ -1,23 +1,25 @@
 import { Route } from '@angular/router';
+import { AuthGuard } from '@auth0/auth0-angular';
 import { ConnectionComponent } from './core/connection/connection.component';
-import { TokenExhangeComponent } from './core/token-exhange/token-exhange.component';
+import { ErrorComponent } from './error/error.component';
 import { RegisterFormComponent } from './shared/components/register-form/register-form.component';
 
 export const APP_ROUTES: Route[] = [
   {
+    path: 'callback',
+    loadComponent: () => ConnectionComponent,
+  },
+  {
     path: 'dashboard',
     loadChildren: () =>
       import('./dashboard/routes').then(x => x.dashboardRoutes),
-    // canActivate: [StravaAuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: 'trainings',
     loadChildren: () =>
       import('./trainings/routes').then(x => x.trainingsRoutes),
-  },
-  {
-    path: 'token-exchange',
-    loadComponent: () => TokenExhangeComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'connection',
@@ -32,6 +34,10 @@ export const APP_ROUTES: Route[] = [
         loadComponent: () => RegisterFormComponent,
       },
     ],
+  },
+  {
+    path: 'error',
+    loadComponent: () => ErrorComponent,
   },
   {
     path: '',

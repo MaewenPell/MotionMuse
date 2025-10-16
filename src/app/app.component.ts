@@ -21,11 +21,11 @@ export class AppComponent {
   connectedAthlete$ = signal<DetailedAthlete | null>(null);
 
   constructor() {
-    this.stravaService.getAthelete().subscribe(athlete => {
-      this.connectedAthlete$.set(athlete);
+    // this.stravaService.getAthelete().subscribe(athlete => {
+    //   this.connectedAthlete$.set(athlete);
 
-      console.log(this.connectedAthlete$());
-    });
+    //   console.log(this.connectedAthlete$());
+    // });
   }
 
   title = 'MotionMuse';

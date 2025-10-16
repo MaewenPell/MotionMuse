@@ -1,15 +1,20 @@
 <div class="connection">
     <div class="connection__content">
-        <p-selectbutton
-            [options]="stateOptions"
-            [(ngModel)]="switchValue"
-            (onChange)="changeNavigation($event)"
-            optionLabel="label"
-            optionValue="value"
-            aria-labelledby="basic" />
+        @if (!connectionService.isAuthenticated$()) {
+            <p-button
+                icon="profil__icon pi pi-user"
+                label="Sign in"
+                (onClick)="connectionService.handleLogin()" />
 
-        <app-register-form
-            #appRegisterForm
-            [kind]="currentEndRoute()" />
+            <p-button
+                icon="profil__icon pi pi-user"
+                label="Sign up"
+                (onClick)="connectionService.handleSignUp()" />
+        } @else {
+            <p-button
+                icon="profil__icon pi pi-user"
+                label="Logout"
+                (onClick)="connectionService.handleLogout()" />
+        }
     </div>
 </div>

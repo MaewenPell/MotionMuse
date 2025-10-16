@@ -1,8 +1,7 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { ConnectionBase } from 'src/app/types/access-token';
-import { StravaAPIUtils } from 'src/app/types/strava-api-token';
-import { Env } from 'src/env';
+import { HttpClient } from '@angular/common/http';
+import { DOCUMENT, Injectable, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService } from '@auth0/auth0-angular';
 
 export type Credentials = {
   username: string;
@@ -29,34 +28,35 @@ export type FinalizePaylod = {
 })
 export class ConnectionService {
   private http = inject(HttpClient);
-  private env = new Env();
+  private auth = inject(AuthService);
+  private doc = inject(DOCUMENT);
 
-  public getConnectionBaseFromStrava(authorizationCode: string) {
-    const params = new HttpParams()
-      .set('client_id', this.env.client_id)
-      .set('client_secret', this.env.client_secret)
-      .set('code', authorizationCode)
-      .set('grant_type', StravaAPIUtils.AUTH);
+  isAuthenticated$ = toSignal(this.auth.isAuthenticated$);
 
-    return this.http.post<ConnectionBase>(StravaAPIUtils.TOKEN_URL, null, {
-      params: params,
+  handleLogin() {
+    this.auth.loginWithRedirect({
+      appState: {
+        target: '/dashboard',
+      },
     });
   }
 
-  register(credentials: Credentials | undefined) {
-    return this.http.post<{ username: string }>(
-      'http://localhost:5073/api/user/register',
-      credentials
-    );
+  handleSignUp() {
+    this.auth.loginWithRedirect({
+      // appState: {
+      //   target: '/token-exchange',
+      // },
+      authorizationParams: {
+        screen_hint: 'signup',
+      },
+    });
   }
 
-  login(credentials: Credentials) {
-    return this.http.post<ConnectedUser>(
-      'http://localhost:5073/api/user/login',
-      {
-        username: credentials.username,
-        password: credentials.password,
-      }
-    );
+  handleLogout() {
+    this.auth.logout({
+      logoutParams: {
+        returnTo: this.doc.location.origin,
+      },
+    });
   }
 }

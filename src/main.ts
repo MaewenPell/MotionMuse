@@ -10,18 +10,20 @@ import {
   provideNoopAnimations,
 } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { ActivatedRouteSnapshot, provideRouter } from '@angular/router';
+import { provideRouter, withDebugTracing } from '@angular/router';
+import { provideAuth0 } from '@auth0/auth0-angular';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { providePrimeNG } from 'primeng/config';
 import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';
 import { StravaInterceptor } from './app/core/interceptor/strava.interceptor';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import MotionMusePreset from './assets/presets/motion-muse.preset';
+import { environment } from './environments/environment';
 
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule),
-    provideRouter(APP_ROUTES),
+    provideRouter(APP_ROUTES, withDebugTracing()), // Enable router tracing
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: StravaInterceptor, multi: true },
@@ -33,5 +35,6 @@ bootstrapApplication(AppComponent, {
       },
     }),
     provideCharts(withDefaultRegisterables()),
+    provideAuth0(environment.auth0),
   ],
 }).catch(err => console.error(err));

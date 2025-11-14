@@ -22,7 +22,12 @@
     "lib": [
       "ESNext",
       "dom"
-    ]
+    ],
+    "paths": {
+      "chart.js/dist/types/utils": [
+        "node_modules/chart.js/dist/types/utils.d.ts"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

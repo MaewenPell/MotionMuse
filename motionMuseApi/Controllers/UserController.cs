@@ -1,11 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using motionMuseApi.Mappings;
 using motionMuseApi.Models;
 using motionMuseApi.Repositories;
 
 namespace motionMuseApi.Controllers
 {
   [ApiController]
+  [Authorize]
   [Route("api/[controller]")]
   public class UserController(IUserRepository userRepository) : ControllerBase
   {

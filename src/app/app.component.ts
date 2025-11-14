@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { StepperModule } from 'primeng/stepper';
 import { MenuComponent } from './shared/components/menu/menu.component';
+import { ConnectionService } from './shared/services/connection.service';
 import { StravaService } from './shared/services/strava.service';
 import { DetailedAthlete } from './types/athlete';
 
@@ -17,16 +18,11 @@ import { DetailedAthlete } from './types/athlete';
 })
 export class AppComponent {
   private stravaService = inject(StravaService);
+  connectionService = inject(ConnectionService);
 
   connectedAthlete$ = signal<DetailedAthlete | null>(null);
 
-  constructor() {
-    // this.stravaService.getAthelete().subscribe(athlete => {
-    //   this.connectedAthlete$.set(athlete);
-
-    //   console.log(this.connectedAthlete$());
-    // });
-  }
+  constructor() {}
 
   title = 'MotionMuse';
 }

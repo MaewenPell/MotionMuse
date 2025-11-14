@@ -2,58 +2,288 @@ import { definePreset } from '@primeng/themes';
 import Aura from '@primeng/themes/aura';
 
 const MotionMusePreset = definePreset(Aura, {
+  /* Warm “sunset” primary to match the new background */
   semantic: {
     primary: {
-      50: '#DAF2DA',
-      100: '#B2E3B2',
-      200: '#61B96A',
-      300: '#3F9F45',
-      400: '#1B5E20',
-      500: '#17481B',
-      600: '#113815',
-      700: '#0C290F',
-      800: '#081F0B',
-      900: '#061507',
-      950: '#030B04',
+      50: '#FFF4E6',
+      100: '#FFE4BF',
+      200: '#FFD399',
+      300: '#FFC074',
+      400: '#FFAE57',
+      500: '#FFA23E', // golden amber
+      600: '#F08F2F',
+      700: '#D97B22',
+      800: '#B96317',
+      900: '#8E470D',
+      950: '#462306',
     },
   },
-  // La configuration de colorScheme permet de définir des valeurs différentes pour le mode clair et le mode sombre.
+
   colorScheme: {
     light: {
       primary: {
-        // Dans le mode clair, le principal est le Vert Forêt pour les éléments clés,
-        // avec un texte inversé en Blanc Cassé (#F5F5F5).
-        color: '#1B5E20',
-        inverseColor: '#F5F5F5',
-        // Pour l'état "hover" et "active", on utilise des variantes légèrement modifiées.
-        hoverColor: '#2E7D32',
-        activeColor: '#388E3C',
+        color: '#FFA23E', // text/icon on primary
+        inverseColor: '#101114', // for chips/badges on amber
+        hoverColor: '#FFAE57',
+        activeColor: '#F08F2F',
       },
       highlight: {
-        // Pour mettre en avant certains éléments, on utilise Orange Énergie (#FF9800)
-        // avec une nuance un peu plus foncée au focus.
-        background: '#FF9800',
-        focusBackground: '#F57C00',
-        color: '#ffffff',
-        focusColor: '#ffffff',
+        background: '#FFD189', // warm highlight for tags/rows
+        focusBackground: '#FFC36A',
+        color: '#1E1E1E',
+        focusColor: '#1E1E1E',
       },
     },
     dark: {
       primary: {
-        // En mode sombre, on inverse les couleurs pour assurer une bonne lisibilité :
-        // le texte utilise le Blanc Cassé et l'inverse devient le Vert Forêt.
-        color: '#F5F5F5',
-        inverseColor: '#1B5E20',
-        // Les états "hover" et "active" utilisent des versions plus claires du vert.
-        hoverColor: '#81C784',
-        activeColor: '#66BB6A',
+        color: '#FFD39A', // brighter in dark
+        inverseColor: '#201610',
+        hoverColor: '#FFC36A',
+        activeColor: '#FFAE57',
       },
       highlight: {
-        // En mode sombre, on garde des valeurs plus neutres pour les highlights.
-        background: 'rgba(250, 250, 250, .16)',
-        focusBackground: 'rgba(250, 250, 250, .24)',
-        color: 'rgba(255,255,255,.87)',
-        focusColor: 'rgba(255,255,255,.87)',
+        background: 'rgba(255, 210, 137, .18)',
+        focusBackground: 'rgba(255, 210, 137, .26)',
+        color: 'rgba(255,255,255,.92)',
+        focusColor: 'rgba(255,255,255,.92)',
+      },
+    },
+  },
+
+  /* Buttons = frosted glass with warm tint (works on the new bg) */
+  components: {
+    button: {
+      root: {
+        borderRadius: '999px',
+        paddingX: '1.1rem',
+        paddingY: '0.55rem',
+        gap: '0.5rem',
+        label: { fontWeight: '600' },
+        transitionDuration: '0.2s',
+        raisedShadow: '0 8px 22px rgba(20, 12, 6, 0.18)',
+
+        /* same glass treatment for all severities */
+        primary: {
+          background: 'rgba(255, 174, 87, 0.36)', // amber glass
+          hoverBackground: 'rgba(255, 174, 87, 0.46)',
+          activeBackground: 'rgba(255, 174, 87, 0.54)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBorderColor: 'rgba(255,255,255,0.42)',
+          activeBorderColor: 'rgba(255,255,255,0.42)',
+          color: 'rgba(255,255,255,0.96)',
+          hoverColor: 'rgba(255,255,255,0.98)',
+          activeColor: 'rgba(255,255,255,1)',
+          focusRing: {
+            color: 'rgba(255, 193, 112, 0.55)', // warm focus halo
+            shadow: '0 0 0 3px rgba(255, 193, 112, 0.25)',
+          },
+        },
+
+        /* reuse for all severities so login page stays consistent */
+        secondary: {
+          background: 'rgba(255, 174, 87, 0.36)',
+          hoverBackground: 'rgba(255, 174, 87, 0.46)',
+          activeBackground: 'rgba(255, 174, 87, 0.54)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBorderColor: 'rgba(255,255,255,0.42)',
+          activeBorderColor: 'rgba(255,255,255,0.42)',
+          color: 'rgba(255,255,255,0.96)',
+          hoverColor: 'rgba(255,255,255,0.98)',
+          activeColor: 'rgba(255,255,255,1)',
+          focusRing: {
+            color: 'rgba(255, 193, 112, 0.55)',
+            shadow: '0 0 0 3px rgba(255, 193, 112, 0.25)',
+          },
+        },
+        success: {
+          background: 'rgba(255, 174, 87, 0.36)',
+          hoverBackground: 'rgba(255, 174, 87, 0.46)',
+          activeBackground: 'rgba(255, 174, 87, 0.54)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBorderColor: 'rgba(255,255,255,0.42)',
+          activeBorderColor: 'rgba(255,255,255,0.42)',
+          color: 'rgba(255,255,255,0.96)',
+          hoverColor: 'rgba(255,255,255,0.98)',
+          activeColor: 'rgba(255,255,255,1)',
+          focusRing: {
+            color: 'rgba(255, 193, 112, 0.55)',
+            shadow: '0 0 0 3px rgba(255, 193, 112, 0.25)',
+          },
+        },
+        info: {
+          background: 'rgba(255, 174, 87, 0.36)',
+          hoverBackground: 'rgba(255, 174, 87, 0.46)',
+          activeBackground: 'rgba(255, 174, 87, 0.54)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBorderColor: 'rgba(255,255,255,0.42)',
+          activeBorderColor: 'rgba(255,255,255,0.42)',
+          color: 'rgba(255,255,255,0.96)',
+          hoverColor: 'rgba(255,255,255,0.98)',
+          activeColor: 'rgba(255,255,255,1)',
+          focusRing: {
+            color: 'rgba(255, 193, 112, 0.55)',
+            shadow: '0 0 0 3px rgba(255, 193, 112, 0.25)',
+          },
+        },
+        warn: {
+          background: 'rgba(255, 174, 87, 0.36)',
+          hoverBackground: 'rgba(255, 174, 87, 0.46)',
+          activeBackground: 'rgba(255, 174, 87, 0.54)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBorderColor: 'rgba(255,255,255,0.42)',
+          activeBorderColor: 'rgba(255,255,255,0.42)',
+          color: 'rgba(255,255,255,0.96)',
+          hoverColor: 'rgba(255,255,255,0.98)',
+          activeColor: 'rgba(255,255,255,1)',
+          focusRing: {
+            color: 'rgba(255, 193, 112, 0.55)',
+            shadow: '0 0 0 3px rgba(255, 193, 112, 0.25)',
+          },
+        },
+        help: {
+          background: 'rgba(255, 174, 87, 0.36)',
+          hoverBackground: 'rgba(255, 174, 87, 0.46)',
+          activeBackground: 'rgba(255, 174, 87, 0.54)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBorderColor: 'rgba(255,255,255,0.42)',
+          activeBorderColor: 'rgba(255,255,255,0.42)',
+          color: 'rgba(255,255,255,0.96)',
+          hoverColor: 'rgba(255,255,255,0.98)',
+          activeColor: 'rgba(255,255,255,1)',
+          focusRing: {
+            color: 'rgba(255, 193, 112, 0.55)',
+            shadow: '0 0 0 3px rgba(255, 193, 112, 0.25)',
+          },
+        },
+        danger: {
+          background: 'rgba(255, 174, 87, 0.36)',
+          hoverBackground: 'rgba(255, 174, 87, 0.46)',
+          activeBackground: 'rgba(255, 174, 87, 0.54)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBorderColor: 'rgba(255,255,255,0.42)',
+          activeBorderColor: 'rgba(255,255,255,0.42)',
+          color: 'rgba(255,255,255,0.96)',
+          hoverColor: 'rgba(255,255,255,0.98)',
+          activeColor: 'rgba(255,255,255,1)',
+          focusRing: {
+            color: 'rgba(255, 193, 112, 0.55)',
+            shadow: '0 0 0 3px rgba(255, 193, 112, 0.25)',
+          },
+        },
+        contrast: {
+          background: 'rgba(255, 174, 87, 0.36)',
+          hoverBackground: 'rgba(255, 174, 87, 0.46)',
+          activeBackground: 'rgba(255, 174, 87, 0.54)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBorderColor: 'rgba(255,255,255,0.42)',
+          activeBorderColor: 'rgba(255,255,255,0.42)',
+          color: 'rgba(255,255,255,0.96)',
+          hoverColor: 'rgba(255,255,255,0.98)',
+          activeColor: 'rgba(255,255,255,1)',
+          focusRing: {
+            color: 'rgba(255, 193, 112, 0.55)',
+            shadow: '0 0 0 3px rgba(255, 193, 112, 0.25)',
+          },
+        },
+      },
+
+      outlined: {
+        primary: {
+          color: 'rgba(255,255,255,0.96)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBackground: 'rgba(255,174,87,0.20)',
+          activeBackground: 'rgba(255,174,87,0.28)',
+        },
+        secondary: {
+          color: 'rgba(255,255,255,0.96)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBackground: 'rgba(255,174,87,0.20)',
+          activeBackground: 'rgba(255,174,87,0.28)',
+        },
+        success: {
+          color: 'rgba(255,255,255,0.96)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBackground: 'rgba(255,174,87,0.20)',
+          activeBackground: 'rgba(255,174,87,0.28)',
+        },
+        info: {
+          color: 'rgba(255,255,255,0.96)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBackground: 'rgba(255,174,87,0.20)',
+          activeBackground: 'rgba(255,174,87,0.28)',
+        },
+        warn: {
+          color: 'rgba(255,255,255,0.96)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBackground: 'rgba(255,174,87,0.20)',
+          activeBackground: 'rgba(255,174,87,0.28)',
+        },
+        help: {
+          color: 'rgba(255,255,255,0.96)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBackground: 'rgba(255,174,87,0.20)',
+          activeBackground: 'rgba(255,174,87,0.28)',
+        },
+        danger: {
+          color: 'rgba(255,255,255,0.96)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBackground: 'rgba(255,174,87,0.20)',
+          activeBackground: 'rgba(255,174,87,0.28)',
+        },
+        contrast: {
+          color: 'rgba(255,255,255,0.96)',
+          borderColor: 'rgba(255,255,255,0.32)',
+          hoverBackground: 'rgba(255,174,87,0.20)',
+          activeBackground: 'rgba(255,174,87,0.28)',
+        },
+      },
+
+      text: {
+        primary: {
+          color: 'rgba(255,255,255,0.96)',
+          hoverBackground: 'rgba(255,174,87,0.16)',
+          activeBackground: 'rgba(255,174,87,0.22)',
+        },
+        secondary: {
+          color: 'rgba(255,255,255,0.96)',
+          hoverBackground: 'rgba(255,174,87,0.16)',
+          activeBackground: 'rgba(255,174,87,0.22)',
+        },
+        success: {
+          color: 'rgba(255,255,255,0.96)',
+          hoverBackground: 'rgba(255,174,87,0.16)',
+          activeBackground: 'rgba(255,174,87,0.22)',
+        },
+        info: {
+          color: 'rgba(255,255,255,0.96)',
+          hoverBackground: 'rgba(255,174,87,0.16)',
+          activeBackground: 'rgba(255,174,87,0.22)',
+        },
+        warn: {
+          color: 'rgba(255,255,255,0.96)',
+          hoverBackground: 'rgba(255,174,87,0.16)',
+          activeBackground: 'rgba(255,174,87,0.22)',
+        },
+        help: {
+          color: 'rgba(255,255,255,0.96)',
+          hoverBackground: 'rgba(255,174,87,0.16)',
+          activeBackground: 'rgba(255,174,87,0.22)',
+        },
+        danger: {
+          color: 'rgba(255,255,255,0.96)',
+          hoverBackground: 'rgba(255,174,87,0.16)',
+          activeBackground: 'rgba(255,174,87,0.22)',
+        },
+        contrast: {
+          color: 'rgba(255,255,255,0.96)',
+          hoverBackground: 'rgba(255,174,87,0.16)',
+          activeBackground: 'rgba(255,174,87,0.22)',
+        },
+        plain: {
+          color: 'rgba(255,255,255,0.96)',
+          hoverBackground: 'rgba(255,174,87,0.16)',
+          activeBackground: 'rgba(255,174,87,0.22)',
+        },
       },
     },
   },

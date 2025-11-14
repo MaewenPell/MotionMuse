@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using motionMuseApi.Mappings;
 using motionMuseApi.Models;

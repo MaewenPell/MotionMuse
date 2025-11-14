@@ -1,16 +1,12 @@
 import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
+  withInterceptors,
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import {
-  provideAnimations,
-  provideNoopAnimations,
-} from '@angular/platform-browser/animations';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideRouter, withDebugTracing } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { provideAuth0 } from '@auth0/auth0-angular';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { providePrimeNG } from 'primeng/config';
@@ -23,15 +19,13 @@ import { environment } from './environments/environment';
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule),
-    provideRouter(APP_ROUTES, withDebugTracing()), // Enable router tracing
-    provideAnimations(),
-    provideHttpClient(withInterceptorsFromDi()),
-    { provide: HTTP_INTERCEPTORS, useClass: StravaInterceptor, multi: true },
-    provideNoopAnimations(),
-    provideAnimationsAsync(),
+    provideRouter(APP_ROUTES),
+    provideHttpClient(withInterceptors([StravaInterceptor])),
+    // { provide: HTTP_INTERCEPTORS, useClass: StravaInterceptor, multi: true },
     providePrimeNG({
       theme: {
         preset: MotionMusePreset,
+        options: { darkModeSelector: '.p-dark' },
       },
     }),
     provideCharts(withDefaultRegisterables()),

@@ -1,18 +1,32 @@
 <div class="connection">
-    <div class="connection__content">
+    <div class="connection__content glass">
+        <div class="connection__logo">
+            <img [src]="'../../../assets/images/logo_2.png'" />
+        </div>
         @if (!connectionService.isAuthenticated$()) {
-            <p-button
-                icon="profil__icon pi pi-user"
-                label="Sign in"
-                (onClick)="connectionService.handleLogin()" />
+            <div class="connection__introduction">
+                <h1 class="connection__title">Welcome to Motion Muse</h1>
+                <h4 class="connection__subtitle">Lets start by login or create a new account</h4>
+            </div>
 
-            <p-button
-                icon="profil__icon pi pi-user"
-                label="Sign up"
-                (onClick)="connectionService.handleSignUp()" />
+            <div class="connection__group">
+                <h4>Already have an account ?</h4>
+                <p-button
+                    icon="pi pi-sign-in"
+                    label="Sign in"
+                    (onClick)="connectionService.handleLogin()" />
+            </div>
+
+            <div class="connection__group">
+                <h4>Create a new account</h4>
+                <p-button
+                    icon="pi pi-user-plus"
+                    label="Sign up"
+                    (onClick)="connectionService.handleSignUp()" />
+            </div>
         } @else {
             <p-button
-                icon="profil__icon pi pi-user"
+                icon="pi pi-sign-out"
                 label="Logout"
                 (onClick)="connectionService.handleLogout()" />
         }

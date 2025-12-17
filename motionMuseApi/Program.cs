@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using motionMuseApi.Models;
 using motionMuseApi.Repositories;
-using motionMuseApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,26 +38,20 @@ builder.Services.AddSwaggerGen(c =>
 {
   c.SwaggerDoc("v1", new OpenApiInfo { Title = "MotionMuse", Version = "1.0.0" });
 
-  var securitySchema = new OpenApiSecurityScheme
+  c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
   {
-    Description = "Using the Authorization header with the Bearer scheme",
-    Name = "Authorization",
-    In = ParameterLocation.Header,
     Type = SecuritySchemeType.Http,
     Scheme = "bearer",
-    Reference = new OpenApiReference
-    {
-      Type = ReferenceType.SecurityScheme,
-      Id = "Bearer"
-    }
-  };
+    BearerFormat = "JWT",
+    In = ParameterLocation.Header,
+    Name = "Authorization",
+    Description = "Using the Authorization header with the Bearer scheme",
+  });
 
-
-  c.AddSecurityDefinition("Bearer", securitySchema);
-
-  c.AddSecurityRequirement(new OpenApiSecurityRequirement
+  c.AddSecurityRequirement(document =>
+    new OpenApiSecurityRequirement
   {
-    { securitySchema, new [] { "Bearer"}}
+    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
   });
 });
 
@@ -66,16 +59,12 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITrainingRepository, SqlTrainerRepository>();
-builder.Services.AddScoped<IUserRepository, IdentityUserRepository>();
-builder.Services.AddScoped<PasswordManager>();
-
 var app = builder.Build();
 
 app.UseCors("Everything");
 
-
-app.UseAuthentication();   // <-- before authorization
-app.UseAuthorization();    // <-- **this makes [Authorize] work**
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseSwagger();
 app.UseSwaggerUI();

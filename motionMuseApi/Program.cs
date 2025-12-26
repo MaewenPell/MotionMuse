@@ -3,6 +3,7 @@ using motionMuseApi.Models;
 using motionMuseApi.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi;
+using motionMuseApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,6 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// builder.Services.AddSingleton<TrainingService>();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
@@ -58,7 +58,10 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<IStravaLinkRepository, StravaLinkRepository>();
 builder.Services.AddScoped<ITrainingRepository, SqlTrainerRepository>();
+builder.Services.AddScoped<IStravaAuthService, StravaAuthService>();
+
 var app = builder.Build();
 
 app.UseCors("Everything");

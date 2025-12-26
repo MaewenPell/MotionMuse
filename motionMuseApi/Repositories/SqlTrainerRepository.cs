@@ -5,7 +5,6 @@ namespace motionMuseApi.Repositories
 {
   public class SqlTrainerRepository(MyDbContext dbcontext) : ITrainingRepository
   {
-
     private readonly MyDbContext _context = dbcontext;
 
     public async Task<Training> Create(Training newTraining)

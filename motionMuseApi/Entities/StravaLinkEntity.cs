@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 using motionMuseApi.Interface;
 
 namespace motionMuseApi.Entities

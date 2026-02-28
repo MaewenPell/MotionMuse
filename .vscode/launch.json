@@ -19,10 +19,10 @@
       "program": "${workspaceFolder}/motionMuseApi/bin/Debug/net10.0/motionMuseApi.dll",
       "cwd": "${workspaceFolder}/motionMuseApi",
       "env": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "AUTH0_CLIENT_ID": "FvdofqR1PZUKPg7vKavXazsgRnpZw96V",
-        "AUTH0_CLIENT_SECRET": "Zb_AfRa6YtmV-fWaIWzdmMEa0zpRhddaLlGyS4QfEGvnM1gAd3zn5n1sd4QS2VEO",
-        "AUTH0_DOMAIN": "dev-motion-muse.eu.auth0.com"
+        "ASPNETCORE_ENVIRONMENT": "Development"
+        // "AUTH0_CLIENT_ID": "FvdofqR1PZUKPg7vKavXazsgRnpZw96V",
+        // "AUTH0_CLIENT_SECRET": "Zb_AfRa6YtmV-fWaIWzdmMEa0zpRhddaLlGyS4QfEGvnM1gAd3zn5n1sd4QS2VEO",
+        // "AUTH0_DOMAIN": "dev-motion-muse.eu.auth0.com"
       }
     }
   ]
